@@ -1,0 +1,6 @@
+/.idea
+/zeusx*.tgz
+
+node_modules
+*.js
+*.d.ts

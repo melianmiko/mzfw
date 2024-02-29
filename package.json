@@ -1,0 +1,15 @@
+{
+  "name": "mzfw",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "melianmiko",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "zeppos-device-types-v1": "^1.0.9"
+  }
+}
