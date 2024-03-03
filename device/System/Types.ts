@@ -16,5 +16,13 @@ export type IZeppFillRectWidgetOptions = IZeppPositionalWidgetOptions & {
     color?: number,
     radius?: number,
 }
+export type IZeppTextWidgetOptions = IZeppPositionalWidgetOptions & {
+    text: string,
+    color?: number,
+    align_h?: number,
+    align_v?: number,
+    text_size?: number,
+    text_style?: number,
+}
 
 export type IZeppGroupWidgetOptions = IHmUIWidget & INativeWidgetParent;

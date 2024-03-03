@@ -1,9 +1,9 @@
-import {IHmUIWidget, INativeWidgetParent, systemUi} from "../System";
-import {Component, ComponentGeometry} from "../UiComponent";
+import {IHmUIWidget, systemUi} from "../System";
+import {Component} from "../UiComponent";
 
 export abstract class NativeComponent<AcceptedProps, NativeProps> extends Component<AcceptedProps> {
     protected abstract widgetID: number;
-    protected abstract defaultProps: AcceptedProps;
+    protected abstract defaultProps: Partial<AcceptedProps>;
     protected abstract nativeProps: NativeProps;
     protected widget: IHmUIWidget;
 
@@ -16,20 +16,25 @@ export abstract class NativeComponent<AcceptedProps, NativeProps> extends Compon
     }
 
     protected onRender() {
-        this.updateProperties();
+        // console.log(JSON.stringify(this.nativeProps));
         this.widget = systemUi.createWidget(this.widgetID, this.nativeProps as any);
+        this.setupEventsAt(this.widget);
     }
 
     protected onDestroy(): any {
         systemUi.deleteWidget(this.widget)
     }
 
-    protected onPropertiesOrGeometryChange() {
+    protected onPropertiesChange() {
         this.updateProperties();
     }
 
+    protected onGeometryChange() {
+        this.updateGeometry();
+    }
+
     protected onComponentUpdate() {
-        this.widget.setProperty(systemUi.prop.MORE, this.props as any);
+        this.widget.setProperty(systemUi.prop.MORE, this.nativeProps as any);
     }
 
     /**
@@ -39,4 +44,5 @@ export abstract class NativeComponent<AcceptedProps, NativeProps> extends Compon
      * @protected
      */
     abstract updateProperties(): void;
+    abstract updateGeometry(): void;
 }

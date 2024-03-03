@@ -49,12 +49,11 @@ export abstract class Component<P> {
      * perform initial configuration.
      *
      * @param parent Root component to use
-     * @param skipChangeEvent If true, won't call onPropertiesOrGeometryChange event
      */
-    attachParent(parent: RootComponent<any>, skipChangeEvent: boolean = false) {
+    attachParent(parent: RootComponent<any>) {
         this.root = parent;
         this.onInit();
-        if(!skipChangeEvent) this.onPropertiesOrGeometryChange();
+        this.onPropertiesChange();
     }
 
     /**
@@ -62,9 +61,10 @@ export abstract class Component<P> {
      * @param newProps Partial props to perform update
      */
     updateProps(newProps: Partial<P>) {
+        // console.log('updateProps', JSON.stringify(newProps));
         const lastHeight = this.geometry.h;
         this.props = {...this.props, ...newProps};
-        this.onPropertiesOrGeometryChange();
+        this.onPropertiesChange();
 
         if(this.autoHeightEnabled) {
             const newHeight = this.getAutoHeight();
@@ -89,9 +89,9 @@ export abstract class Component<P> {
      * @param y Y position, should exist if x isn't null
      * @param w Component width, if null - will skip size change
      * @param h Component height, if null - will enable auto-height
-     * @param noRefresh Skip component refresh, useful if multiple setGeometry calls to this component will be done
      */
-    public setGeometry(x: number = null, y: number = null, w: number = null, h: number = null, noRefresh: boolean = false) {
+    public setGeometry(x: number = null, y: number = null, w: number = null, h: number = null) {
+        // console.log('setGeometry', x, y, w, h);
         if(x != null) {
             this.geometry.x = x;
             this.geometry.y = y;
@@ -103,9 +103,19 @@ export abstract class Component<P> {
             this.autoHeightEnabled = h == null;
         }
 
-        if(!noRefresh) this.onPropertiesOrGeometryChange();
-        if(w != null && this.autoHeightEnabled) this.geometry.h = this.getAutoHeight();
-        if(this.isRendered && !noRefresh) this.onComponentUpdate();
+        this.onGeometryChange();
+
+        if(w != null && this.autoHeightEnabled) {
+            let lastH = this.geometry.h;
+            this.geometry.h = this.getAutoHeight();
+            if(this.isRendered && lastH != this.geometry.h) {
+                this.onGeometryChange();
+                this.root.onChildHeightChanged(this);
+            }
+        }
+
+        if(this.isRendered)
+            this.onComponentUpdate();
     }
 
     /**
@@ -137,10 +147,14 @@ export abstract class Component<P> {
     }
 
     /**
-     * Will be called when component props or coordinates are changed.
+     * Will be called when component props are changed.
      * Should perform required internal recalculations
      */
-    protected onPropertiesOrGeometryChange() {}
+    protected onPropertiesChange() {}
+    protected onGeometryChange() {
+        // console.log("fallback onGeom -> onProp")
+        this.onPropertiesChange(); // fallback
+    }
 
     /**
      * Will be called after component constructor.

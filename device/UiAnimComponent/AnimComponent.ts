@@ -29,7 +29,7 @@ export class AnimComponent extends Component<AnimWidgetProps> {
         systemUi.deleteWidget(this.nativeViewBg);
     }
 
-    onPropertiesOrGeometryChange() {
+    onPropertiesChange() {
         if(this.isRendered) {
             this.nativeViewBg.setProperty(systemUi.prop.MORE, this.bgProps);
             this.nativeView.setProperty(systemUi.prop.MORE, this.nativeProps);

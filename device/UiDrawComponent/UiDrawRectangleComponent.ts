@@ -13,9 +13,12 @@ export class UiDrawRectangleComponent extends NativeComponent<UiDrawRectangleCom
     }
 
     updateProperties(): void {
+        this.nativeProps.h = this.props.height;
         this.nativeProps.radius = this.props.radius;
         this.nativeProps.color = this.props.color;
-        this.nativeProps.h = this.props.height;
+    }
+
+    updateGeometry(): void {
         this.nativeProps.x = this.geometry.x;
         this.nativeProps.y = this.geometry.y;
         this.nativeProps.w = this.geometry.w;

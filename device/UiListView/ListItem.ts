@@ -2,13 +2,9 @@ import {PaperComponent} from "../UiPaperComponent";
 import {IHmUIWidget, IHmUIWidgetOptions, systemUi} from "../System";
 import {TextLayoutProvider} from "../SystemTools";
 import {ListEntryWidgetProps} from "./Types";
-import {DEVICE_SHAPE} from "../UiProperties/UiProperties";
-
-const ICON_SIZE = DEVICE_SHAPE == "band" ? 24 : 48;
-const ICON_OFFSET = DEVICE_SHAPE == "band" ? 16 : 8;
-const DESCRIPTION_SIZE_DELTA = 2;
-const VERT_MARGIN = 16;
-
+import {ICON_OFFSET, ICON_SIZE} from "../UiProperties";
+import {DESCRIPTION_SIZE_DELTA, VERT_MARGIN} from "./ListItemSizes";
+import {ensureIsNotBand7} from "../UiProperties";
 
 export class ListItem extends PaperComponent<ListEntryWidgetProps> {
     private textBoxWidth: number;
@@ -40,6 +36,8 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
     }
 
     onDestroy() {
+        ensureIsNotBand7();
+
         systemUi.deleteWidget(this.iconView);
         systemUi.deleteWidget(this.titleView);
         systemUi.deleteWidget(this.descriptionView);
@@ -56,20 +54,22 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
         };
     }
 
-    protected onPropertiesOrGeometryChange() {
-        // Base box width
+    protected onPropertiesChange() {
         let width = this.geometry.w - ICON_OFFSET * 2;
         if(this.props.icon) width = width - ICON_SIZE - (ICON_OFFSET * 2);
         this.textBoxWidth = width;
+        // console.log("textBoxWidth", width);
 
         // Text metrics
         this.titleLayout.performUpdate(this.props.title, this.textBoxWidth,
-            this.root.baseFontSize)
+            this.root.theme.FONT_SIZE);
         this.descriptionLayout.performUpdate(this.props.description, this.textBoxWidth,
-            this.root.baseFontSize - DESCRIPTION_SIZE_DELTA)
+            this.root.theme.FONT_SIZE - DESCRIPTION_SIZE_DELTA);
+        // console.log("Sizes for AH updated");
     }
 
     getAutoHeight(): number {
+        // console.log("listItemAH", this.titleLayout.height, this.descriptionLayout.height);
         const textBasedHeight = this.titleLayout.height + this.descriptionLayout.height;
         return Math.max(textBasedHeight, ICON_SIZE) + (VERT_MARGIN * 2)
     }
@@ -88,7 +88,7 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
             y: Math.round((this.geometry.h - textBasedHeight) / 2),
             w: this.textBoxWidth,
             h: this.titleLayout.height,
-            text_size: this.root.baseFontSize,
+            text_size: this.root.theme.FONT_SIZE,
             color: this.props.textColor,
             text_style: systemUi.text_style.WRAP,
             text: this.props.title,
@@ -102,7 +102,7 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
             y: Math.round((this.geometry.h - textBasedHeight) / 2) + this.titleLayout.height,
             w: this.textBoxWidth,
             h: this.descriptionLayout.height,
-            text_size: this.root.baseFontSize - DESCRIPTION_SIZE_DELTA,
+            text_size: this.root.theme.FONT_SIZE - DESCRIPTION_SIZE_DELTA,
             color: this.props.descriptionColor,
             text_style: systemUi.text_style.WRAP,
             text: this.props.description,

@@ -1,5 +1,6 @@
 import {TextComponent} from "../UiTextComponent";
-import {Theme} from "../UiComponent";
+import {UiTheme} from "../UiComponent";
+import {ICON_OFFSET} from "../UiProperties";
 
 export class SectionHeaderComponent extends TextComponent {
     constructor(text: string) {
@@ -8,8 +9,9 @@ export class SectionHeaderComponent extends TextComponent {
 
     onInit() {
         this.props = {
-            color: Theme.ACCENT_COLOR,
-            textSize: this.root.baseFontSize - 4,
+            color: this.root.theme.ACCENT_COLOR,
+            textSize: this.root.theme.FONT_SIZE - 4,
+            marginH: ICON_OFFSET,
             ...this.props,
         }
         super.onInit();

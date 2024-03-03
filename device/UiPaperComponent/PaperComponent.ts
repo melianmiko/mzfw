@@ -1,4 +1,4 @@
-import {Component, Theme, TouchEventData} from "../UiComponent";
+import {Component, UiTheme, TouchEventData} from "../UiComponent";
 import {IZeppGroupWidgetOptions, IHmUIWidget, IHmUIWidgetOptions, systemUi} from "../System";
 import {KEY_EVENT_PRESS, KEY_EVENT_RELEASE} from "../System/Interaction";
 
@@ -184,11 +184,11 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
             y: this.geometry.y,
             w: SECOND_BUTTON_WIDTH,
             h: this.geometry.h,
-            normal_color: Theme.ACCENT_COLOR_DARK,
-            press_color: Theme.ACCENT_COLOR_DARK,
-            color: Theme.ACCENT_COLOR,
+            normal_color: this.root.theme.ACCENT_COLOR_DARK,
+            press_color: this.root.theme.ACCENT_COLOR_DARK,
+            color: this.root.theme.ACCENT_COLOR,
             text: this.props.secondActionName,
-            text_size: this.root.baseFontSize - 4,
+            text_size: this.root.theme.FONT_SIZE - 4,
             radius: 4,
             click_func: this.props.onSecondActionClick,
         }

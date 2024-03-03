@@ -1,2 +1,2 @@
-import "./promise";
 import "./setTimeout";
+import "./promise";

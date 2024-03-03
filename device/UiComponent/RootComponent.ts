@@ -3,15 +3,16 @@ import {SCREEN_HEIGHT} from "../UiProperties/UiProperties";
 import * as Interaction from "../System/Interaction";
 import * as PageTools from "../System/PageTools";
 import {TouchEventData} from "./Types";
+import {UiTheme} from "./UiTheme";
 
 /**
  * RootComponent - base component that can fit another ones into them.
  */
 export abstract class RootComponent<P> extends Component<P> {
     /**
-     * Accent color for child components
+     * Page UI theme
      */
-    public baseFontSize: number = 32;
+    public theme: UiTheme = new UiTheme();
     /**
      * New layer Y position that will be smoothly reached in ~1 second.
      * If null, no smooth scroll is pending. Numeric value mean scrollPosition

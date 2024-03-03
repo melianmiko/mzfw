@@ -1,12 +1,13 @@
 import {Component, RootComponent} from "../UiComponent";
 import {
-    BOTTOM_MARGIN, DEVICE_SHAPE,
+    BOTTOM_MARGIN,
     DeviceInfo,
+    IS_BAND_7,
     SCREEN_HEIGHT,
     SCREEN_MARGIN,
     TOP_MARGIN,
     WIDGET_WIDTH
-} from "../UiProperties/UiProperties";
+} from "../UiProperties";
 import {UiDrawRectangleComponent} from "../UiDrawComponent";
 import {AnimComponent} from "../UiAnimComponent";
 import {IHmUIWidget, systemUi} from "../System";
@@ -55,6 +56,11 @@ export class ListView<T> extends RootComponent<T> {
      * Render all attached components
      */
     onRender() {
+        if(this.dynamicRenderEnabled && IS_BAND_7) {
+            console.log("WARN: Force disable dynamic render for Band 7 due to: Bad ZeppOS version");
+            this.dynamicRenderEnabled = false;
+        }
+
         this.renderStartPos = this.renderDirection == 1 ? 0 : REV_RENDER_START_POS;
         this.renderEndPos = this.renderDirection == 1 ? 0 : REV_RENDER_START_POS;
 
@@ -103,7 +109,7 @@ export class ListView<T> extends RootComponent<T> {
      * @param at Target index position
      */
     addComponent(component: Component<any>, at: number = this.nestedComponents.length) {
-        component.attachParent(this, true);
+        component.attachParent(this);
 
         let height: number = null;
         if(this.nestedComponents.length == 0)
@@ -197,7 +203,7 @@ export class ListView<T> extends RootComponent<T> {
             y += this.renderDirection * this.childPositionInfo[i].lastHeight;
         }
 
-        this.repositionComponents(i, y);
+        this.repositionComponents();
     }
 
     /**
@@ -211,6 +217,7 @@ export class ListView<T> extends RootComponent<T> {
         for(; i < this.nestedComponents.length; i++) {
             const cmp = this.nestedComponents[i]
             const height = cmp.geometry.h;
+            // console.log("reposition", i, y, height);
             cmp.setGeometry(
                 SCREEN_MARGIN,
                 this.renderDirection == 1 ? y : y - height
