@@ -1,3 +1,5 @@
+import {IUnsafeMemInfoProvider} from "./Types";
+
 declare const global: any;
 declare const __$$R$$__: any;
 
@@ -34,6 +36,24 @@ export function osImport(name: string, legacyName: string): any {
  * hmUI / @zos/ui target independent
  */
 export const systemUi: typeof hmUI = osImport("@zos/ui", "hmUI");
+export const systemApp = osImport("@zos/app", "hmApp");
+/**
+ * Will be true if device doesn't support runtime higher than 1.0.1.
+ * Useful to determinate legacy devices, with malloc bugs and other trash features.
+ *
+ * Examples: GTS 4 with runtime 1.0 it will be false.
+ *           GTS 3, or Band 7 it will be true
+ */
+export const isLegacyDevice: boolean = (typeof (systemApp as IUnsafeMemInfoProvider).getMemUsage) !== "function";
+
+export function getMemoryUsage() {
+    // Undocumented function
+    try {
+        return (systemApp as IUnsafeMemInfoProvider).getMemUsage();
+    } catch(_) {
+        return 0;
+    }
+}
 
 export function createSensor(modernName: string, legacyName: string): any {
     if(isLegacyAPI)

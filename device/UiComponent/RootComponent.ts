@@ -47,7 +47,8 @@ export abstract class RootComponent<P> extends Component<P> {
      * Timer used for scroll position check
      * @private
      */
-    private scrollPositionTimer: number;
+    private internalTickTimer: number;
+    private internalTick: number = 0;
 
     /**
      * Default root component constructor
@@ -98,7 +99,7 @@ export abstract class RootComponent<P> extends Component<P> {
         });
 
         // Layer scroll check timer
-        this.scrollPositionTimer = setInterval(this.onInternalTimerTick.bind(this), 50);
+        this.internalTickTimer = setInterval(this.onInternalTimerTick.bind(this), 50);
     }
 
     /**
@@ -121,6 +122,10 @@ export abstract class RootComponent<P> extends Component<P> {
                 PageTools.scrollTo({y: - scrollPosition - step});
             }
         }
+
+        // Debug features
+
+        this.internalTick++;
     }
 
     /**
@@ -132,7 +137,7 @@ export abstract class RootComponent<P> extends Component<P> {
         // Unregister all
         Interaction.offKey();
         Interaction.offDigitalCrown();
-        clearInterval(this.scrollPositionTimer);
+        clearInterval(this.internalTickTimer);
     }
 
     /**

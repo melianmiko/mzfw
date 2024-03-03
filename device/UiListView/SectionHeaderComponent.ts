@@ -1,5 +1,4 @@
 import {TextComponent} from "../UiTextComponent";
-import {UiTheme} from "../UiComponent";
 import {ICON_OFFSET} from "../UiProperties";
 
 export class SectionHeaderComponent extends TextComponent {

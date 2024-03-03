@@ -5,6 +5,9 @@ export type IHmUIWidgetOptions = HmWearableProgram.DeviceSide.HmUI.HmUIWidgetOpt
 export type INativeWidgetParent = {
     createWidget(widgetType: HmUIWidgetType, options: IHmUIWidgetOptions): IHmUIWidget;
 }
+export type IUnsafeMemInfoProvider = {
+    getMemUsage(): number,
+}
 
 export type IZeppPositionalWidgetOptions = {
     x?: number,

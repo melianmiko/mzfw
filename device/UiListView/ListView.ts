@@ -1,16 +1,8 @@
 import {Component, RootComponent} from "../UiComponent";
-import {
-    BOTTOM_MARGIN,
-    DeviceInfo,
-    IS_BAND_7,
-    SCREEN_HEIGHT,
-    SCREEN_MARGIN,
-    TOP_MARGIN,
-    WIDGET_WIDTH
-} from "../UiProperties";
+import {BOTTOM_MARGIN, DeviceInfo, SCREEN_HEIGHT, SCREEN_MARGIN, TOP_MARGIN, WIDGET_WIDTH} from "../UiProperties";
 import {UiDrawRectangleComponent} from "../UiDrawComponent";
 import {AnimComponent} from "../UiAnimComponent";
-import {IHmUIWidget, systemUi} from "../System";
+import {IHmUIWidget, isLegacyDevice, IUnsafeMemInfoProvider, systemApp, systemUi} from "../System";
 import {performVibration} from "../System/Vibrator";
 import * as PageTools from "../System/PageTools";
 import {ChildPositionInfo} from "./Types";
@@ -56,8 +48,8 @@ export class ListView<T> extends RootComponent<T> {
      * Render all attached components
      */
     onRender() {
-        if(this.dynamicRenderEnabled && IS_BAND_7) {
-            console.log("WARN: Force disable dynamic render for Band 7 due to: Bad ZeppOS version");
+        if(this.dynamicRenderEnabled && isLegacyDevice) {
+            console.log("WARN: Force disable dynamic render: ZeppOS 1.0.x device");
             this.dynamicRenderEnabled = false;
         }
 

@@ -1,5 +1,5 @@
-import {Component, UiTheme, TouchEventData} from "../UiComponent";
-import {IZeppGroupWidgetOptions, IHmUIWidget, IHmUIWidgetOptions, systemUi} from "../System";
+import {Component, TouchEventData} from "../UiComponent";
+import {IHmUIWidget, IHmUIWidgetOptions, IZeppGroupWidgetOptions, systemUi} from "../System";
 import {KEY_EVENT_PRESS, KEY_EVENT_RELEASE} from "../System/Interaction";
 
 const SECOND_BUTTON_WIDTH = 120;
