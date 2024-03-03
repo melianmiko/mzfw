@@ -1,4 +1,4 @@
-import {osImport, isLegacyAPI} from "./LegacyImport";
+import {osImport, isLegacyAPI} from "./Compat";
 const sysInter: any = osImport("@zos/interaction", "hmApp");
 
 export type OnKeyCallback = (key: number, keyEvent: number) => any;

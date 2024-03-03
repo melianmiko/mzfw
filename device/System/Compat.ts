@@ -1,6 +1,7 @@
 import {IUnsafeMemInfoProvider} from "./Types";
 
 declare const global: any;
+declare const DeviceRuntimeCore: any;
 declare const __$$R$$__: any;
 
 /**
@@ -44,7 +45,7 @@ export const systemApp = osImport("@zos/app", "hmApp");
  * Examples: GTS 4 with runtime 1.0 it will be false.
  *           GTS 3, or Band 7 it will be true
  */
-export const isLegacyDevice: boolean = (typeof (systemApp as IUnsafeMemInfoProvider).getMemUsage) !== "function";
+export const isLegacyDevice: boolean = typeof DeviceRuntimeCore != "undefined" ? DeviceRuntimeCore.version[0] == "1": false;
 
 export function getMemoryUsage() {
     // Undocumented function

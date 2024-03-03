@@ -1,2 +1,2 @@
-export * from "./LegacyImport";
+export * from "./Compat";
 export * from "./Types";
