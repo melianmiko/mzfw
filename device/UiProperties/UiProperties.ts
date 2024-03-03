@@ -42,7 +42,7 @@ export const WIDGET_WIDTH = SCREEN_WIDTH - SCREEN_MARGIN * 2;
 export const TOP_MARGIN = ((): number => {
     if(DEVICE_SHAPE == "circle") return Math.floor(SCREEN_HEIGHT * 0.4);
     if(DEVICE_SHAPE == "band" && SCREEN_HEIGHT == 490) return 96; // Mi Band 7
-    return 48;
+    return 56;
 })();
 
 /**

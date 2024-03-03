@@ -4,6 +4,7 @@ import * as Interaction from "../System/Interaction";
 import * as PageTools from "../System/PageTools";
 import {TouchEventData} from "./Types";
 import {UiTheme} from "./UiTheme";
+import {systemApp, systemUi} from "../System";
 
 /**
  * RootComponent - base component that can fit another ones into them.
@@ -23,6 +24,10 @@ export abstract class RootComponent<P> extends Component<P> {
      * Will change render direction from top-to-bottom to bottom-to-top
      */
     public renderDirection: 1 | -1 = 1;
+    /**
+     * Remove system status bar on render
+     */
+    public hideStatusBar: boolean = false;
     /**
      * Components inside this root
      */
@@ -93,7 +98,8 @@ export abstract class RootComponent<P> extends Component<P> {
         // Clean up events from other apps, if they exists
         Interaction.offDigitalCrown();
 
-        // Key event listener
+        // System setup
+        systemUi.setStatusBarVisible(!this.hideStatusBar);
         Interaction.onKey((key: number, action: number) => {
             return this.handleButtonEvent(key, action);
         });
