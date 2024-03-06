@@ -2,7 +2,7 @@ import {PaperComponent} from "../UiPaperComponent";
 import {IHmUIWidget, IHmUIWidgetOptions, systemUi} from "../System";
 import {TextLayoutProvider} from "../SystemTools";
 import {ListEntryWidgetProps} from "./Types";
-import {ICON_OFFSET, ICON_SIZE} from "../UiProperties";
+import {ICON_OFFSET, ICON_OFFSET_AFTER_MPX, ICON_SIZE} from "../UiProperties";
 import {DESCRIPTION_SIZE_DELTA, VERT_MARGIN} from "./ListItemSizes";
 import {ensureIsNotBand7} from "../UiProperties";
 
@@ -56,7 +56,7 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
 
     protected onPropertiesChange() {
         let width = this.geometry.w - ICON_OFFSET * 2;
-        if(this.props.icon) width = width - ICON_SIZE - (ICON_OFFSET * 2);
+        if(this.props.icon) width = width - ICON_SIZE - (ICON_OFFSET * ICON_OFFSET_AFTER_MPX);
         this.textBoxWidth = width;
         // console.log("textBoxWidth", width);
 
@@ -84,7 +84,7 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
     get titleViewProps(): IHmUIWidgetOptions {
         const textBasedHeight = this.titleLayout.height + this.descriptionLayout.height;
         return {
-            x: typeof this.props.icon == "string" ? ICON_OFFSET * 3 + ICON_SIZE : ICON_OFFSET,
+            x: typeof this.props.icon == "string" ? ICON_OFFSET * (1 + ICON_OFFSET_AFTER_MPX) + ICON_SIZE : ICON_OFFSET,
             y: Math.round((this.geometry.h - textBasedHeight) / 2),
             w: this.textBoxWidth,
             h: this.titleLayout.height,
@@ -98,7 +98,7 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
     get descriptionViewProps(): IHmUIWidgetOptions {
         const textBasedHeight = this.titleLayout.height + this.descriptionLayout.height;
         return {
-            x: typeof this.props.icon == "string" ? ICON_OFFSET * 3 + ICON_SIZE : ICON_OFFSET,
+            x: typeof this.props.icon == "string" ? ICON_OFFSET * (1 + ICON_OFFSET_AFTER_MPX) + ICON_SIZE : ICON_OFFSET,
             y: Math.round((this.geometry.h - textBasedHeight) / 2) + this.titleLayout.height,
             w: this.textBoxWidth,
             h: this.descriptionLayout.height,

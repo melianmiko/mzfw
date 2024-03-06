@@ -11,6 +11,4 @@ export function push(opt: {url: string, params: string}) {
     }) : sysRouter.push(opt);
 }
 
-export function back() {
-    return sysRouter.back();
-}
+export const back: () => void = isLegacyAPI ? sysRouter.goBack : sysRouter.back;

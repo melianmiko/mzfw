@@ -58,3 +58,5 @@ export const BASE_FONT_SIZE = ((): number => {
 export const ICON_SIZE = DEVICE_SHAPE == "band" ? 24 : 48;
 
 export const ICON_OFFSET = DEVICE_SHAPE == "band" ? 8 : 16;
+
+export const ICON_OFFSET_AFTER_MPX = DEVICE_SHAPE == "band" ? 1 : 2;
