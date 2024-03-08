@@ -15,10 +15,12 @@ export type IZeppPositionalWidgetOptions = {
     w?: number,
     h?: number,
 }
+
 export type IZeppFillRectWidgetOptions = IZeppPositionalWidgetOptions & {
     color?: number,
     radius?: number,
 }
+
 export type IZeppImgWidgetOptions = IZeppPositionalWidgetOptions & {
     src: string,
     pad_x?: string,
@@ -33,5 +35,18 @@ export type IZeppTextWidgetOptions = IZeppPositionalWidgetOptions & {
     text_size?: number,
     text_style?: number,
 }
+
+export type IZeppAnimWidgetOptions = Partial<{
+    x: number,
+    y: number,
+    anim_path: string,
+    anim_prefix: string,
+    anim_ext: string,
+    anim_fps: number,
+    repeat_count: number,
+    anim_repeat?: boolean,
+    anim_size: number
+    anim_status: number
+}>;
 
 export type IZeppGroupWidgetOptions = IHmUIWidget & INativeWidgetParent;

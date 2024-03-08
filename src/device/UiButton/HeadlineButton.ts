@@ -94,9 +94,9 @@ export class HeadlineButton extends Component<HeadlineButtonProps> {
     }
 
     protected onComponentUpdate() {
-        this.backgroundView.setProperty(hmUI.prop.MORE, this.backgroundProps as any);
-        this.iconView.setProperty(hmUI.prop.MORE, this.iconProps as any);
-        if(SIZE_OPTION > 0) this.textView.setProperty(hmUI.prop.MORE, this.textProps as any);
+        this.backgroundView.setProperty(systemUi.prop.MORE, this.backgroundProps as any);
+        this.iconView.setProperty(systemUi.prop.MORE, this.iconProps as any);
+        if(SIZE_OPTION > 0) this.textView.setProperty(systemUi.prop.MORE, this.textProps as any);
     }
 
     protected getAutoHeight(): number {

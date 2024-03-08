@@ -2,7 +2,7 @@ import {Align, TextStyle} from "./Enums";
 import {IZeppTextWidgetOptions, systemUi} from "../System";
 import {TextLayoutProvider} from "../SystemTools";
 import {TextComponentProps} from "./Types";
-import {NativeComponent} from "../SystemTools/NativeComponent";
+import {NativeComponent} from "../UiNativeComponents/NativeComponent";
 
 export class TextComponent extends NativeComponent<TextComponentProps, IZeppTextWidgetOptions> {
     public isFocusable: boolean = false;

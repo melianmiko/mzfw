@@ -1,3 +1,3 @@
 export * from "./TextLayoutProvider";
-export * from "./NativeComponent";
+export * from "../UiNativeComponents/NativeComponent";
 export * from "./Errors";

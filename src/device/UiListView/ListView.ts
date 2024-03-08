@@ -9,12 +9,13 @@ import {
     TOP_MARGIN,
     WIDGET_WIDTH
 } from "../UiProperties";
-import { AnimComponent } from "../UiAnimComponent";
+import { AnimComponent } from "../UiNativeComponents";
 import { IHmUIWidget, isLegacyDevice, systemUi } from "../System";
 import { performVibration } from "../System/Vibrator";
 import * as PageTools from "../System/PageTools";
 import { ChildPositionInfo } from "./Types";
 import { DummyComponent } from "../UiComponent/DummyComponent";
+import { createSpinner } from "../UiTools";
 
 const REV_RENDER_START_POS = 10000;
 
@@ -447,17 +448,7 @@ export class ListView<T> extends RootComponent<T> {
      * Should create loading footer for buildMore()
      */
     protected buildSpinner(): Component<any> | null {
-        // if(DEVICE_SHAPE == "band")
-        // TODO: Low-ram view
-
-        return new AnimComponent({
-            imageWidth: 48,
-            imageHeight: 16,
-            imagesPath: "mzfw/spin_sm",
-            imagesPrefix: "anim",
-            imagesCount: 7,
-            fps: 21,
-        });
+        return createSpinner();
     }
 
     /**

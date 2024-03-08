@@ -1,8 +1,10 @@
 import {IZeppFillRectWidgetOptions, systemUi} from "../System";
-import {NativeComponent} from "../SystemTools/NativeComponent";
+import {NativeComponent} from "./NativeComponent";
 import {UiDrawRectangleComponentProps} from "./Types";
 
-
+/**
+ * systemUI.widget.FILL_RECT wrapper component.
+ */
 export class UiDrawRectangleComponent extends NativeComponent<UiDrawRectangleComponentProps, IZeppFillRectWidgetOptions> {
     protected widgetID: number = systemUi.widget.FILL_RECT;
     protected nativeProps: IZeppFillRectWidgetOptions = {};
