@@ -1,4 +1,4 @@
-import { ListItem, ListView } from "../UiListView";
+import { ListItem, ListView, SectionHeaderComponent } from "../UiListView";
 import { Component } from "../UiComponent";
 import {
     DEVICE_SHAPE,
@@ -9,6 +9,7 @@ import {
     IS_MI_BAND_7,
     IS_SMALL_SCREEN_DEVICE
 } from "../UiProperties";
+import { zeppFeatureLevel } from "../System";
 
 // Zeusx bundle
 declare const BUNDLE: {
@@ -28,6 +29,15 @@ export class TemplateAboutPage extends ListView<null> {
      * @protected
      */
     protected buildInfo: {[id: string]: any} = null;
+    /**
+     * List of used third party libraries and their versions.
+     * Would be great if you'll keep mzfw and zeusx lines inside.
+     *
+     * @protected
+     */
+    protected thirdPartyLibraries: {[name: string]: string} = {
+
+    };
 
     protected build(): Component<any>[] {
         return [];
@@ -43,7 +53,15 @@ export class TemplateAboutPage extends ListView<null> {
         return Promise.resolve(result);
     }
 
-    private getNerdInfoRows(): ListItem[] {
+    private getLibrariesInfo(): Component<any>[] {
+        const out: Component<any>[] = [
+            new SectionHeaderComponent("Third-party libraries")
+        ]
+
+        return out;
+    }
+
+    private getNerdInfoRows(): Component<any>[] {
         const deviceInfo = new ListItem({
             title: "",
             description: this.i18n("Show device info"),
@@ -57,19 +75,23 @@ export class TemplateAboutPage extends ListView<null> {
             description: this.i18n("Show build info"),
             onClick: () => {
                 let info = "ZEUSX_BUNDLE:";
-                console.log(JSON.stringify(this.buildInfo))
                 for(const key in this.buildInfo)
                     info += "\n- " + key + ": " + JSON.stringify(this.buildInfo[key]);
                 buildInfo.updateProps({description: info});
             }
         }) : null;
 
-        return [deviceInfo, buildInfo];
+        return [
+            new SectionHeaderComponent(this.i18n("Additional info")),
+            deviceInfo,
+            buildInfo
+        ];
     }
 
     private getDeviceInfo() : string {
         return `deviceName: ${DeviceInfo.deviceName}\n` +
             `deviceSource: ${DeviceInfo.deviceSource}\n` +
+            `zeppFeatureLevel: ${zeppFeatureLevel}\n`+
             `DEVICE_SHAPE: ${DEVICE_SHAPE}\n` +
             `UI_FLAGS:\n` +
             (IS_BAND_7 ? "-IS_BAND_7\n" : "") +

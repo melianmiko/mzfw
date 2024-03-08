@@ -1,6 +1,6 @@
 {
   "include": [
-    "**/*"
+    "./src"
   ],
   "files": [
     "node_modules/zeppos-device-types-v1/types/index.d.ts"
@@ -11,7 +11,7 @@
   ],
   "compilerOptions": {
     "outDir": ".",
-    "rootDir": ".",
+    "rootDir": "src",
     "module": "ES6",
     "moduleResolution": "Node",
     "declaration": true,
