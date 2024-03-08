@@ -1,5 +1,6 @@
 /.idea
 /zeusx*.tgz
 /device
+/shared
 
 node_modules
