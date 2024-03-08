@@ -1,6 +1,5 @@
 /.idea
 /zeusx*.tgz
+/device
 
 node_modules
-*.js
-*.d.ts
