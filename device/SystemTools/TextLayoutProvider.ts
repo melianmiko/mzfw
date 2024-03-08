@@ -1,4 +1,5 @@
 import {systemUi} from "../System";
+import { TextLayoutError } from "./Errors";
 
 /**
  * Cached wrapper for getTextLayout()
@@ -27,6 +28,9 @@ export class TextLayoutProvider {
                 text_size: size,
                 text_width: width,
             });
+            if(!layout)
+                throw new TextLayoutError(`text=${text}, size=${size}, width=${width}`);
+
             this.width = layout.width;
             this.height = layout.height;
         } else {

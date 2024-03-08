@@ -36,7 +36,7 @@ export function osImport(name: string, legacyName: string): any {
 /**
  * hmUI / @zos/ui target independent
  */
-export const systemUi: typeof hmUI = osImport("@zos/ui", "hmUI");
+export const systemUi = osImport("@zos/ui", "hmUI") as typeof hmUI;
 export const systemApp = osImport("@zos/app", "hmApp");
 /**
  * Will be true if device doesn't support runtime higher than 1.0.1.

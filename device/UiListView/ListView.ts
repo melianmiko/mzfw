@@ -1,11 +1,11 @@
-import {Component, RootComponent} from "../UiComponent";
-import {BOTTOM_MARGIN, DeviceInfo, SCREEN_HEIGHT, SCREEN_MARGIN, TOP_MARGIN, WIDGET_WIDTH} from "../UiProperties";
-import {UiDrawRectangleComponent} from "../UiDrawComponent";
-import {AnimComponent} from "../UiAnimComponent";
-import {IHmUIWidget, isLegacyDevice, IUnsafeMemInfoProvider, systemApp, systemUi} from "../System";
-import {performVibration} from "../System/Vibrator";
+import { Component, RootComponent } from "../UiComponent";
+import { BOTTOM_MARGIN, DeviceInfo, SCREEN_HEIGHT, SCREEN_MARGIN, TOP_MARGIN, WIDGET_WIDTH } from "../UiProperties";
+import { UiDrawRectangleComponent } from "../UiDrawComponent";
+import { AnimComponent } from "../UiAnimComponent";
+import { IHmUIWidget, isLegacyDevice, systemUi } from "../System";
+import { performVibration } from "../System/Vibrator";
 import * as PageTools from "../System/PageTools";
-import {ChildPositionInfo} from "./Types";
+import { ChildPositionInfo } from "./Types";
 
 const REV_RENDER_START_POS = 10000;
 

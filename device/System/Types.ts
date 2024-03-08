@@ -19,6 +19,12 @@ export type IZeppFillRectWidgetOptions = IZeppPositionalWidgetOptions & {
     color?: number,
     radius?: number,
 }
+export type IZeppImgWidgetOptions = IZeppPositionalWidgetOptions & {
+    src: string,
+    pad_x?: string,
+    pad_y?: string,
+}
+
 export type IZeppTextWidgetOptions = IZeppPositionalWidgetOptions & {
     text: string,
     color?: number,

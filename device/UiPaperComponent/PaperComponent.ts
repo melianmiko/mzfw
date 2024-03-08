@@ -5,24 +5,24 @@ import {KEY_EVENT_PRESS, KEY_EVENT_RELEASE} from "../System/Interaction";
 const SECOND_BUTTON_WIDTH = 120;
 
 export type PaperWidgetProps = {
-    paperColor?: number,
     paperRadius?: number,
     secondActionName?: string,
     onSecondActionClick?(): any,
+    paperBackgroundMarginV?: number,
+    paperBackgroundMarginH?: number,
 }
 
 export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> {
     public isFocusable: boolean = true;
 
-    private COLOR_DEFAULT = 0x0;
-    private COLOR_SELECTED = 0x333333;
-    private COLOR_PRESSED = 0x444444;
-
+    protected colorDefault = 0x0;
+    protected colorSelected = 0x333333;
+    protected colorPressed = 0x444444;
     protected button: IHmUIWidget;
     protected group: IZeppGroupWidgetOptions;
     protected paperBackground: IHmUIWidget;
 
-    private color: number = this.COLOR_DEFAULT;
+    private color: number = this.colorDefault;
     private longTouchTimer: number = -1;
     private pressedSince: number = 0;
     private clickData: TouchEventData;
@@ -32,7 +32,10 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
     private swipeCancelTimer: number = 0;
 
     onRender() {
-        this.button = systemUi.createWidget(systemUi.widget.BUTTON, this.buttonProps as any);
+        this.color = this.colorDefault;
+
+        if(this.props.secondActionName)
+            this.button = systemUi.createWidget(systemUi.widget.BUTTON, this.buttonProps as any);
         this.group = systemUi.createWidget(systemUi.widget.GROUP, this.geometry as any) as IZeppGroupWidgetOptions;
         this.paperBackground = this.group.createWidget(systemUi.widget.FILL_RECT, this.paperBackgroundProps);
         this.setupEventsAt(this.paperBackground);
@@ -49,7 +52,8 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
 
         systemUi.deleteWidget(this.paperBackground);
         systemUi.deleteWidget(this.group);
-        systemUi.deleteWidget(this.button);
+        if(this.button)
+            systemUi.deleteWidget(this.button);
     }
 
     abstract onClick(data: TouchEventData): any;
@@ -58,7 +62,7 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
         if(this.pressedSince > 0) return;
 
         // UI
-        this.setColor(this.COLOR_PRESSED);
+        this.setColor(this.colorPressed);
 
         // Logical handler
         this.pressedSince = Date.now();
@@ -75,7 +79,7 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
     private onClickCancel(failure: boolean = false) {
         if(this.pressedSince == 0) return;
 
-        this.setColor(this.isFocused ? this.COLOR_SELECTED : this.COLOR_DEFAULT);
+        this.setColor(this.isFocused ? this.colorSelected : this.colorDefault);
 
         if(!failure && Date.now() - this.pressedSince < 350) {
             this.onClick(this.clickData);
@@ -148,18 +152,19 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
 
     onFocus() {
         this.isFocused = true;
-        this.setColor(this.COLOR_SELECTED);
+        this.setColor(this.colorSelected);
     }
 
     onBlur() {
         this.isFocused = false;
-        this.setColor(this.COLOR_DEFAULT);
+        this.setColor(this.colorDefault);
     }
 
     protected onComponentUpdate() {
         this.paperBackground.setProperty(systemUi.prop.MORE, this.paperBackgroundProps as any);
-        this.button.setProperty(systemUi.prop.MORE, this.buttonProps as any);
         this.group.setProperty(systemUi.prop.MORE, this.geometry as any);
+        if(this.button)
+            this.button.setProperty(systemUi.prop.MORE, this.buttonProps as any);
     }
 
     private setColor(color: number) {
@@ -168,11 +173,14 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
     }
 
     private get paperBackgroundProps(): IHmUIWidgetOptions {
+        const marginH = this.props.paperBackgroundMarginH ?? 0;
+        const marginV = this.props.paperBackgroundMarginV ?? 0;
+
         return {
-            x: 0,
-            y: 0,
-            w: this.geometry.w,
-            h: this.geometry.h,
+            x: marginH,
+            y: marginV,
+            w: this.geometry.w - marginH * 2,
+            h: this.geometry.h - marginV * 2,
             color: this.color,
             radius: this.props.paperRadius ? this.props.paperRadius : 8,
         }

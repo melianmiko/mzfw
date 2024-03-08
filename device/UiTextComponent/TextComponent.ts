@@ -21,6 +21,12 @@ export class TextComponent extends NativeComponent<TextComponentProps, IZeppText
 
     private textLayout = new TextLayoutProvider();
 
+    onInit() {
+        super.onInit();
+        if(!this.props.textSize)
+            this.props.textSize = this.root.theme.FONT_SIZE;
+    }
+
     updateProperties(): void {
         this.nativeProps = {
             ...this.nativeProps,
