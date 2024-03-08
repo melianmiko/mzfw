@@ -1,7 +1,7 @@
 import { Component, TouchEventData } from "../UiComponent";
 import { HeadlineButtonProps } from "./Types";
 import { TextLayoutProvider } from "../SystemTools";
-import { SCREEN_WIDTH, WIDGET_WIDTH } from "../UiProperties";
+import { IS_BAND_7, IS_SMALL_SCREEN_DEVICE, SCREEN_WIDTH, WIDGET_WIDTH } from "../UiProperties";
 import {
     IHmUIWidget,
     IZeppFillRectWidgetOptions,
@@ -11,7 +11,7 @@ import {
 } from "../System";
 
 const BTN_PADDING = 8;
-const SIZE_OPTION = WIDGET_WIDTH > 390 ? 2 : (WIDGET_WIDTH > 200 ? 1 : 0);
+const SIZE_OPTION = IS_SMALL_SCREEN_DEVICE ? (IS_BAND_7 ? 0 : 1) : 2;
 const ICON_SIZE = [32, 24, 32][SIZE_OPTION];
 const TEXT_SIZE = [0, 20, 22][SIZE_OPTION];
 
@@ -65,11 +65,11 @@ export class HeadlineButton extends Component<HeadlineButtonProps> {
 
         this.backgroundProps.y = this.geometry.y + Math.floor((this.geometry.h - this.backgroundProps.h) / 2);
 
-        this.iconProps.x = this.backgroundProps.x + BTN_PADDING;
+        this.iconProps.x = this.backgroundProps.x + BTN_PADDING * 2;
         this.iconProps.y = this.backgroundProps.y + BTN_PADDING;
 
         if(SIZE_OPTION > 0) {
-            this.textProps.x = this.iconProps.x + ICON_SIZE + BTN_PADDING;
+            this.textProps.x = this.iconProps.x + BTN_PADDING + ICON_SIZE;
             this.textProps.y = this.backgroundProps.y + BTN_PADDING;
             this.textProps.w = this.textLayout.width;
         }
@@ -106,7 +106,7 @@ export class HeadlineButton extends Component<HeadlineButtonProps> {
     private refreshWidth() {
         if(SIZE_OPTION > 0) {
             this.textLayout.performUpdate(this.props.text, WIDGET_WIDTH, TEXT_SIZE);
-            this.backgroundProps.w = this.textLayout.width + ICON_SIZE + BTN_PADDING * 3;
+            this.backgroundProps.w = this.textLayout.width + ICON_SIZE + BTN_PADDING * 5;
         } else {
             this.backgroundProps.w = ICON_SIZE + BTN_PADDING * 2;
         }

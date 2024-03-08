@@ -1,11 +1,20 @@
 import { Component, RootComponent } from "../UiComponent";
-import { BOTTOM_MARGIN, DeviceInfo, SCREEN_HEIGHT, SCREEN_MARGIN, TOP_MARGIN, WIDGET_WIDTH } from "../UiProperties";
-import { UiDrawRectangleComponent } from "../UiDrawComponent";
+import {
+    BOTTOM_MARGIN,
+    DeviceInfo,
+    HAVE_STATUS_BAR,
+    SCREEN_HEIGHT,
+    SCREEN_MARGIN,
+    STATUS_BAR_HEIGHT,
+    TOP_MARGIN,
+    WIDGET_WIDTH
+} from "../UiProperties";
 import { AnimComponent } from "../UiAnimComponent";
 import { IHmUIWidget, isLegacyDevice, systemUi } from "../System";
 import { performVibration } from "../System/Vibrator";
 import * as PageTools from "../System/PageTools";
 import { ChildPositionInfo } from "./Types";
+import { DummyComponent } from "../UiComponent/DummyComponent";
 
 const REV_RENDER_START_POS = 10000;
 
@@ -66,7 +75,22 @@ export class ListView<T> extends RootComponent<T> {
                 src: "",
             });
 
-        this.addComponent(this.buildHeader());
+        const header = this.buildHeader();
+        const margin = this.renderDirection == 1 ? TOP_MARGIN : BOTTOM_MARGIN;
+        if(header) {
+            if(HAVE_STATUS_BAR && !this.hideStatusBar && this.renderDirection == 1) {
+                // Keep status bar visible, so add offset
+                this.addComponent(new DummyComponent({height: STATUS_BAR_HEIGHT}), 0, STATUS_BAR_HEIGHT);
+                this.addComponent(header, 1, null);
+            } else {
+                // Add only header w-o status bar height reserve
+                this.addComponent(header, 0, margin);
+            }
+        } else {
+            // Add placeholder to keep header space reserved
+            this.addComponent(new DummyComponent({height: margin}), 0, margin);
+        }
+
         for(const component of this.build())
             if(component != null)
                 this.addComponent(component);
@@ -99,13 +123,10 @@ export class ListView<T> extends RootComponent<T> {
      *
      * @param component Component to add
      * @param at Target index position
+     * @param height
      */
-    addComponent(component: Component<any>, at: number = this.nestedComponents.length) {
+    addComponent(component: Component<any>, at: number = this.nestedComponents.length, height: number | null = null) {
         component.attachParent(this);
-
-        let height: number = null;
-        if(this.nestedComponents.length == 0)
-            height = this.renderDirection == 1 ? TOP_MARGIN : BOTTOM_MARGIN;
         component.setGeometry(null, null, WIDGET_WIDTH, height);
 
         if(at == this.nestedComponents.length) {
@@ -249,9 +270,8 @@ export class ListView<T> extends RootComponent<T> {
      * This method is called every 50-100 ms, it will perform all scroll-desired operation
      * @protected
      */
-    protected onInternalTimerTick() {
-        super.onInternalTimerTick();
-        const scrollPosition = -PageTools.getScrollTop();
+    protected onInternalTimerTick(): number {
+        const scrollPosition = super.onInternalTimerTick();
 
         if(this.isRendered && this.dynamicRenderEnabled &&
             Math.abs(scrollPosition - this.lastDynRenderRefreshScrollPosition) > 100) {
@@ -264,6 +284,8 @@ export class ListView<T> extends RootComponent<T> {
                 (this.renderDirection == -1 && scrollPosition - this.renderEndPos <= 200))
             this.performBuildMore();
         }
+
+        return scrollPosition;
     }
 
     /**
@@ -407,9 +429,10 @@ export class ListView<T> extends RootComponent<T> {
      * with fixed (device-specific) height.
      */
     protected buildHeader(): Component<any> {
-        return new UiDrawRectangleComponent({
-            color: 0,
-        });
+        return null;
+        // return new UiDrawRectangleComponent({
+        //     color: 0,
+        // });
     }
 
     /**
@@ -417,9 +440,7 @@ export class ListView<T> extends RootComponent<T> {
      * noting more present in buildMore() and build()
      */
     protected buildFooter(): Component<any> {
-        return new UiDrawRectangleComponent({
-            color: 0
-        });
+        return new DummyComponent({height: BOTTOM_MARGIN});
     }
 
     /**

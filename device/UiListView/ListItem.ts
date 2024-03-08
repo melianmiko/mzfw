@@ -1,10 +1,9 @@
-import {PaperComponent} from "../UiPaperComponent";
-import {IHmUIWidget, IHmUIWidgetOptions, systemUi} from "../System";
-import {TextLayoutProvider} from "../SystemTools";
-import {ListEntryWidgetProps} from "./Types";
-import {ICON_OFFSET, ICON_OFFSET_AFTER_MPX, ICON_SIZE} from "../UiProperties";
-import {DESCRIPTION_SIZE_DELTA, VERT_MARGIN} from "./ListItemSizes";
-import {ensureIsNotBand7} from "../UiProperties";
+import { PaperComponent } from "../UiPaperComponent";
+import { IHmUIWidget, IHmUIWidgetOptions, systemUi } from "../System";
+import { TextLayoutProvider } from "../SystemTools";
+import { ListEntryWidgetProps } from "./Types";
+import { ensureIsNotBand7, ICON_OFFSET, ICON_OFFSET_AFTER_MPX, ICON_SIZE, IS_MI_BAND_7 } from "../UiProperties";
+import { DESCRIPTION_SIZE_DELTA, VERT_MARGIN } from "./ListItemSizes";
 
 export class ListItem extends PaperComponent<ListEntryWidgetProps> {
     private textBoxWidth: number;
@@ -14,12 +13,19 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
     private titleLayout = new TextLayoutProvider();
     private descriptionLayout = new TextLayoutProvider();
 
+    protected colorDefault: number = IS_MI_BAND_7 ? 0x101010 : 0;
+
     onInit() {
         this.props = {
             onClick(): any {},
             onLongClick(): any {},
             textColor: 0xFFFFFF,
             descriptionColor: 0x999999,
+
+            // Mi Band 7 system-like UI settings
+            paperBackgroundMarginV: IS_MI_BAND_7 ? 2 : 0,
+            paperRadius: IS_MI_BAND_7 ? 12 : 8,
+
             ...this.props,
         }
     }
@@ -47,7 +53,7 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
     get iconViewProps(): IHmUIWidgetOptions {
         return {
             x: ICON_OFFSET,
-            y: VERT_MARGIN,
+            y: this.props.description ? VERT_MARGIN : Math.floor((this.geometry.h - ICON_SIZE) / 2),
             w: ICON_SIZE,
             h: ICON_SIZE,
             src: `icon/${ICON_SIZE}/${this.props.icon}.png`,

@@ -8,15 +8,6 @@ export type IDeviceInfo = HmWearableProgram.DeviceSide.HmSetting.IHmSettingDevic
 export const DeviceInfo: IDeviceInfo = osImport("@zos/device", "hmSetting").getDeviceInfo();
 
 /**
- * Device screen shape (circle, square or band)
- */
-export const DEVICE_SHAPE = DeviceInfo.screenShape === 1 ? "circle" : (DeviceInfo.width / DeviceInfo.height) > 0.6 ? "square" : "band" ;
-
-export const IS_LOW_RAM_DEVICE = DEVICE_SHAPE == "band";
-
-export const IS_BAND_7 = DeviceInfo.deviceName.toLowerCase().indexOf(" band 7") > -1;
-
-/**
  * Screen width
  */
 export const SCREEN_WIDTH = DeviceInfo.width;
@@ -25,6 +16,25 @@ export const SCREEN_WIDTH = DeviceInfo.width;
  * Screen height
  */
 export const SCREEN_HEIGHT = DeviceInfo.height;
+
+/**
+ * Device screen shape (circle, square or band)
+ */
+export const DEVICE_SHAPE = DeviceInfo.screenShape === 1 ? "circle" : (DeviceInfo.width / DeviceInfo.height) > 0.6 ? "square" : "band" ;
+
+export const IS_LOW_RAM_DEVICE = DEVICE_SHAPE == "band";
+
+export const IS_SMALL_SCREEN_DEVICE = SCREEN_WIDTH < 380;
+
+export const IS_BAND_7 = DeviceInfo.deviceName.toLowerCase().indexOf(" band 7") > -1;
+
+export const IS_MI_BAND_7 = DEVICE_SHAPE == "band" && SCREEN_HEIGHT == 490;
+
+/**
+ * All non-circle devices have status bar, except Mi Band 7
+ */
+export const HAVE_STATUS_BAR = DEVICE_SHAPE != "circle" && !IS_MI_BAND_7;
+export const STATUS_BAR_HEIGHT = DEVICE_SHAPE == "band" ? 32 : 56;
 
 /**
  * Screen left-right margin
@@ -40,9 +50,9 @@ export const WIDGET_WIDTH = SCREEN_WIDTH - SCREEN_MARGIN * 2;
  * Page top margin
  */
 export const TOP_MARGIN = ((): number => {
-    if(DEVICE_SHAPE == "circle") return Math.floor(SCREEN_HEIGHT * 0.4);
-    if(DEVICE_SHAPE == "band" && SCREEN_HEIGHT == 490) return 96; // Mi Band 7
-    return 56;
+    if(DEVICE_SHAPE == "circle") return Math.floor(SCREEN_HEIGHT * 0.4); // Circle
+    if(DEVICE_SHAPE == "band" && IS_MI_BAND_7) return 96; // Mi Band 7
+    return 56; // square, ab7
 })();
 
 /**
@@ -57,6 +67,6 @@ export const BASE_FONT_SIZE = ((): number => {
 
 export const ICON_SIZE = DEVICE_SHAPE == "band" ? 24 : 48;
 
-export const ICON_OFFSET = DEVICE_SHAPE == "band" ? 8 : 16;
+export const ICON_OFFSET = IS_SMALL_SCREEN_DEVICE ? 8 : 16;
 
 export const ICON_OFFSET_AFTER_MPX = DEVICE_SHAPE == "band" ? 1 : 2;

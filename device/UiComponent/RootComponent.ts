@@ -53,7 +53,6 @@ export abstract class RootComponent<P> extends Component<P> {
      * @private
      */
     private internalTickTimer: number;
-    private internalTick: number = 0;
 
     /**
      * Default root component constructor
@@ -110,9 +109,10 @@ export abstract class RootComponent<P> extends Component<P> {
 
     /**
      * This method is called every 50-100 ms, it will perform all scroll-desired operation
+     * Returns scroll position
      * @protected
      */
-    protected onInternalTimerTick() {
+    protected onInternalTimerTick(): number {
         const scrollPosition = -PageTools.getScrollTop();
 
         if(scrollPosition < this.minScrollPosition) {
@@ -129,9 +129,7 @@ export abstract class RootComponent<P> extends Component<P> {
             }
         }
 
-        // Debug features
-
-        this.internalTick++;
+        return scrollPosition;
     }
 
     /**

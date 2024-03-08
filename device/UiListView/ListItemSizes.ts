@@ -1,4 +1,4 @@
-import {DEVICE_SHAPE} from "../UiProperties/UiProperties";
+import { DEVICE_SHAPE, IS_BAND_7, IS_MI_BAND_7 } from "../UiProperties";
 
 export const DESCRIPTION_SIZE_DELTA = 2;
-export const VERT_MARGIN = DEVICE_SHAPE == "band" ? 8 : 16;
+export const VERT_MARGIN = (IS_BAND_7 && !IS_MI_BAND_7) ? 8 : 16;

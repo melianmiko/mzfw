@@ -1,8 +1,9 @@
-import {Component, TouchEventData} from "../UiComponent";
-import {IHmUIWidget, IHmUIWidgetOptions, IZeppGroupWidgetOptions, systemUi} from "../System";
-import {KEY_EVENT_PRESS, KEY_EVENT_RELEASE} from "../System/Interaction";
+import { Component, TouchEventData } from "../UiComponent";
+import { IHmUIWidget, IHmUIWidgetOptions, IZeppGroupWidgetOptions, systemUi } from "../System";
+import { KEY_EVENT_PRESS, KEY_EVENT_RELEASE } from "../System/Interaction";
+import { IS_SMALL_SCREEN_DEVICE } from "../UiProperties";
 
-const SECOND_BUTTON_WIDTH = 120;
+const SECOND_BUTTON_WIDTH = IS_SMALL_SCREEN_DEVICE ? 90 : 120;
 
 export type PaperWidgetProps = {
     paperRadius?: number,
@@ -15,7 +16,7 @@ export type PaperWidgetProps = {
 export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> {
     public isFocusable: boolean = true;
 
-    protected colorDefault = 0x0;
+    protected colorDefault: number = 0x0;
     protected colorSelected = 0x333333;
     protected colorPressed = 0x444444;
     protected button: IHmUIWidget;
@@ -67,12 +68,22 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
         // Logical handler
         this.pressedSince = Date.now();
         this.clickData = data;
-        if(isWheelClick)
-            this.longTouchTimer = setTimeout(() => this.onLongWheelClick(), 350);
+
+        // Timer
+        let tick = 0;
+        this.longTouchTimer = setInterval(() => {
+            if(tick == 1 && isWheelClick)
+                this.onLongWheelClick();
+            else if(tick >= 3) {
+                this.onClickCancel(true);
+            }
+            tick++;
+        }, 350);
     }
 
     private onLongWheelClick() {
-        this.props.onSecondActionClick();
+        if(this.props.onSecondActionClick)
+            this.props.onSecondActionClick();
         this.onClickCancel(true);
     }
 
@@ -87,7 +98,7 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
         this.pressedSince = 0;
 
         if(this.longTouchTimer) {
-            clearTimeout(this.longTouchTimer);
+            clearInterval(this.longTouchTimer);
             this.longTouchTimer = null;
         }
 
@@ -182,22 +193,25 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
             w: this.geometry.w - marginH * 2,
             h: this.geometry.h - marginV * 2,
             color: this.color,
-            radius: this.props.paperRadius ? this.props.paperRadius : 8,
+            radius: typeof this.props.paperRadius == "number" ? this.props.paperRadius : 8,
         }
     }
 
     private get buttonProps(): any {
+        const marginH = (this.props.paperBackgroundMarginH ?? 0) + 1;
+        const marginV = (this.props.paperBackgroundMarginV ?? 0) + 1;
+
         return {
-            x: this.geometry.x + this.geometry.w - SECOND_BUTTON_WIDTH,
-            y: this.geometry.y,
-            w: SECOND_BUTTON_WIDTH,
-            h: this.geometry.h,
+            x: this.geometry.x + this.geometry.w - SECOND_BUTTON_WIDTH + marginH,
+            y: this.geometry.y + marginV,
+            w: SECOND_BUTTON_WIDTH - (marginH * 2),
+            h: this.geometry.h - (marginV * 2),
             normal_color: this.root.theme.ACCENT_COLOR_DARK,
             press_color: this.root.theme.ACCENT_COLOR_DARK,
             color: this.root.theme.ACCENT_COLOR,
             text: this.props.secondActionName,
             text_size: this.root.theme.FONT_SIZE - 4,
-            radius: 4,
+            radius: typeof this.props.paperRadius == "number" ? this.props.paperRadius : 8,
             click_func: this.props.onSecondActionClick,
         }
     }
