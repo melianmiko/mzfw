@@ -1,7 +1,7 @@
 import { Component, RootComponent } from "../UiComponent";
 import {
     BOTTOM_MARGIN,
-    DeviceInfo,
+    DeviceInfo, ensureIsNotBand7,
     HAVE_STATUS_BAR,
     SCREEN_HEIGHT,
     SCREEN_MARGIN,
@@ -108,6 +108,8 @@ export class ListView<T> extends RootComponent<T> {
      * Rebuild entire screen (this is VERY SLOW, use only if you really need this)
      */
     rebuildAll() {
+        ensureIsNotBand7();
+
         for(const component of this.nestedComponents) {
             component.performDestroy();
         }
@@ -197,7 +199,7 @@ export class ListView<T> extends RootComponent<T> {
         // If focus position is equal to removed item, we should set it to next one
         if(this.focusPosition == index) {
             const cmp = this.nestedComponents[index];
-            cmp.onFocus && cmp.onFocus();
+            cmp.onFocus && cmp.onFocus(1);
             this.scrollToFocusedChild();
         }
     }
@@ -392,8 +394,9 @@ export class ListView<T> extends RootComponent<T> {
      *
      * @protected
      */
-    protected onWheelFocusChange() {
-        super.onWheelFocusChange();
+    protected onWheelFocusChange(degree: number) {
+        super.onWheelFocusChange(degree);
+
         performVibration(23, 25);
         this.scrollToFocusedChild();
     }

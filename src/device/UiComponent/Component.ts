@@ -173,7 +173,7 @@ export abstract class Component<P> {
      * Will be called when component get focus from keyboard
      * navigation or wheel.
      */
-    onFocus(): void {};
+    onFocus(degree: number): void {};
 
     /**
      * Will be called when component lose focus from keyboard

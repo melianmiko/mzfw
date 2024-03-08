@@ -58,24 +58,10 @@ export abstract class TemplateAboutPage extends ListView<null> {
                 iconPath: this.iconPath,
             }),
             ...this.extraItems(),
+            ...this.getAuthors(),
+            ...this.getLibrariesInfo(),
+            ...this.getNerdInfoRows(),
         ];
-    }
-
-    protected buildMore(page: number): Promise<Component<any>[]> {
-        let result: Component<any>[] = [];
-        switch (page) {
-        case 0:
-            result = this.getAuthors();
-            break;
-        case 1:
-            result = this.getLibrariesInfo();
-            break;
-        case 2:
-            result = this.getNerdInfoRows();
-            break;
-        }
-
-        return Promise.resolve(result);
     }
 
     private getAuthors(): Component<any>[] {

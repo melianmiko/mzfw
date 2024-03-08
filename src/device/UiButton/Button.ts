@@ -32,7 +32,6 @@ export class Button extends PaperComponent<ButtonProps> {
         this.props = {
             paperRadius: Math.floor((this.root.theme.FONT_SIZE * MPX_BUTTON_HEIGHT) / 2 - 2),
             paperBackgroundMarginV: Math.floor(this.root.theme.FONT_SIZE * (MPX_FULL_HEIGHT - MPX_BUTTON_HEIGHT) * 0.5),
-            paperBackgroundMarginH: WIDGET_WIDTH > 200 ? 48 : 0,
             ...this.props,
         };
     }
@@ -57,6 +56,7 @@ export class Button extends PaperComponent<ButtonProps> {
     protected onGeometryChange() {
         this.textNativeProps.w = this.geometry.w;
         this.textNativeProps.h = this.geometry.h;
+        this.props.paperBackgroundMarginH = this.geometry.w > 200 ? 48 : 0;
     }
 
     protected onComponentUpdate() {

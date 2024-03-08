@@ -1,7 +1,7 @@
 import { Component, TouchEventData } from "../UiComponent";
 import { HeadlineButtonProps } from "./Types";
 import { TextLayoutProvider } from "../SystemTools";
-import { IS_BAND_7, IS_SMALL_SCREEN_DEVICE, SCREEN_WIDTH, WIDGET_WIDTH } from "../UiProperties";
+import { IS_BAND_7, IS_SMALL_SCREEN_DEVICE, WIDGET_WIDTH } from "../UiProperties";
 import {
     IHmUIWidget,
     IZeppFillRectWidgetOptions,
@@ -65,7 +65,7 @@ export class HeadlineButton extends Component<HeadlineButtonProps> {
 
         this.backgroundProps.y = this.geometry.y + Math.floor((this.geometry.h - this.backgroundProps.h) / 2);
 
-        this.iconProps.x = this.backgroundProps.x + BTN_PADDING * 2;
+        this.iconProps.x = this.backgroundProps.x + BTN_PADDING * (SIZE_OPTION == 0 ? 1 : 2);
         this.iconProps.y = this.backgroundProps.y + BTN_PADDING;
 
         if(SIZE_OPTION > 0) {

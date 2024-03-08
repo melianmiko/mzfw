@@ -9,7 +9,11 @@ export type IUnsafeMemInfoProvider = {
     getMemUsage(): number,
 }
 
-export type IZeppPositionalWidgetOptions = {
+export type IZeppCommonOptions = {
+    alpha?: number,
+}
+
+export type IZeppPositionalWidgetOptions = IZeppCommonOptions & {
     x?: number,
     y?: number,
     w?: number,
@@ -36,7 +40,7 @@ export type IZeppTextWidgetOptions = IZeppPositionalWidgetOptions & {
     text_style?: number,
 }
 
-export type IZeppAnimWidgetOptions = Partial<{
+export type IZeppAnimWidgetOptions = IZeppCommonOptions & Partial<{
     x: number,
     y: number,
     anim_path: string,

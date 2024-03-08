@@ -220,7 +220,7 @@ export abstract class RootComponent<P> extends Component<P> {
 
         // Give it to next one
         this.focusPosition = index;
-        this.onWheelFocusChange();
+        this.onWheelFocusChange(degree);
 
         return true;
     }
@@ -264,8 +264,8 @@ export abstract class RootComponent<P> extends Component<P> {
      * Will be called when new item reaches wheel focus
      * @protected
      */
-    protected onWheelFocusChange() {
-        this.nestedComponents[this.focusPosition].onFocus();
+    protected onWheelFocusChange(degree: number) {
+        this.nestedComponents[this.focusPosition].onFocus(degree);
     }
 
     /**
