@@ -1,8 +1,8 @@
-import {RootComponent} from "./RootComponent";
-import {IHmUIWidget, systemUi} from "../System";
-import * as Interaction from "../System/Interaction";
-import {ComponentGeometry, TouchEventData} from "./Types";
-
+import { RootComponent } from "./RootComponent";
+import * as Interaction from "../../zosx/interaction";
+import { ComponentGeometry } from "./Types";
+import { ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
+import { event } from "../../zosx/ui";
 
 /**
  * Generic component class.
@@ -20,7 +20,7 @@ export abstract class Component<P> {
     /**
      * Root component
      */
-    protected root: RootComponent<any> = null;
+    protected root: RootComponent<any> | null = null;
     /**
      * Is render performed
      */
@@ -70,7 +70,8 @@ export abstract class Component<P> {
             const newHeight = this.getAutoHeight();
             if(newHeight != lastHeight) {
                 this.geometry.h = newHeight;
-                this.root.onChildHeightChanged(this);
+                if(this.root)
+                    this.root.onChildHeightChanged(this);
             }
         }
 
@@ -90,9 +91,9 @@ export abstract class Component<P> {
      * @param w Component width, if null - will skip size change
      * @param h Component height, if null - will enable auto-height
      */
-    public setGeometry(x: number = null, y: number = null, w: number = null, h: number = null) {
+    public setGeometry(x: number|null = null, y: number|null = null, w: number|null = null, h: number|null = null) {
         // console.log('setGeometry', x, y, w, h);
-        if(x != null) {
+        if(x != null && y != null) {
             this.geometry.x = x;
             this.geometry.y = y;
         }
@@ -110,7 +111,8 @@ export abstract class Component<P> {
             this.geometry.h = this.getAutoHeight();
             if(this.isRendered && lastH != this.geometry.h) {
                 this.onGeometryChange();
-                this.root.onChildHeightChanged(this);
+                if(this.root)
+                    this.root.onChildHeightChanged(this);
             }
         }
 
@@ -139,11 +141,10 @@ export abstract class Component<P> {
     /**
      * Add listeners for onTouchDown/Up/Move to native widget
      */
-    protected setupEventsAt(nativeWidget: IHmUIWidget) {
-        nativeWidget.addEventListener(systemUi.event.CLICK_DOWN, (p) => this.onTouchDown(p));
-        nativeWidget.addEventListener(systemUi.event.CLICK_UP, (p) => this.onTouchUp(p));
-        // noinspection JSUnresolvedReference
-        nativeWidget.addEventListener((systemUi.event as any).MOVE, (p) => this.onTouchMove(p));
+    protected setupEventsAt(nativeWidget: ZeppWidget<any, any>) {
+        nativeWidget.addEventListener(event.CLICK_DOWN, (p: ZeppWidgetEventData) => this.onTouchDown(p));
+        nativeWidget.addEventListener(event.CLICK_UP, (p: ZeppWidgetEventData) => this.onTouchUp(p));
+        nativeWidget.addEventListener(event.MOVE, (p: ZeppWidgetEventData) => this.onTouchMove(p));
     }
 
     /**
@@ -194,7 +195,7 @@ export abstract class Component<P> {
      * Your component should call this at CLICK_DOWN.
      * @param data x,y
      */
-    onTouchDown(data: TouchEventData): boolean {
+    onTouchDown(data: ZeppWidgetEventData): boolean {
         if(this.root == null) return false;
         return this.root.onTouchDown(data);
     }
@@ -203,7 +204,7 @@ export abstract class Component<P> {
      * Your component should call this at CLICK_UP.
      * @param data x,y
      */
-    onTouchUp(data: TouchEventData): boolean {
+    onTouchUp(data: ZeppWidgetEventData): boolean {
         if(this.root == null) return false;
         return this.root.onTouchUp(data);
     }
@@ -212,7 +213,7 @@ export abstract class Component<P> {
      * Your component should call this at CLICK_MOVE,
      * @param data x,y
      */
-    onTouchMove(data: TouchEventData): boolean {
+    onTouchMove(data: ZeppWidgetEventData): boolean {
         if(this.root == null) return false;
         return this.root.onTouchMove(data);
     }

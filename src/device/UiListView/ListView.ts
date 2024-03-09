@@ -1,7 +1,8 @@
 import { Component, RootComponent } from "../UiComponent";
 import {
     BOTTOM_MARGIN,
-    DeviceInfo, ensureIsNotBand7,
+    DeviceInfo,
+    ensureIsNotBand7,
     HAVE_STATUS_BAR,
     SCREEN_HEIGHT,
     SCREEN_MARGIN,
@@ -9,21 +10,23 @@ import {
     TOP_MARGIN,
     WIDGET_WIDTH
 } from "../UiProperties";
-import { AnimComponent } from "../UiNativeComponents";
-import { IHmUIWidget, isLegacyDevice, systemUi } from "../System";
+import { isLegacyDevice } from "../System";
 import { performVibration } from "../System/Vibrator";
-import * as PageTools from "../System/PageTools";
 import { ChildPositionInfo } from "./Types";
 import { DummyComponent } from "../UiComponent/DummyComponent";
 import { createSpinner } from "../UiTools";
+import { createWidget, prop, widget } from "../../zosx/ui";
+import { ZeppImgWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
+import { ZeppWidget } from "../../zosx/ui/Types";
+import { getScrollTop, scrollTo } from "../../zosx/page";
 
 const REV_RENDER_START_POS = 10000;
 
 export class ListView<T> extends RootComponent<T> {
-    private eofListView: IHmUIWidget;
+    private eofListView: ZeppWidget<ZeppImgWidgetOptions, {}> | null = null;
     private childPositionInfo: ChildPositionInfo[] = [];
-    private renderStartPos: number = null;
-    private renderEndPos: number = null;
+    private renderStartPos: number = 0;
+    private renderEndPos: number = 0;
     private footerComponent: Component<any> | null = null;
     private buildMorePage: number = 0;
     private lastDynRenderRefreshScrollPosition: number = 0;
@@ -68,7 +71,7 @@ export class ListView<T> extends RootComponent<T> {
 
         // Create end-of list view for dynamic rendering
         if(!this.eofListView)
-            this.eofListView = systemUi.createWidget(systemUi.widget.IMG, {
+            this.eofListView = createWidget<ZeppImgWidgetOptions>(widget.IMG, {
                 x: 0,
                 y: this.renderStartPos,
                 w: 10,
@@ -97,7 +100,7 @@ export class ListView<T> extends RootComponent<T> {
                 this.addComponent(component);
 
         if(this.renderDirection == -1)
-            PageTools.scrollTo({y: -REV_RENDER_START_POS + SCREEN_HEIGHT});
+            scrollTo({y: -REV_RENDER_START_POS + SCREEN_HEIGHT});
     }
 
     protected onDestroy(): any {
@@ -232,8 +235,7 @@ export class ListView<T> extends RootComponent<T> {
     private repositionComponents(i: number = 0, y: number = this.renderStartPos) {
         for(; i < this.nestedComponents.length; i++) {
             const cmp = this.nestedComponents[i]
-            const height = cmp.geometry.h;
-            // console.log("reposition", i, y, height);
+            const height = cmp.geometry.h ?? 0;
             cmp.setGeometry(
                 SCREEN_MARGIN,
                 this.renderDirection == 1 ? y : y - height
@@ -258,8 +260,8 @@ export class ListView<T> extends RootComponent<T> {
             );
 
         // re-position eof-list view
-        if(this.renderDirection == 1 && this.renderEndPos != y) {
-            this.eofListView.setProperty(systemUi.prop.Y, y + BOTTOM_MARGIN);
+        if(this.renderDirection == 1 && this.renderEndPos != y && this.eofListView) {
+            this.eofListView.setProperty(prop.Y, y + BOTTOM_MARGIN);
         }
 
         // Limit scroll to top
@@ -301,12 +303,13 @@ export class ListView<T> extends RootComponent<T> {
         // console.log(`Render more, page=${this.buildMorePage}`);
 
         // Use spinner as footer
-        this.footerComponent = this.buildSpinner();
+        const spinner = this.buildSpinner();
+        this.footerComponent = spinner
         this.performRenderFooter();
 
         // Call to buildMore
         this.buildMore(this.buildMorePage).then((components) => {
-            this.footerComponent.performDestroy();
+            spinner.performDestroy();
 
             if(components.length == 0) {
                 // console.log("No more items, redirect to generic footer...");
@@ -345,7 +348,7 @@ export class ListView<T> extends RootComponent<T> {
      * WIll recover scroll position, no more
      */
     recoverFocusPosition(): number {
-        const targetY = Math.floor(-PageTools.getScrollTop() + (SCREEN_HEIGHT / 2));
+        const targetY = Math.floor(-getScrollTop() + (SCREEN_HEIGHT / 2));
         if(this.renderDirection == 1) {
             // From first to last
             for(let i = 0; i < this.childPositionInfo.length && i >= 0; i++) {
@@ -371,7 +374,7 @@ export class ListView<T> extends RootComponent<T> {
      * @private
      */
     private dynamicRender(startIndex: number = 0, endIndex: number = this.nestedComponents.length) {
-        const scrollPos = -PageTools.getScrollTop();
+        const scrollPos = -getScrollTop();
         const topBaseLine = Math.max(0, scrollPos - SCREEN_HEIGHT);
         const bottomBaseLine = scrollPos + 2 * SCREEN_HEIGHT;
         // console.log(topBaseLine, bottomBaseLine);
@@ -407,13 +410,13 @@ export class ListView<T> extends RootComponent<T> {
      */
     protected scrollToFocusedChild() {
         const {y, h} = this.nestedComponents[this.focusPosition].geometry;
-        this.smoothScrollPosition = y - (DeviceInfo.height - h) / 2;
+        this.smoothScrollPosition = (y ?? 0) - (DeviceInfo.height - (h ?? 0)) / 2;
     }
 
     /**
      * Should return set of components that will be rendered on page start.
      */
-    protected build() : Component<any>[] {
+    protected build() : ( Component<any> | null )[] {
         return [];
     }
 
@@ -432,11 +435,8 @@ export class ListView<T> extends RootComponent<T> {
      * Should create header component, that will be rendered at position zero
      * with fixed (device-specific) height.
      */
-    protected buildHeader(): Component<any> {
+    protected buildHeader(): Component<any> | null {
         return null;
-        // return new UiDrawRectangleComponent({
-        //     color: 0,
-        // });
     }
 
     /**
@@ -450,7 +450,7 @@ export class ListView<T> extends RootComponent<T> {
     /**
      * Should create loading footer for buildMore()
      */
-    protected buildSpinner(): Component<any> | null {
+    protected buildSpinner(): Component<any> {
         return createSpinner();
     }
 

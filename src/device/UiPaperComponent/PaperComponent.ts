@@ -1,7 +1,9 @@
-import { Component, TouchEventData } from "../UiComponent";
-import { IHmUIWidget, IHmUIWidgetOptions, IZeppGroupWidgetOptions, systemUi } from "../System";
-import { KEY_EVENT_PRESS, KEY_EVENT_RELEASE } from "../System/Interaction";
+import { Component } from "../UiComponent";
+import { KEY_EVENT_PRESS, KEY_EVENT_RELEASE } from "../../zosx/interaction";
 import { IS_SMALL_SCREEN_DEVICE } from "../UiProperties";
+import { ZeppGroupInstance, ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
+import { ZeppFillRectWidgetOptions, ZeppWidgetPositionOptions } from "../../zosx/ui/WidgetOptionTypes";
+import { createWidget, deleteWidget, prop, widget } from "../../zosx/ui";
 
 const SECOND_BUTTON_WIDTH = IS_SMALL_SCREEN_DEVICE ? 90 : 120;
 
@@ -13,32 +15,39 @@ export type PaperWidgetProps = {
     paperBackgroundMarginH?: number,
 }
 
+// TODO: Refactor
 export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> {
     public isFocusable: boolean = true;
 
     protected colorDefault: number = 0x0;
     protected colorSelected = 0x333333;
     protected colorPressed = 0x444444;
-    protected button: IHmUIWidget;
-    protected group: IZeppGroupWidgetOptions;
-    protected paperBackground: IHmUIWidget;
+    protected button: ZeppWidget<any, {}> | null = null;
+    protected group: ZeppWidget<ZeppWidgetPositionOptions, ZeppGroupInstance> | null = null;
+    protected paperBackground: ZeppWidget<ZeppFillRectWidgetOptions, {}> | null = null;
 
     private color: number = this.colorDefault;
-    private longTouchTimer: number = -1;
     private pressedSince: number = 0;
-    private clickData: TouchEventData;
+    private clickData: ZeppWidgetEventData | null = null;
+
+    private longTouchTimer: NodeJS.Timeout | null = null;
+    private swipeCancelTimer: NodeJS.Timeout | null = null;
 
     private isFocused: boolean = false;
     private isWheelDown: boolean = false;
-    private swipeCancelTimer: number = 0;
 
     onRender() {
         this.color = this.colorDefault;
 
         if(this.props.secondActionName)
-            this.button = systemUi.createWidget(systemUi.widget.BUTTON, this.buttonProps as any);
-        this.group = systemUi.createWidget(systemUi.widget.GROUP, this.geometry as any) as IZeppGroupWidgetOptions;
-        this.paperBackground = this.group.createWidget(systemUi.widget.FILL_RECT, this.paperBackgroundProps);
+            this.button = createWidget(widget.BUTTON, this.buttonProps);
+        this.group = createWidget<ZeppWidgetPositionOptions, ZeppGroupInstance>(widget.GROUP, {
+            x: this.geometry.x ?? 0,
+            y: this.geometry.y ?? 0,
+            w: this.geometry.w ?? 0,
+            h: this.geometry.h ?? 0,
+        });
+        this.paperBackground = this.group.createWidget<ZeppFillRectWidgetOptions>(widget.FILL_RECT, this.paperBackgroundProps);
         this.setupEventsAt(this.paperBackground);
     }
 
@@ -51,15 +60,14 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
         this.longTouchTimer = null;
         this.swipeCancelTimer = null;
 
-        systemUi.deleteWidget(this.paperBackground);
-        systemUi.deleteWidget(this.group);
-        if(this.button)
-            systemUi.deleteWidget(this.button);
+        deleteWidget(this.paperBackground);
+        deleteWidget(this.group);
+        if(this.button) deleteWidget(this.button);
     }
 
-    abstract onClick(data: TouchEventData): any;
+    abstract onClick(data: ZeppWidgetEventData): any;
 
-    private onClickStart(data: TouchEventData, isWheelClick: boolean = false) {
+    private onClickStart(data: ZeppWidgetEventData, isWheelClick: boolean = false) {
         if(this.pressedSince > 0) return;
 
         // UI
@@ -92,7 +100,7 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
 
         this.setColor(this.isFocused ? this.colorSelected : this.colorDefault);
 
-        if(!failure && Date.now() - this.pressedSince < 350) {
+        if(!failure && Date.now() - this.pressedSince < 350 && this.clickData) {
             this.onClick(this.clickData);
         }
         this.pressedSince = 0;
@@ -101,7 +109,6 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
             clearInterval(this.longTouchTimer);
             this.longTouchTimer = null;
         }
-
     }
 
     onWheelButtonEvent(action: number): boolean {
@@ -121,18 +128,18 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
         return false;
     }
 
-    onTouchDown(data: TouchEventData): boolean {
+    onTouchDown(data: ZeppWidgetEventData): boolean {
         this.onClickStart(data);
         return super.onTouchDown(data);
     }
 
-    onTouchUp(data: TouchEventData): boolean {
+    onTouchUp(data: ZeppWidgetEventData): boolean {
         this.onClickCancel();
         return super.onTouchUp(data);
     }
 
-    onTouchMove(data: TouchEventData): boolean {
-        if(!this.clickData) return;
+    onTouchMove(data: ZeppWidgetEventData): boolean {
+        if(!this.clickData) return super.onTouchMove(data);
 
         const dx = data.x - this.clickData.x;
         const dy = data.y - this.clickData.y;
@@ -153,12 +160,13 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
         if(dx < 0)
             this.swipeCancelTimer = setTimeout(() => this.onSwipeCancel(), 2500);
 
-        this.group.setProperty(systemUi.prop.X, this.geometry.x + dx);
+        if(this.group)
+            this.group.setProperty(prop.X, (this.geometry.x ?? 0) + dx);
     }
 
     private onSwipeCancel() {
         this.onSwipeMove(0);
-        this.swipeCancelTimer = 0;
+        this.swipeCancelTimer = null;
     }
 
     onFocus() {
@@ -172,40 +180,50 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
     }
 
     protected onComponentUpdate() {
-        this.paperBackground.setProperty(systemUi.prop.MORE, this.paperBackgroundProps as any);
-        this.group.setProperty(systemUi.prop.MORE, this.geometry as any);
+        if(this.paperBackground)
+            this.paperBackground.setProperty(prop.MORE, this.paperBackgroundProps);
+        if(this.group)
+            this.group.setProperty(prop.MORE, this.geometry);
         if(this.button)
-            this.button.setProperty(systemUi.prop.MORE, this.buttonProps as any);
+            this.button.setProperty(prop.MORE, this.buttonProps);
     }
 
     private setColor(color: number) {
         this.color = color;
-        this.paperBackground.setProperty(systemUi.prop.MORE, this.paperBackgroundProps as any);
+        if(this.paperBackground)
+            this.paperBackground.setProperty(prop.MORE, this.paperBackgroundProps as any);
     }
 
-    private get paperBackgroundProps(): IHmUIWidgetOptions {
+    private get paperBackgroundProps(): ZeppFillRectWidgetOptions {
         const marginH = this.props.paperBackgroundMarginH ?? 0;
         const marginV = this.props.paperBackgroundMarginV ?? 0;
 
         return {
             x: marginH,
             y: marginV,
-            w: this.geometry.w - marginH * 2,
-            h: this.geometry.h - marginV * 2,
+            w: (this.geometry.w ?? 0) - marginH * 2,
+            h: (this.geometry.h ?? 0) - marginV * 2,
             color: this.color,
             radius: typeof this.props.paperRadius == "number" ? this.props.paperRadius : 8,
         }
     }
 
     private get buttonProps(): any {
+        if(!this.root) return {};
+        const geometry = {
+            x: this.geometry.x ?? 0,
+            y: this.geometry.y ?? 0,
+            w: this.geometry.w ?? 0,
+            h: this.geometry.h ?? 0,
+        }
         const marginH = (this.props.paperBackgroundMarginH ?? 0) + 1;
         const marginV = (this.props.paperBackgroundMarginV ?? 0) + 1;
 
         return {
-            x: this.geometry.x + this.geometry.w - SECOND_BUTTON_WIDTH + marginH,
-            y: this.geometry.y + marginV,
+            x: geometry.x + geometry.w - SECOND_BUTTON_WIDTH + marginH,
+            y: geometry.y + marginV,
             w: SECOND_BUTTON_WIDTH - (marginH * 2),
-            h: this.geometry.h - (marginV * 2),
+            h: geometry.h - (marginV * 2),
             normal_color: this.root.theme.ACCENT_COLOR_DARK,
             press_color: this.root.theme.ACCENT_COLOR_DARK,
             color: this.root.theme.ACCENT_COLOR,

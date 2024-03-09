@@ -2,5 +2,6 @@
 /zeusx*.tgz
 /device
 /shared
+/zosx
 
 node_modules

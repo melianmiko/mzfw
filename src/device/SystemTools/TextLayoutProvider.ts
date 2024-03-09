@@ -1,11 +1,11 @@
-import {systemUi} from "../System";
 import { TextLayoutError } from "./Errors";
+import { getTextLayout } from "../../zosx/ui";
 
 /**
  * Cached wrapper for getTextLayout()
  */
 export class TextLayoutProvider {
-    private lastText: string = "";
+    private lastText: string | null = "";
     private lastWidth: number = -1;
     private lastSize: number = -1;
 
@@ -24,7 +24,7 @@ export class TextLayoutProvider {
             return false;
 
         if(text != null && text != "") {
-            const layout = systemUi.getTextLayout(text, {
+            const layout = getTextLayout(text, {
                 text_size: size,
                 text_width: width,
             });

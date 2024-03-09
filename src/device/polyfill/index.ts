@@ -1,2 +1,0 @@
-import "./setTimeout";
-import "./promise";

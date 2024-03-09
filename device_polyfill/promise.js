@@ -1,8 +1,4 @@
-import {glob} from "../System";
-
-declare const exports: any;
-declare const module: any;
-declare const define: any;
+import {glob} from "../zosx/internal";
 
 ;(function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined'
@@ -145,7 +141,7 @@ declare const define: any;
     })
   }
 
-  function resolve(self: any, newValue: any) {
+  function resolve(self, newValue) {
     try {
       // Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
       if (newValue === self) throw new TypeError('A promise cannot be resolved with itself.')

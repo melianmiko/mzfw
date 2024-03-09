@@ -31,7 +31,7 @@ export abstract class TemplateAboutPage extends ListView<null> {
      * set this to BUNDLE.
      * @protected
      */
-    protected buildInfo: { [id: string]: any } = null;
+    protected buildInfo: { [id: string]: any } | null = null;
     /**
      * List of used third party libraries and their versions.
      * Would be great if you'll keep mzfw and zeusx lines inside.
@@ -50,7 +50,7 @@ export abstract class TemplateAboutPage extends ListView<null> {
         return [];
     }
 
-    protected build(): Component<any>[] {
+    protected build(): ( Component<any> | null)[] {
         return [
             new AboutPageHeader({
                 name: this.displayName,
@@ -103,7 +103,7 @@ export abstract class TemplateAboutPage extends ListView<null> {
         return out;
     }
 
-    private getNerdInfoRows(): Component<any>[] {
+    private getNerdInfoRows(): (Component<any> | null)[] {
         const deviceInfo = new ListItem({
             title: "",
             description: this.i18n("Show device info"),
@@ -120,7 +120,7 @@ export abstract class TemplateAboutPage extends ListView<null> {
                 for (const key in this.buildInfo) {
                     info += "\n- " + key + ": " + JSON.stringify(this.buildInfo[key]);
                 }
-                buildInfo.updateProps({description: info});
+                buildInfo && buildInfo.updateProps({description: info});
             }
         }) : null;
 

@@ -1,11 +1,13 @@
-import {IHmUIWidget, systemUi} from "../System";
-import {Component} from "../UiComponent";
+import { Component } from "../UiComponent";
+import { ZeppWidget, ZeppWidgetID } from "../../zosx/ui/Types";
+import { ZeppWidgetGenericOptions } from "../../zosx/ui/WidgetOptionTypes";
+import { createWidget, deleteWidget, prop } from "../../zosx/ui";
 
-export abstract class NativeComponent<AcceptedProps, NativeProps> extends Component<AcceptedProps> {
-    protected abstract widgetID: number;
-    protected abstract defaultProps: Partial<AcceptedProps>;
-    protected abstract nativeProps: NativeProps;
-    protected widget: IHmUIWidget;
+export abstract class NativeComponent<AP, NP, WTE = {}> extends Component<AP> {
+    protected abstract widgetID: ZeppWidgetID;
+    protected abstract defaultProps: Partial<AP>;
+    protected abstract nativeProps: ZeppWidgetGenericOptions & NP;
+    protected widget: ZeppWidget<ZeppWidgetGenericOptions & NP, WTE> | null = null;
 
     onInit() {
         this.props = {
@@ -16,13 +18,12 @@ export abstract class NativeComponent<AcceptedProps, NativeProps> extends Compon
     }
 
     protected onRender() {
-        // console.log(JSON.stringify(this.nativeProps));
-        this.widget = systemUi.createWidget(this.widgetID, this.nativeProps as any);
+        this.widget = createWidget<ZeppWidgetGenericOptions & NP, WTE>(this.widgetID, this.nativeProps);
         this.setupEventsAt(this.widget);
     }
 
     protected onDestroy(): any {
-        systemUi.deleteWidget(this.widget)
+        deleteWidget(this.widget)
     }
 
     protected onPropertiesChange() {
@@ -34,7 +35,8 @@ export abstract class NativeComponent<AcceptedProps, NativeProps> extends Compon
     }
 
     protected onComponentUpdate() {
-        this.widget.setProperty(systemUi.prop.MORE, this.nativeProps as any);
+        if(this.widget)
+            this.widget.setProperty(prop.MORE, this.nativeProps);
     }
 
     /**

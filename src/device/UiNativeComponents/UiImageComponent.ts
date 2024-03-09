@@ -1,21 +1,29 @@
 import { NativeComponent } from "./NativeComponent";
-import { IZeppImgWidgetOptions, systemUi } from "../System";
 import { ImageComponentProps } from "./Types";
+import { ZeppWidgetID } from "../../zosx/ui/Types";
+import { widget } from "../../zosx/ui";
+import { ZeppImgWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
 
-export class ImageComponent extends NativeComponent<ImageComponentProps, IZeppImgWidgetOptions> {
-    protected widgetID: number = systemUi.widget.IMG;
+export class ImageComponent extends NativeComponent<ImageComponentProps, ZeppImgWidgetOptions> {
+    protected widgetID: ZeppWidgetID = widget.IMG;
     protected defaultProps: Partial<ImageComponentProps> = {};
-    protected nativeProps: IZeppImgWidgetOptions = {src: ""};
+    protected nativeProps: ZeppImgWidgetOptions = {
+        x: 0,
+        y: 0,
+        src: "",
+    };
 
     updateProperties(): void {
         this.nativeProps.src = this.props.src;
     }
 
     updateGeometry(): void {
-        let {x, y, w, h} = this.geometry;
+        let x: number = this.geometry.x ?? 0;
+        let y: number = this.geometry.y ?? 0;
+
         if(this.props.imageWidth && this.props.imageHeight) {
-            x += Math.floor(Math.max(0, (w - this.props.imageWidth) / 2));
-            y += Math.floor(Math.max(0, (h - this.props.imageHeight) / 2));
+            x += Math.floor(Math.max(0, ((this.geometry.w ?? 0) - this.props.imageWidth) / 2));
+            y += Math.floor(Math.max(0, ((this.geometry.h ?? 0) - this.props.imageHeight) / 2));
         }
 
         this.nativeProps.x = x;

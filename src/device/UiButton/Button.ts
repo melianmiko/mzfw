@@ -1,8 +1,9 @@
 import { ButtonProps } from "./Types";
 import { PaperComponent } from "../UiPaperComponent";
 import { ButtonVariant } from "./Enums";
-import { IHmUIWidget, IZeppTextWidgetOptions, systemUi } from "../System";
-import { WIDGET_WIDTH } from "../UiProperties";
+import { ZeppTextWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
+import { align, deleteWidget, prop, text_style, widget } from "../../zosx/ui";
+import { ZeppWidget } from "../../zosx/ui/Types";
 
 const MPX_BUTTON_HEIGHT = 2.5;
 const MPX_FULL_HEIGHT = 3;
@@ -11,14 +12,14 @@ const MPX_FULL_HEIGHT = 3;
  * Common button component
  */
 export class Button extends PaperComponent<ButtonProps> {
-    private textView: IHmUIWidget;
-    private textNativeProps: IZeppTextWidgetOptions = {
+    private textView: ZeppWidget<ZeppTextWidgetOptions, {}> | null = null;
+    private textNativeProps: ZeppTextWidgetOptions = {
         x: 0,
         y: 0,
         text: "",
-        align_h: systemUi.align.CENTER_H,
-        align_v: systemUi.align.CENTER_V,
-        text_style: systemUi.text_style.NONE,
+        align_h: align.CENTER_H,
+        align_v: align.CENTER_V,
+        text_style: text_style.NONE,
         color: 0xFFFFFF,
     };
 
@@ -28,6 +29,7 @@ export class Button extends PaperComponent<ButtonProps> {
 
     onInit() {
         super.onInit();
+        if(!this.root) return;
         this.textNativeProps.text_size = this.root.theme.FONT_SIZE;
         this.props = {
             paperRadius: Math.floor((this.root.theme.FONT_SIZE * MPX_BUTTON_HEIGHT) / 2 - 2),
@@ -38,12 +40,14 @@ export class Button extends PaperComponent<ButtonProps> {
 
     onRender() {
         super.onRender();
-        this.textView = this.group.createWidget(systemUi.widget.TEXT, this.textNativeProps);
+        if(!this.group) return
+
+        this.textView = this.group.createWidget(widget.TEXT, this.textNativeProps);
         this.setupEventsAt(this.textView);
     }
 
     onDestroy() {
-        systemUi.deleteWidget(this.textView);
+        deleteWidget(this.textView);
         super.onDestroy();
     }
 
@@ -54,23 +58,23 @@ export class Button extends PaperComponent<ButtonProps> {
     }
 
     protected onGeometryChange() {
-        this.textNativeProps.w = this.geometry.w;
-        this.textNativeProps.h = this.geometry.h;
-        this.props.paperBackgroundMarginH = this.geometry.w > 200 ? 48 : 0;
+        this.textNativeProps.w = this.geometry.w ?? 0;
+        this.textNativeProps.h = this.geometry.h ?? 0;
+        this.props.paperBackgroundMarginH = (this.geometry.w ?? 0) > 200 ? 48 : 0;
     }
 
     protected onComponentUpdate() {
         super.onComponentUpdate();
-        this.textView.setProperty(systemUi.prop.MORE, this.textNativeProps as any);
+        if(this.textView) this.textView.setProperty(prop.MORE, this.textNativeProps as any);
     }
 
     onClick() {
-        if(this.props.onClick)
-            this.props.onClick();
+        this.props.onClick && this.props.onClick();
     }
 
     protected getAutoHeight(): number {
-        return this.root.theme.FONT_SIZE * MPX_FULL_HEIGHT;
+        const fontSize: number = this.root ? this.root.theme.FONT_SIZE : 18;
+        return fontSize * MPX_FULL_HEIGHT;
     }
 
     private applyColorScheme(): void {
@@ -81,6 +85,7 @@ export class Button extends PaperComponent<ButtonProps> {
             this.colorPressed = 0x111111;
             break;
         case ButtonVariant.PRIMARY:
+            if(!this.root) break;
             this.colorDefault = this.root.theme.ACCENT_COLOR;
             this.colorSelected = this.root.theme.ACCENT_COLOR_LIGHT;
             this.colorPressed = this.root.theme.ACCENT_COLOR_LIGHT;

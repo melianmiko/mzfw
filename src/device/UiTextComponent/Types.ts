@@ -1,12 +1,12 @@
-import {Align, TextStyle} from "./Enums";
+import { ZeppWidgetAlignMode, ZeppWidgetTextStyle } from "../../zosx/ui/Types";
 
 export type TextComponentProps = {
     text: string,
     color?: number,
-    alignH?: Align,
-    alignV?: Align,
+    alignH?: ZeppWidgetAlignMode,
+    alignV?: ZeppWidgetAlignMode,
     marginH?: number,
     marginV?: number,
     textSize?: number,
-    textStyle?: TextStyle,
+    textStyle?: ZeppWidgetTextStyle,
 };

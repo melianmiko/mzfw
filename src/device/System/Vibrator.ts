@@ -1,23 +1,15 @@
-import {createSensor} from "./index";
+import { Vibrator } from "../../zosx/sensor";
 
 /**
  * Current `performVibration` timer
  */
-let vibrationTimer: number = null;
+let vibrationTimer: NodeJS.Timeout | null = null;
 
-/**
- * Vibrate sensor typing
- */
-export type VibrationSensor = {
-    scene: number;
-    start(): void;
-    stop(): void;
-}
 
 /**
  * hmSensor.type.VIBRATE, made global for global use )
  */
-export const Vibrate: VibrationSensor = createSensor("Vibrator", "VIBRATE")
+export const vibrator = new Vibrator();
 
 /**
  * Perform a vibration of provided scene for provided duration
@@ -27,13 +19,14 @@ export const Vibrate: VibrationSensor = createSensor("Vibrator", "VIBRATE")
  */
 export function performVibration(scene: number, duration: number = 100) {
     if(vibrationTimer) return;
-    Vibrate.stop();
-    Vibrate.scene = scene;
-    Vibrate.start();
+    vibrator.stop();
+    vibrator.setMode(scene);
+    vibrator.start();
 
     vibrationTimer = setTimeout(() => {
-        Vibrate.stop();
-        clearTimeout(vibrationTimer);
+        vibrator.stop();
+        if(vibrationTimer)
+            clearTimeout(vibrationTimer);
         vibrationTimer = null;
     }, duration);
 }

@@ -1,4 +1,5 @@
-import { IHmUIWidget, IZeppFillRectWidgetOptions, IZeppImgWidgetOptions, IZeppTextWidgetOptions } from "../System";
+import { ZeppFillRectWidgetOptions, ZeppImgWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
+import { ZeppWidget } from "../../zosx/ui/Types";
 
 export type ActionBarItem = {
     icon: string,
@@ -7,8 +8,8 @@ export type ActionBarItem = {
 }
 
 export type ActionBarItemView = {
-    background?: IHmUIWidget,
-    backgroundProps: IZeppFillRectWidgetOptions,
-    icon?: IHmUIWidget,
-    iconProps: IZeppImgWidgetOptions,
+    background?: ZeppWidget<ZeppFillRectWidgetOptions, {}>,
+    backgroundProps: ZeppFillRectWidgetOptions,
+    icon?: ZeppWidget<ZeppImgWidgetOptions, {}>,
+    iconProps: ZeppImgWidgetOptions,
 }

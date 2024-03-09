@@ -1,4 +1,4 @@
-import {glob} from "../System";
+import {glob} from "../zosx/internal";
 
 if (typeof setTimeout === 'undefined') {
   glob.clearTimeout = function clearTimeout(timerRef) {

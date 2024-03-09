@@ -2,9 +2,6 @@
   "include": [
     "./src"
   ],
-  "files": [
-    "node_modules/zeppos-device-types-v1/types/index.d.ts"
-  ],
   "exclude": [
     "node_modules",
     "**/*.d.ts"
@@ -13,8 +10,10 @@
     "outDir": ".",
     "rootDir": "src",
     "module": "ES6",
+    "target": "ES2021",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
+    "strict": true,
     "declaration": true,
     "lib": [
       "es2021",

@@ -1,11 +1,10 @@
-import {osImport} from "../System";
-
-export type IDeviceInfo = HmWearableProgram.DeviceSide.HmSetting.IHmSettingDeviceInfo;
+import { getDeviceInfo } from "../../zosx/device";
+import { ZeppDeviceInfo } from "../../zosx/device/Types";
 
 /**
  * Generic device info (Cross-runtime import)
  */
-export const DeviceInfo: IDeviceInfo = osImport("@zos/device", "hmSetting").getDeviceInfo();
+export const DeviceInfo: ZeppDeviceInfo = getDeviceInfo();
 
 /**
  * Screen width

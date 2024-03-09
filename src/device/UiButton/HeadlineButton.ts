@@ -1,14 +1,14 @@
-import { Component, TouchEventData } from "../UiComponent";
+import { Component } from "../UiComponent";
 import { HeadlineButtonProps } from "./Types";
 import { TextLayoutProvider } from "../SystemTools";
 import { IS_BAND_7, IS_SMALL_SCREEN_DEVICE, WIDGET_WIDTH } from "../UiProperties";
+import { ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
 import {
-    IHmUIWidget,
-    IZeppFillRectWidgetOptions,
-    IZeppImgWidgetOptions,
-    IZeppTextWidgetOptions,
-    systemUi
-} from "../System";
+    ZeppFillRectWidgetOptions,
+    ZeppImgWidgetOptions,
+    ZeppTextWidgetOptions
+} from "../../zosx/ui/WidgetOptionTypes";
+import { align, createWidget, deleteWidget, prop, text_style, widget } from "../../zosx/ui";
 
 const BTN_PADDING = 8;
 const SIZE_OPTION = IS_SMALL_SCREEN_DEVICE ? (IS_BAND_7 ? 0 : 1) : 2;
@@ -23,28 +23,35 @@ export class HeadlineButton extends Component<HeadlineButtonProps> {
     public isFocusable: boolean = true;
 
     private textLayout: TextLayoutProvider = new TextLayoutProvider();
-    private backgroundView: IHmUIWidget;
-    private iconView: IHmUIWidget;
-    private textView: IHmUIWidget;
+    private backgroundView: ZeppWidget<ZeppFillRectWidgetOptions, {}> | null = null;
+    private iconView: ZeppWidget<ZeppImgWidgetOptions, {}> | null = null;
+    private textView: ZeppWidget<ZeppTextWidgetOptions, {}> | null = null;
 
-    private backgroundProps: IZeppFillRectWidgetOptions = {
-        color: 0x222222,
+    private backgroundProps: ZeppFillRectWidgetOptions = {
+        x: 0,
+        y: 0,
+        w: 0,
         h: ICON_SIZE + BTN_PADDING * 2,
-        radius: Math.floor(ICON_SIZE / 2) + (BTN_PADDING - 1),
+        color: 0x222222,
+        radius: Math.floor(ICON_SIZE / 2) + (BTN_PADDING - 1)
     };
 
-    private iconProps: IZeppImgWidgetOptions = {
+    private iconProps: ZeppImgWidgetOptions = {
+        x: 0,
+        y: 0,
         w: ICON_SIZE,
         h: ICON_SIZE,
-        src: "",
+        src: ""
     };
 
-    private textProps: IZeppTextWidgetOptions = {
+    private textProps: ZeppTextWidgetOptions = {
+        x: 0,
+        y: 0,
         h: ICON_SIZE,
         text: "",
-        text_style: systemUi.text_style.NONE,
+        text_style: text_style.NONE,
         text_size: TEXT_SIZE,
-        align_v: systemUi.align.CENTER_V,
+        align_v: align.CENTER_V,
     };
 
     onInit() {
@@ -63,7 +70,7 @@ export class HeadlineButton extends Component<HeadlineButtonProps> {
     protected onGeometryChange() {
         this.refreshWidth();
 
-        this.backgroundProps.y = this.geometry.y + Math.floor((this.geometry.h - this.backgroundProps.h) / 2);
+        this.backgroundProps.y = (this.geometry.y ?? 0) + Math.floor(((this.geometry.h ?? 0) - this.backgroundProps.h) / 2);
 
         this.iconProps.x = this.backgroundProps.x + BTN_PADDING * (SIZE_OPTION == 0 ? 1 : 2);
         this.iconProps.y = this.backgroundProps.y + BTN_PADDING;
@@ -76,27 +83,27 @@ export class HeadlineButton extends Component<HeadlineButtonProps> {
     }
 
     protected onRender(): any {
-        this.backgroundView = systemUi.createWidget(systemUi.widget.FILL_RECT, this.backgroundProps);
+        this.backgroundView = createWidget(widget.FILL_RECT, this.backgroundProps);
         this.setupEventsAt(this.backgroundView);
-        this.iconView = systemUi.createWidget(systemUi.widget.IMG, this.iconProps);
+        this.iconView = createWidget(widget.IMG, this.iconProps);
         this.setupEventsAt(this.iconView);
 
         if(SIZE_OPTION > 0) {
-            this.textView = systemUi.createWidget(systemUi.widget.TEXT, this.textProps);
+            this.textView = createWidget(widget.TEXT, this.textProps);
             this.setupEventsAt(this.textView);
         }
     }
 
     protected onDestroy(): any {
-        if(SIZE_OPTION > 0) systemUi.deleteWidget(this.textView);
-        systemUi.deleteWidget(this.iconView);
-        systemUi.deleteWidget(this.backgroundView);
+        if(SIZE_OPTION > 0) deleteWidget(this.textView);
+        deleteWidget(this.iconView);
+        deleteWidget(this.backgroundView);
     }
 
     protected onComponentUpdate() {
-        this.backgroundView.setProperty(systemUi.prop.MORE, this.backgroundProps as any);
-        this.iconView.setProperty(systemUi.prop.MORE, this.iconProps as any);
-        if(SIZE_OPTION > 0) this.textView.setProperty(systemUi.prop.MORE, this.textProps as any);
+        if(this.backgroundView) this.backgroundView.setProperty(prop.MORE, this.backgroundProps);
+        if(this.iconView) this.iconView.setProperty(prop.MORE, this.iconProps);
+        if(this.textView) this.textView.setProperty(prop.MORE, this.textProps);
     }
 
     protected getAutoHeight(): number {
@@ -111,7 +118,7 @@ export class HeadlineButton extends Component<HeadlineButtonProps> {
             this.backgroundProps.w = ICON_SIZE + BTN_PADDING * 2;
         }
 
-        this.backgroundProps.x = this.geometry.x + Math.floor((this.geometry.w - this.backgroundProps.w) / 2);
+        this.backgroundProps.x = (this.geometry.x ?? 0) + Math.floor(((this.geometry.w ?? 0) - this.backgroundProps.w) / 2);
     }
 
     onWheelClick(): boolean {
@@ -122,23 +129,23 @@ export class HeadlineButton extends Component<HeadlineButtonProps> {
         return false;
     }
 
-    onTouchDown(data: TouchEventData): boolean {
+    onTouchDown(data: ZeppWidgetEventData): boolean {
         this.backgroundProps.color = 0x444444;
-        this.backgroundView.setProperty(systemUi.prop.MORE, this.backgroundProps as any);
+        if(this.backgroundView) this.backgroundView.setProperty(prop.MORE, this.backgroundProps);
 
         return super.onTouchDown(data);
     }
 
-    onTouchMove(data: TouchEventData): boolean {
+    onTouchMove(data: ZeppWidgetEventData): boolean {
         this.backgroundProps.color = 0x222222;
-        this.backgroundView.setProperty(systemUi.prop.MORE, this.backgroundProps as any);
+        if(this.backgroundView) this.backgroundView.setProperty(prop.MORE, this.backgroundProps);
 
         return super.onTouchMove(data);
     }
 
-    onTouchUp(data: TouchEventData): boolean {
+    onTouchUp(data: ZeppWidgetEventData): boolean {
         this.backgroundProps.color = 0x222222;
-        this.backgroundView.setProperty(systemUi.prop.MORE, this.backgroundProps as any);
+        if(this.backgroundView) this.backgroundView.setProperty(prop.MORE, this.backgroundProps);
 
         if(this.props.onClick) this.props.onClick();
         return super.onTouchUp(data);
@@ -146,11 +153,11 @@ export class HeadlineButton extends Component<HeadlineButtonProps> {
 
     onFocus() {
         this.backgroundProps.color = 0x444444;
-        this.backgroundView.setProperty(systemUi.prop.MORE, this.backgroundProps as any);
+        if(this.backgroundView) this.backgroundView.setProperty(prop.MORE, this.backgroundProps);
     }
 
     onBlur() {
         this.backgroundProps.color = 0x222222;
-        this.backgroundView.setProperty(systemUi.prop.MORE, this.backgroundProps as any);
+        if(this.backgroundView) this.backgroundView.setProperty(prop.MORE, this.backgroundProps);
     }
 }

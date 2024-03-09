@@ -1,10 +1,10 @@
-import {Component} from "./Component";
-import {SCREEN_HEIGHT} from "../UiProperties/UiProperties";
-import * as Interaction from "../System/Interaction";
-import * as PageTools from "../System/PageTools";
-import {TouchEventData} from "./Types";
-import {UiTheme} from "./UiTheme";
-import {systemApp, systemUi} from "../System";
+import { Component } from "./Component";
+import { SCREEN_HEIGHT } from "../UiProperties";
+import * as Interaction from "../../zosx/interaction";
+import { UiTheme } from "./UiTheme";
+import { setStatusBarVisible } from "../../zosx/ui";
+import { ZeppWidgetEventData } from "../../zosx/ui/Types";
+import { getScrollTop, scrollTo } from "../../zosx/page";
 
 /**
  * RootComponent - base component that can fit another ones into them.
@@ -19,7 +19,7 @@ export abstract class RootComponent<P> extends Component<P> {
      * If null, no smooth scroll is pending. Numeric value mean scrollPosition
      * that should be reached.
      */
-    public smoothScrollPosition: number = null;
+    public smoothScrollPosition: number | null = null;
     /**
      * Will change render direction from top-to-bottom to bottom-to-top
      */
@@ -52,7 +52,7 @@ export abstract class RootComponent<P> extends Component<P> {
      * Timer used for scroll position check
      * @private
      */
-    private internalTickTimer: number;
+    private internalTickTimer: NodeJS.Timeout | null = null;
 
     /**
      * Default root component constructor
@@ -98,9 +98,11 @@ export abstract class RootComponent<P> extends Component<P> {
         Interaction.offDigitalCrown();
 
         // System setup
-        systemUi.setStatusBarVisible(!this.hideStatusBar);
-        Interaction.onKey((key: number, action: number) => {
-            return this.handleButtonEvent(key, action);
+        setStatusBarVisible(!this.hideStatusBar);
+        Interaction.onKey({
+            callback: (key: number, action: number) => {
+                return this.handleButtonEvent(key, action);
+            }
         });
 
         // Layer scroll check timer
@@ -113,19 +115,19 @@ export abstract class RootComponent<P> extends Component<P> {
      * @protected
      */
     protected onInternalTimerTick(): number {
-        const scrollPosition = -PageTools.getScrollTop();
+        const scrollPosition = -getScrollTop();
 
         if(scrollPosition < this.minScrollPosition) {
-            PageTools.scrollTo({y: -this.minScrollPosition});
+            scrollTo({y: -this.minScrollPosition});
         }
 
         if(this.smoothScrollPosition != null) {
             const step = Math.round((this.smoothScrollPosition - scrollPosition) / 2);
             if(Math.abs(step) < 4) {
-                PageTools.scrollTo({y: -this.smoothScrollPosition});
+                scrollTo({y: -this.smoothScrollPosition});
                 this.smoothScrollPosition = null;
             } else {
-                PageTools.scrollTo({y: - scrollPosition - step});
+                scrollTo({y: - scrollPosition - step});
             }
         }
 
@@ -141,7 +143,7 @@ export abstract class RootComponent<P> extends Component<P> {
         // Unregister all
         Interaction.offKey();
         Interaction.offDigitalCrown();
-        clearInterval(this.internalTickTimer);
+        if(this.internalTickTimer) clearInterval(this.internalTickTimer);
     }
 
     /**
@@ -181,7 +183,7 @@ export abstract class RootComponent<P> extends Component<P> {
 
         degree = this.renderDirection * degree;
 
-        let cy: number = null;
+        let cy: number | null = null;
         if(this.focusPosition < 0) {
             // Expect that currently is focused previous one component, if we don't know who it is
             const recovered = this.recoverFocusPosition() + (degree > 0 ? -1 : 1);
@@ -190,7 +192,7 @@ export abstract class RootComponent<P> extends Component<P> {
             this.focusPosition = recovered;
         } else {
             // If focus isn't recovered, get current focused item pos to ensure that next one is near to get scroll
-            cy = -PageTools.getScrollTop();
+            cy = -getScrollTop();
         }
 
         // Handle with current focused item?
@@ -210,7 +212,7 @@ export abstract class RootComponent<P> extends Component<P> {
         } while(!this.nestedComponents[index].isFocusable);
 
         // Is component near?
-        if(cy != null && Math.abs(this.nestedComponents[index].geometry.y - cy) > SCREEN_HEIGHT * 0.9)
+        if(cy != null && Math.abs((this.nestedComponents[index].geometry.y ?? 0) - cy) > SCREEN_HEIGHT * 0.9)
             return false;
 
         // Drop focus from current component
@@ -240,7 +242,7 @@ export abstract class RootComponent<P> extends Component<P> {
     /**
      * Handle touch up event
      */
-    onTouchUp(_data: TouchEventData): boolean {
+    onTouchUp(_data: ZeppWidgetEventData): boolean {
         return false;
     }
 
@@ -248,7 +250,7 @@ export abstract class RootComponent<P> extends Component<P> {
      * Drop focus when touching grass, or display.
      * @param _data Touch event data, useless for us.
      */
-    onTouchDown(_data: TouchEventData): boolean {
+    onTouchDown(_data: ZeppWidgetEventData): boolean {
         this.dropWheelFocus();
         return true;
     }

@@ -1,9 +1,10 @@
 import { Component } from "../UiComponent";
 import { ActionBarItem, ActionBarItemView } from "./Types";
-import { IHmUIWidget, systemUi } from "../System";
 import { ICON_SIZE } from "../UiProperties";
+import { createWidget, deleteWidget, event, prop, widget } from "../../zosx/ui";
+import { ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
 
-const ACTION_ICON_SIZE = Math.max(48, ICON_SIZE);
+const ACTION_ICON_SIZE = Math.max(32, ICON_SIZE);
 const ACTION_ITEM_SIZE = ACTION_ICON_SIZE * 2;
 const ROW_HEIGHT = ACTION_ITEM_SIZE + 8;
 const ITEM_ICON_MARGIN = Math.floor((ACTION_ITEM_SIZE - 4 - ACTION_ICON_SIZE) / 2);
@@ -15,7 +16,7 @@ export class ActionBar extends Component<ActionBarItem[]> {
     private wheelFocusPosition: number = -1;
 
     protected getAutoHeight(): number {
-        const itemsPerRow = Math.floor(this.geometry.w / ACTION_ITEM_SIZE);
+        const itemsPerRow = Math.floor((this.geometry.w ?? 1) / ACTION_ITEM_SIZE);
         return Math.ceil(this.props.length / itemsPerRow) * ROW_HEIGHT;
     }
 
@@ -24,12 +25,18 @@ export class ActionBar extends Component<ActionBarItem[]> {
             // Default view native props
             if(!this.views[i]) this.views[i] = {
                 backgroundProps: {
+                    x: 0,
+                    y: 0,
                     color: 0x222222,
                     w: ACTION_ITEM_SIZE - 4,
                     h: ACTION_ITEM_SIZE - 4,
                     radius: Math.floor(ACTION_ITEM_SIZE / 2) - 1,
                 },
-                iconProps: {src: ""},
+                iconProps: {
+                    x: 0,
+                    y: 0,
+                    src: ""
+                },
             }
 
             // Update native props
@@ -40,6 +47,8 @@ export class ActionBar extends Component<ActionBarItem[]> {
     }
 
     protected onGeometryChange() {
+        if(this.geometry.w == null || this.geometry.x == null || this.geometry.y == null)
+            return;
         const maxItemsInRow = Math.floor(this.geometry.w / ACTION_ITEM_SIZE);
         const maxItemWidth = Math.floor(ACTION_ITEM_SIZE * 1.5);
         const rows = Math.ceil(this.props.length / maxItemsInRow);
@@ -64,25 +73,26 @@ export class ActionBar extends Component<ActionBarItem[]> {
         for(let i = 0; i < this.views.length; i++) {
             const v = this.views[i];
 
-            v.background = systemUi.createWidget(systemUi.widget.FILL_RECT, v.backgroundProps);
+            v.background = createWidget(widget.FILL_RECT, v.backgroundProps);
             this.setupEventsAt(v.background, i);
-            v.icon = systemUi.createWidget(systemUi.widget.IMG, v.iconProps);
+            v.icon = createWidget(widget.IMG, v.iconProps);
             this.setupEventsAt(v.icon, i);
         }
     }
 
     protected onDestroy() {
         for(const v of this.views) {
-            systemUi.deleteWidget(v.icon);
-            systemUi.deleteWidget(v.background);
+            deleteWidget(v.icon);
+            deleteWidget(v.background);
         }
     }
 
     protected onComponentUpdate() {
         // TODO: remove items from actionbar when they're removed props
         for(const v of this.views) {
-            v.background.setProperty(systemUi.prop.MORE, v.backgroundProps as any);
-            v.icon.setProperty(systemUi.prop.MORE, v.iconProps as any);
+            if(!v.background || !v.icon) continue;
+            v.background.setProperty(prop.MORE, v.backgroundProps as any);
+            v.icon.setProperty(prop.MORE, v.iconProps as any);
         }
     }
 
@@ -100,12 +110,11 @@ export class ActionBar extends Component<ActionBarItem[]> {
         this.raiseViewFocus(-1);
     }
 
-    protected setupEventsAt(nativeWidget: IHmUIWidget, index?: number) {
+    protected setupEventsAt(nativeWidget: ZeppWidget<any, any>, index?: number) {
         super.setupEventsAt(nativeWidget);
-        nativeWidget.addEventListener(systemUi.event.CLICK_UP, (d) => {
-            this.onTouchUp(d);
-            if(index && this.props[index].onClick)
-                this.props[index].onClick();
+        nativeWidget.addEventListener(event.CLICK_UP, (p :ZeppWidgetEventData) => {
+            this.onTouchUp(p);
+            index && this.props[index].onClick();
         })
     }
 
@@ -131,17 +140,19 @@ export class ActionBar extends Component<ActionBarItem[]> {
     }
 
     private raiseViewFocus(next: number): void {
-        // console.log(`ActionBar focus=${next}`)
         const prev = this.wheelFocusPosition;
         this.wheelFocusPosition = next;
 
         if(prev > -1) {
             this.views[prev].backgroundProps.color = this.getItemBackgroundColor(prev);
-            this.views[prev].background.setProperty(systemUi.prop.MORE, this.views[prev].backgroundProps as any);
+            const v = this.views[prev].background;
+            if(v) v.setProperty(prop.MORE, this.views[prev].backgroundProps);
         }
+
         if(next > -1) {
             this.views[next].backgroundProps.color = this.getItemBackgroundColor(next);
-            this.views[next].background.setProperty(systemUi.prop.MORE, this.views[next].backgroundProps as any);
+            const v = this.views[next].background;
+            if(v) v.setProperty(prop.MORE, this.views[next].backgroundProps);
         }
     }
 }

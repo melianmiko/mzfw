@@ -1,15 +1,17 @@
 import { PaperComponent } from "../UiPaperComponent";
-import { IHmUIWidget, IHmUIWidgetOptions, systemUi } from "../System";
 import { TextLayoutProvider } from "../SystemTools";
 import { ListEntryWidgetProps } from "./Types";
 import { ensureIsNotBand7, ICON_OFFSET, ICON_OFFSET_AFTER_MPX, ICON_SIZE, IS_MI_BAND_7 } from "../UiProperties";
 import { DESCRIPTION_SIZE_DELTA, VERT_MARGIN } from "./ListItemSizes";
+import { ZeppWidget } from "../../zosx/ui/Types";
+import { ZeppImgWidgetOptions, ZeppTextWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
+import { deleteWidget, prop, text_style, widget } from "../../zosx/ui";
 
 export class ListItem extends PaperComponent<ListEntryWidgetProps> {
-    private textBoxWidth: number;
-    private iconView: IHmUIWidget;
-    private titleView: IHmUIWidget;
-    private descriptionView: IHmUIWidget;
+    private textBoxWidth: number = 0;
+    private iconView: ZeppWidget<ZeppImgWidgetOptions, {}> | null = null;
+    private titleView: ZeppWidget<ZeppTextWidgetOptions, {}> | null = null;
+    private descriptionView: ZeppWidget<ZeppTextWidgetOptions, {}> | null = null;
     private titleLayout = new TextLayoutProvider();
     private descriptionLayout = new TextLayoutProvider();
 
@@ -32,10 +34,10 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
 
     onRender() {
         super.onRender();
-
-        this.iconView = this.group.createWidget(systemUi.widget.IMG, this.iconViewProps);
-        this.titleView = this.group.createWidget(systemUi.widget.TEXT, this.titleViewProps);
-        this.descriptionView = this.group.createWidget(systemUi.widget.TEXT, this.descriptionViewProps);
+        if(!this.group) return;
+        this.iconView = this.group.createWidget<ZeppImgWidgetOptions>(widget.IMG, this.iconViewProps);
+        this.titleView = this.group.createWidget<ZeppTextWidgetOptions>(widget.TEXT, this.titleViewProps);
+        this.descriptionView = this.group.createWidget<ZeppTextWidgetOptions>(widget.TEXT, this.descriptionViewProps);
         this.setupEventsAt(this.iconView);
         this.setupEventsAt(this.titleView);
         this.setupEventsAt(this.descriptionView);
@@ -44,16 +46,16 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
     onDestroy() {
         ensureIsNotBand7();
 
-        systemUi.deleteWidget(this.iconView);
-        systemUi.deleteWidget(this.titleView);
-        systemUi.deleteWidget(this.descriptionView);
+        deleteWidget(this.iconView);
+        deleteWidget(this.titleView);
+        deleteWidget(this.descriptionView);
         super.onDestroy();
     }
 
-    get iconViewProps(): IHmUIWidgetOptions {
+    get iconViewProps(): ZeppImgWidgetOptions {
         return {
             x: ICON_OFFSET,
-            y: this.props.description ? VERT_MARGIN : Math.floor((this.geometry.h - ICON_SIZE) / 2),
+            y: this.props.description ? VERT_MARGIN : Math.floor(((this.geometry.h ?? 0) - ICON_SIZE) / 2),
             w: ICON_SIZE,
             h: ICON_SIZE,
             src: `icon/${ICON_SIZE}/${this.props.icon}.png`,
@@ -61,17 +63,17 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
     }
 
     protected onPropertiesChange() {
-        let width = this.geometry.w - ICON_OFFSET * 2;
+        if(!this.root) return;
+
+        let width = (this.geometry.w ?? 0) - ICON_OFFSET * 2;
         if(this.props.icon) width = width - ICON_SIZE - (ICON_OFFSET * ICON_OFFSET_AFTER_MPX);
         this.textBoxWidth = width;
-        // console.log("textBoxWidth", width);
 
         // Text metrics
         this.titleLayout.performUpdate(this.props.title, this.textBoxWidth,
             this.root.theme.FONT_SIZE);
-        this.descriptionLayout.performUpdate(this.props.description, this.textBoxWidth,
+        this.descriptionLayout.performUpdate(this.props.description ?? "", this.textBoxWidth,
             this.root.theme.FONT_SIZE - DESCRIPTION_SIZE_DELTA);
-        // console.log("Sizes for AH updated");
     }
 
     getAutoHeight(): number {
@@ -82,44 +84,44 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
 
     onComponentUpdate() {
         super.onComponentUpdate();
-        this.iconView.setProperty(systemUi.prop.MORE, this.iconViewProps as any);
-        this.titleView.setProperty(systemUi.prop.MORE, this.titleViewProps as any);
-        this.descriptionView.setProperty(systemUi.prop.MORE, this.descriptionViewProps as any);
+        if(this.iconView) this.iconView.setProperty(prop.MORE, this.iconViewProps);
+        if(this.titleView) this.titleView.setProperty(prop.MORE, this.titleViewProps);
+        if(this.descriptionView) this.descriptionView.setProperty(prop.MORE, this.descriptionViewProps);
     }
 
-    get titleViewProps(): IHmUIWidgetOptions {
+    get titleViewProps(): ZeppTextWidgetOptions {
         const textBasedHeight = this.titleLayout.height + this.descriptionLayout.height;
         return {
             x: typeof this.props.icon == "string" ? ICON_OFFSET * (1 + ICON_OFFSET_AFTER_MPX) + ICON_SIZE : ICON_OFFSET,
-            y: Math.round((this.geometry.h - textBasedHeight) / 2),
+            y: Math.round(((this.geometry.h ?? 0) - textBasedHeight) / 2),
             w: this.textBoxWidth,
             h: this.titleLayout.height,
-            text_size: this.root.theme.FONT_SIZE,
+            text_size: this.root ? this.root.theme.FONT_SIZE : 18,
             color: this.props.textColor,
-            text_style: systemUi.text_style.WRAP,
+            text_style: text_style.WRAP,
             text: this.props.title,
         };
     }
 
-    get descriptionViewProps(): IHmUIWidgetOptions {
+    get descriptionViewProps(): ZeppTextWidgetOptions {
         const textBasedHeight = this.titleLayout.height + this.descriptionLayout.height;
         return {
             x: typeof this.props.icon == "string" ? ICON_OFFSET * (1 + ICON_OFFSET_AFTER_MPX) + ICON_SIZE : ICON_OFFSET,
-            y: Math.round((this.geometry.h - textBasedHeight) / 2) + this.titleLayout.height,
+            y: Math.round(((this.geometry.h ?? 0) - textBasedHeight) / 2) + this.titleLayout.height,
             w: this.textBoxWidth,
             h: this.descriptionLayout.height,
-            text_size: this.root.theme.FONT_SIZE - DESCRIPTION_SIZE_DELTA,
+            text_size: (this.root ? this.root.theme.FONT_SIZE : 18) - DESCRIPTION_SIZE_DELTA,
             color: this.props.descriptionColor,
-            text_style: systemUi.text_style.WRAP,
-            text: this.props.description,
+            text_style: text_style.WRAP,
+            text: this.props.description ?? "",
         };
     }
 
     onClick() {
-        this.props.onClick();
+        this.props.onClick && this.props.onClick();
     }
 
     onLongClick() {
-        this.props.onLongClick();
+        this.props.onLongClick && this.props.onLongClick();
     }
 }

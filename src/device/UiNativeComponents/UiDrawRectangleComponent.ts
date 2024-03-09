@@ -1,13 +1,15 @@
-import {IZeppFillRectWidgetOptions, systemUi} from "../System";
-import {NativeComponent} from "./NativeComponent";
-import {UiDrawRectangleComponentProps} from "./Types";
+import { NativeComponent } from "./NativeComponent";
+import { UiDrawRectangleComponentProps } from "./Types";
+import { ZeppFillRectWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
+import { ZeppWidgetID } from "../../zosx/ui/Types";
+import { widget } from "../../zosx/ui";
 
 /**
  * systemUI.widget.FILL_RECT wrapper component.
  */
-export class UiDrawRectangleComponent extends NativeComponent<UiDrawRectangleComponentProps, IZeppFillRectWidgetOptions> {
-    protected widgetID: number = systemUi.widget.FILL_RECT;
-    protected nativeProps: IZeppFillRectWidgetOptions = {};
+export class UiDrawRectangleComponent extends NativeComponent<UiDrawRectangleComponentProps, ZeppFillRectWidgetOptions> {
+    protected widgetID: ZeppWidgetID = widget.FILL_RECT;
+    protected nativeProps: ZeppFillRectWidgetOptions = {x: 0, y: 0, w: 0, h: 0,};
     protected defaultProps: UiDrawRectangleComponentProps = {
         height: 10,
         color: 0x222222,
@@ -15,24 +17,18 @@ export class UiDrawRectangleComponent extends NativeComponent<UiDrawRectangleCom
     }
 
     updateProperties(): void {
-        this.nativeProps = {
-            h: this.props.height,
-            radius: this.props.radius,
-            color: this.props.color,
-            ...this.nativeProps,
-        }
+        this.nativeProps.radius = this.props.radius;
+        this.nativeProps.color = this.props.color;
     }
 
     updateGeometry(): void {
-        this.nativeProps = {
-            x: this.geometry.x,
-            y: this.geometry.y,
-            w: this.geometry.w,
-            ...this.nativeProps,
-        }
+        if(this.geometry.x) this.nativeProps.x = this.geometry.x;
+        if(this.geometry.y) this.nativeProps.y = this.geometry.y;
+        if(this.geometry.w) this.nativeProps.w = this.geometry.w;
+        if(this.geometry.h) this.nativeProps.h = this.geometry.h;
     }
 
     getAutoHeight(): number {
-        return this.props.height;
+        return this.props.height ?? 50;
     }
 }
