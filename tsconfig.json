@@ -2,12 +2,8 @@
   "include": [
     "./src"
   ],
-  "exclude": [
-    "node_modules",
-    "**/*.d.ts"
-  ],
   "compilerOptions": {
-    "outDir": ".",
+    "outDir": "./package",
     "rootDir": "src",
     "module": "ES6",
     "target": "ES2021",

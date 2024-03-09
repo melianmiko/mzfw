@@ -1,0 +1,11 @@
+{
+  "name": "mzfw",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "melianmiko",
+  "license": "ISC"
+}
