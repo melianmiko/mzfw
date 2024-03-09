@@ -1,19 +1,15 @@
 import { SideMessaging } from "./SideMessaging";
 import { MessageContext } from "./Types";
 import { SideMessageEvents } from "./Enums";
-
-/**
- * Use this for compatability with messageBuilder depend on code.
- */
-export let messageBuilder: SideMessaging | null;
+import { glob } from "../../zosx/internal";
 
 /**
  * Init messaging connection
  * @param appID Current app ID, if not set, we'll try to detect it from zeusx config
  */
 export function initMessaging(appID: number) {
-  messageBuilder = new SideMessaging(appID);
-  messageBuilder.connect();
+  glob["messageBuilder"] = new SideMessaging(appID);
+  glob["messageBuilder"].connect();
 }
 
 /**
@@ -21,6 +17,7 @@ export function initMessaging(appID: number) {
  * Call this in app.onDestroy()
  */
 export function closeMessaging() {
+  const messageBuilder: SideMessaging | null = glob["messageBuilder"];
   if(messageBuilder) messageBuilder.close();
 }
 
@@ -29,6 +26,7 @@ export function closeMessaging() {
  * @param callback Message handler
  */
 export function registerMessageHandler(callback: (ctx: MessageContext) => any) {
+  const messageBuilder: SideMessaging | null = glob["messageBuilder"];
   if(!messageBuilder) throw new MessagingNotInitializedError();
   messageBuilder.on(SideMessageEvents.ON_MESSAGE, callback);
 }
@@ -38,6 +36,7 @@ export function registerMessageHandler(callback: (ctx: MessageContext) => any) {
  * @param callback Message handler
  */
 export function unregisterMessageHandler(callback?: (ctx: MessageContext) => any) {
+  const messageBuilder: SideMessaging | null = glob["messageBuilder"];
   if(!messageBuilder) throw new MessagingNotInitializedError();
   messageBuilder.off(SideMessageEvents.ON_MESSAGE, callback);
 }
@@ -48,7 +47,8 @@ export function unregisterMessageHandler(callback?: (ctx: MessageContext) => any
  * @param data Any data
  * @param timeout Request timeout.
  */
-export function sendRequestMessage<P>(data: any, timeout: number = 60000): Promise<P> {
+export function sendRequestMessage<D = any, P = any>(data: D, timeout: number = 60000): Promise<P> {
+  const messageBuilder: SideMessaging | null = glob["messageBuilder"];
   if(!messageBuilder) throw new MessagingNotInitializedError();
   return messageBuilder.request<P>(data, {timeout});
 }

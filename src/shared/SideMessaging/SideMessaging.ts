@@ -9,12 +9,13 @@ import { ZeppSideServiceMessaging } from "../../zosx/side";
 
 declare const messaging: ZeppSideServiceMessaging;
 
-const DEBUG = true;
-const IS_SIDE_SERVICE = typeof messaging != "undefined";
+const DEBUG = false;
 const PART_SIZE = 2048;
 const RQ_HEADER_SIZE = 16;
-const ble: ZeppBleLibrary | null = IS_SIDE_SERVICE ? null : osImport<ZeppBleLibrary>("@zos/ble", "hmBle");
 
+export const IS_SIDE_SERVICE = typeof messaging != "undefined";
+
+const ble: ZeppBleLibrary | null = IS_SIDE_SERVICE ? null : osImport<ZeppBleLibrary>("@zos/ble", "hmBle");
 
 export class SideMessaging extends EventBus<SideMessageEvents, MessageContext> {
   private readonly appId: number;
@@ -202,7 +203,6 @@ export class SideMessaging extends EventBus<SideMessageEvents, MessageContext> {
 
       buffer.writeUInt16LE(dataLength, offset + 2); // partLength
       buffer.writeUInt16LE(partID, offset + 4); // partID
-      console.log(buffer.byteLength, dataOffset, dataLength);
       body.copy(buffer, RQ_HEADER_SIZE + offset,
         dataOffset, dataOffset + dataLength);
 

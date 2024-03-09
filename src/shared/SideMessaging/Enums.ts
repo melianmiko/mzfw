@@ -7,6 +7,7 @@ export enum MessageType {
 export enum MessageParseType {
   RAW,
   JSON,
+  MULTIPART = 255,
 }
 
 export enum SideMessageEvents {
