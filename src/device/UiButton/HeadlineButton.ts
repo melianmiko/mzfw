@@ -12,8 +12,8 @@ import { align, createWidget, deleteWidget, prop, text_style, widget } from "../
 
 const BTN_PADDING = 8;
 const SIZE_OPTION = IS_SMALL_SCREEN_DEVICE ? (IS_BAND_7 ? 0 : 1) : 2;
-const ICON_SIZE = [32, 24, 32][SIZE_OPTION];
-const TEXT_SIZE = [0, 20, 22][SIZE_OPTION];
+const ICON_SIZE = [32, 24, 48][SIZE_OPTION];
+const TEXT_SIZE = [0, 20, 24][SIZE_OPTION];
 
 /**
  * Headline button, for use in header/footer of page.
