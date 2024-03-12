@@ -1,11 +1,10 @@
 export type ListEntryWidgetProps = {
-    title: string,
+    title?: string,
     icon?: string,
     description?: string,
-    textColor?: number,
+    titleColor?: number,
     descriptionColor?: number,
     onClick?(): any,
-    onLongClick?(): any,
 }
 
 export type ChildPositionInfo = {

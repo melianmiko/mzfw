@@ -20,9 +20,8 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
     onInit() {
         this.props = {
             onClick(): any {},
-            onLongClick(): any {},
-            textColor: 0xFFFFFF,
-            descriptionColor: 0x999999,
+            titleColor: this.root.theme.TEXT_COLOR,
+            descriptionColor: this.root.theme.TEXT_COLOR_2,
 
             // Mi Band 7 system-like UI settings
             paperBackgroundMarginV: IS_MI_BAND_7 ? 2 : 0,
@@ -97,9 +96,9 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
             w: this.textBoxWidth,
             h: this.titleLayout.height,
             text_size: this.root ? this.root.theme.FONT_SIZE : 18,
-            color: this.props.textColor,
+            color: this.props.titleColor,
             text_style: text_style.WRAP,
-            text: this.props.title,
+            text: this.props.title ?? "",
         };
     }
 
@@ -119,9 +118,5 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
 
     onClick() {
         this.props.onClick && this.props.onClick();
-    }
-
-    onLongClick() {
-        this.props.onLongClick && this.props.onLongClick();
     }
 }

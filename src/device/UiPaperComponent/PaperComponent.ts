@@ -1,6 +1,6 @@
 import { Component } from "../UiComponent";
 import { KEY_EVENT_PRESS, KEY_EVENT_RELEASE } from "../../zosx/interaction";
-import { IS_SMALL_SCREEN_DEVICE } from "../UiProperties";
+import { IS_SMALL_SCREEN_DEVICE, IS_MI_BAND_7 } from "../UiProperties";
 import { ZeppGroupInstance, ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
 import { ZeppFillRectWidgetOptions, ZeppWidgetPositionOptions } from "../../zosx/ui/WidgetOptionTypes";
 import { createWidget, deleteWidget, prop, widget } from "../../zosx/ui";
@@ -11,6 +11,9 @@ export type PaperWidgetProps = {
     paperRadius?: number,
     secondActionName?: string,
     onSecondActionClick?(): any,
+    paperBackgroundNormal?: number,
+    paperBackgroundSelected?: number,
+    paperBackgroundPressed?: number,
     paperBackgroundMarginV?: number,
     paperBackgroundMarginH?: number,
 }
@@ -19,14 +22,11 @@ export type PaperWidgetProps = {
 export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> {
     public isFocusable: boolean = true;
 
-    protected colorDefault: number = 0x0;
-    protected colorSelected = 0x333333;
-    protected colorPressed = 0x444444;
     protected button: ZeppWidget<any, {}> | null = null;
     protected group: ZeppWidget<ZeppWidgetPositionOptions, ZeppGroupInstance> | null = null;
     protected paperBackground: ZeppWidget<ZeppFillRectWidgetOptions, {}> | null = null;
 
-    private color: number = this.colorDefault;
+    private color: number = 0;
     private pressedSince: number = 0;
     private clickData: ZeppWidgetEventData | null = null;
 
@@ -36,8 +36,18 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
     private isFocused: boolean = false;
     private isWheelDown: boolean = false;
 
+    onInit() {
+        this.props = {
+            paperBackgroundNormal: this.root.theme.PAPER_NORMAL,
+            paperBackgroundSelected: this.root.theme.PAPER_SELECTED,
+            paperBackgroundPressed: this.root.theme.PAPER_PRESSED,
+            ...this.props,
+        }
+        this.color = this.props.paperBackgroundNormal;
+    }
+
     onRender() {
-        this.color = this.colorDefault;
+        this.color = this.props.paperBackgroundNormal;
 
         if(this.props.secondActionName)
             this.button = createWidget(widget.BUTTON, this.buttonProps);
@@ -71,7 +81,7 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
         if(this.pressedSince > 0) return;
 
         // UI
-        this.setColor(this.colorPressed);
+        this.setColor(this.props.paperBackgroundPressed);
 
         // Logical handler
         this.pressedSince = Date.now();
@@ -98,7 +108,7 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
     private onClickCancel(failure: boolean = false) {
         if(this.pressedSince == 0) return;
 
-        this.setColor(this.isFocused ? this.colorSelected : this.colorDefault);
+        this.setColor(this.isFocused ? this.props.paperBackgroundSelected : this.props.paperBackgroundNormal);
 
         if(!failure && Date.now() - this.pressedSince < 350 && this.clickData) {
             this.onClick(this.clickData);
@@ -171,12 +181,12 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
 
     onFocus() {
         this.isFocused = true;
-        this.setColor(this.colorSelected);
+        this.setColor(this.props.paperBackgroundSelected);
     }
 
     onBlur() {
         this.isFocused = false;
-        this.setColor(this.colorDefault);
+        this.setColor(this.props.paperBackgroundNormal);
     }
 
     protected onComponentUpdate() {
