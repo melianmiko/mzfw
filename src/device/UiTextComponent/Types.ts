@@ -9,4 +9,5 @@ export type TextComponentProps = {
     marginV?: number,
     textSize?: number,
     textStyle?: ZeppWidgetTextStyle,
+    textColor?: number,
 };

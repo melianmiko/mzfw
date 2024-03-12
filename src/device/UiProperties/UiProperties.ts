@@ -64,7 +64,11 @@ export const BASE_FONT_SIZE = ((): number => {
     return Math.min(32, Math.floor(SCREEN_WIDTH / 12));
 })();
 
-export const ICON_SIZE = DEVICE_SHAPE == "band" ? 24 : 48;
+export const ICON_SIZE: number = ((): number => {
+    if(DEVICE_SHAPE == "band") return 24;
+    if(IS_SMALL_SCREEN_DEVICE) return 48;
+    return 56;
+})();
 
 export const ICON_OFFSET = IS_SMALL_SCREEN_DEVICE ? 8 : 16;
 

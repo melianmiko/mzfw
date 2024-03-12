@@ -1,4 +1,4 @@
-import { RootComponent } from "./RootComponent";
+import { BaseCompositor } from "../UiCompositor/BaseCompositor";
 import * as Interaction from "../../zosx/interaction";
 import { ComponentGeometry } from "./Types";
 import { ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
@@ -20,7 +20,7 @@ export abstract class Component<P> {
     /**
      * Root component
      */
-    protected root: RootComponent<any> | null = null;
+    protected root: BaseCompositor<any> | null = null;
     /**
      * Is render performed
      */
@@ -50,7 +50,7 @@ export abstract class Component<P> {
      *
      * @param parent Root component to use
      */
-    attachParent(parent: RootComponent<any>) {
+    attachParent(parent: BaseCompositor<any>) {
         this.root = parent;
         this.onInit();
         this.onPropertiesChange();

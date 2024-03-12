@@ -2,6 +2,8 @@ export type UiDrawRectangleComponentProps = {
     height?: number,
     color?: number,
     radius?: number,
+    marginV?: number,
+    marginH?: number,
 }
 
 export type ImageComponentProps = {

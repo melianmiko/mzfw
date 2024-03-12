@@ -1,6 +1,7 @@
-export type ListEntryWidgetProps = {
+export type ListItemProps = {
     title?: string,
     icon?: string,
+    iconPosition?: "left"|"right",
     description?: string,
     titleColor?: number,
     descriptionColor?: number,

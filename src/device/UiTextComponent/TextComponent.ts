@@ -29,8 +29,8 @@ export class TextComponent extends NativeComponent<TextComponentProps, ZeppTextW
 
     onInit() {
         super.onInit();
-        if(!this.props.textSize && this.root)
-            this.props.textSize = this.root.theme.FONT_SIZE;
+        this.props.textSize = this.props.textSize ?? this.root?.theme.FONT_SIZE ?? 18;
+        this.props.color = this.props.textColor ?? this.root?.theme.TEXT_COLOR ?? 0xFFFFFF;
     }
 
     updateProperties(): void {

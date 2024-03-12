@@ -41,12 +41,10 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
     private colorPressed: number = 0;
 
     protected onPropertiesChange() {
-        if(!this.root) return;
-        
-        const theme = this.root.theme;
-        this.colorNormal = this.props.paperBackgroundNormal ?? theme.PAPER_NORMAL;
-        this.colorSelected = this.props.paperBackgroundSelected ?? theme.PAPER_SELECTED;
-        this.colorPressed = this.props.paperBackgroundPressed ?? theme.PAPER_PRESSED;
+        const theme = this.root?.theme;
+        this.colorNormal = this.props.paperBackgroundNormal ?? theme?.PAPER_NORMAL ?? 0;
+        this.colorSelected = this.props.paperBackgroundSelected ?? theme?.PAPER_SELECTED ?? 0;
+        this.colorPressed = this.props.paperBackgroundPressed ?? theme?.PAPER_PRESSED ?? 0;
     }
 
     onRender() {

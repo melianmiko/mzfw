@@ -1,4 +1,4 @@
-import { Component, RootComponent } from "../UiComponent";
+import { Component, BaseCompositor } from "../UiComponent";
 import {
     BOTTOM_MARGIN,
     DeviceInfo,
@@ -22,7 +22,7 @@ import { getScrollTop, scrollTo } from "../../zosx/page";
 
 const REV_RENDER_START_POS = 10000;
 
-export class ListView<T> extends RootComponent<T> {
+export class ListView<T> extends BaseCompositor<T> {
     private eofListView: ZeppWidget<ZeppImgWidgetOptions, {}> | null = null;
     private childPositionInfo: ChildPositionInfo[] = [];
     private renderStartPos: number = 0;

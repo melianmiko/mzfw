@@ -1,4 +1,4 @@
 export * from "./Component";
-export * from "./RootComponent";
+export * from "../UiCompositor/BaseCompositor";
 export * from "./Types";
-export * from "./UiTheme";
+export * from "../UiCompositor/UiTheme";

@@ -22,13 +22,13 @@ export class UiDrawRectangleComponent extends NativeComponent<UiDrawRectangleCom
     }
 
     updateGeometry(): void {
-        if(this.geometry.x) this.nativeProps.x = this.geometry.x;
-        if(this.geometry.y) this.nativeProps.y = this.geometry.y;
-        if(this.geometry.w) this.nativeProps.w = this.geometry.w;
-        if(this.geometry.h) this.nativeProps.h = this.geometry.h;
+        if(this.geometry.x) this.nativeProps.x = this.geometry.x + (this.props.marginH ?? 0);
+        if(this.geometry.y) this.nativeProps.y = this.geometry.y + (this.props.marginV ?? 0);
+        if(this.geometry.w) this.nativeProps.w = this.geometry.w - (this.props.marginH ?? 0) * 2;
+        if(this.geometry.h) this.nativeProps.h = this.geometry.h - (this.props.marginV ?? 0) * 2;
     }
 
     getAutoHeight(): number {
-        return this.props.height ?? 50;
+        return (this.props.height ?? 50) + (this.props.marginV ?? 0) * 2;
     }
 }

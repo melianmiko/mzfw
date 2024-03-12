@@ -1,4 +1,4 @@
-import { Component } from "./Component";
+import { Component } from "../UiComponent";
 import { SCREEN_HEIGHT } from "../UiProperties";
 import * as Interaction from "../../zosx/interaction";
 import { UiTheme } from "./UiTheme";
@@ -9,7 +9,7 @@ import { getScrollTop, scrollTo } from "../../zosx/page";
 /**
  * RootComponent - base component that can fit another ones into them.
  */
-export abstract class RootComponent<P> extends Component<P> {
+export abstract class BaseCompositor<P> extends Component<P | {}> {
     /**
      * Page UI theme
      */
@@ -58,18 +58,20 @@ export abstract class RootComponent<P> extends Component<P> {
      * Default root component constructor
      * @param props
      */
-    constructor(props: P) {
-        super(props);
+    constructor(props?: P | {}) {
+        super(props ?? {});
         this.root = null;
     }
 
     /**
      * This method will build object entry for ZeppOS `Page()` call.
      *
-     * @param ClassName class entry of RootComponent that will be used as page
+     * @param page class entry of RootComponent that will be used as page
      */
-    static makePage(ClassName: { new(props: any): Component<any> }): any {
-        let page: Component<any>;
+    static makePage(page: BaseCompositor<any>): any {
+        if(!page.performRender)
+            throw new Error("makePage syntax is changed: use page instance instead of class entry");
+
         return {
             onInit(p: string) {
                 let props: any = {};
@@ -78,7 +80,7 @@ export abstract class RootComponent<P> extends Component<P> {
                 } catch (e) {
                 }
 
-                page = new ClassName(props);
+                page.updateProps(props);
                 page.performRender();
             },
             onDestroy() {
@@ -275,4 +277,10 @@ export abstract class RootComponent<P> extends Component<P> {
      * @param child Child that report about height change
      */
     abstract onChildHeightChanged(child: Component<any>): void;
+
+    attachParent() {
+        throw new Error("You can't place one compositor into another one");
+    }
+
+    protected onComponentUpdate() {}
 }
