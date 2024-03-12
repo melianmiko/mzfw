@@ -18,6 +18,8 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
     protected colorDefault: number = IS_MI_BAND_7 ? 0x101010 : 0;
 
     onInit() {
+        if(!this.root) throw new Error("No compositor");
+
         this.props = {
             onClick(): any {},
             titleColor: this.root.theme.TEXT_COLOR,
@@ -69,7 +71,7 @@ export class ListItem extends PaperComponent<ListEntryWidgetProps> {
         this.textBoxWidth = width;
 
         // Text metrics
-        this.titleLayout.performUpdate(this.props.title, this.textBoxWidth,
+        this.titleLayout.performUpdate(this.props.title ?? "", this.textBoxWidth,
             this.root.theme.FONT_SIZE);
         this.descriptionLayout.performUpdate(this.props.description ?? "", this.textBoxWidth,
             this.root.theme.FONT_SIZE - DESCRIPTION_SIZE_DELTA);

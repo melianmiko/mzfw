@@ -36,21 +36,25 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
     private isFocused: boolean = false;
     private isWheelDown: boolean = false;
 
-    onInit() {
-        this.props = {
-            paperBackgroundNormal: this.root.theme.PAPER_NORMAL,
-            paperBackgroundSelected: this.root.theme.PAPER_SELECTED,
-            paperBackgroundPressed: this.root.theme.PAPER_PRESSED,
-            ...this.props,
-        }
-        this.color = this.props.paperBackgroundNormal;
+    private colorNormal: number = 0;
+    private colorSelected: number = 0;
+    private colorPressed: number = 0;
+
+    protected onPropertiesChange() {
+        if(!this.root) return;
+        
+        const theme = this.root.theme;
+        this.colorNormal = this.props.paperBackgroundNormal ?? theme.PAPER_NORMAL;
+        this.colorSelected = this.props.paperBackgroundSelected ?? theme.PAPER_SELECTED;
+        this.colorPressed = this.props.paperBackgroundPressed ?? theme.PAPER_PRESSED;
     }
 
     onRender() {
-        this.color = this.props.paperBackgroundNormal;
+        this.color = this.colorNormal;
 
         if(this.props.secondActionName)
             this.button = createWidget(widget.BUTTON, this.buttonProps);
+
         this.group = createWidget<ZeppWidgetPositionOptions, ZeppGroupInstance>(widget.GROUP, {
             x: this.geometry.x ?? 0,
             y: this.geometry.y ?? 0,
@@ -81,7 +85,7 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
         if(this.pressedSince > 0) return;
 
         // UI
-        this.setColor(this.props.paperBackgroundPressed);
+        this.setColor(this.colorPressed);
 
         // Logical handler
         this.pressedSince = Date.now();
@@ -108,7 +112,7 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
     private onClickCancel(failure: boolean = false) {
         if(this.pressedSince == 0) return;
 
-        this.setColor(this.isFocused ? this.props.paperBackgroundSelected : this.props.paperBackgroundNormal);
+        this.setColor(this.isFocused ? this.colorSelected : this.colorNormal);
 
         if(!failure && Date.now() - this.pressedSince < 350 && this.clickData) {
             this.onClick(this.clickData);
@@ -181,12 +185,12 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
 
     onFocus() {
         this.isFocused = true;
-        this.setColor(this.props.paperBackgroundSelected);
+        this.setColor(this.colorSelected);
     }
 
     onBlur() {
         this.isFocused = false;
-        this.setColor(this.props.paperBackgroundNormal);
+        this.setColor(this.colorNormal);
     }
 
     protected onComponentUpdate() {
