@@ -2,13 +2,16 @@ import { SideMessaging } from "./SideMessaging";
 import { MessageContext } from "./Types";
 import { SideMessageEvents } from "./Enums";
 import { glob } from "../../zosx/internal";
+import { getAppTags } from "../AppTagsProvider";
 
 /**
  * Init messaging connection
  * @param appID Current app ID, if not set, we'll try to detect it from zeusx config
  */
-export function initMessaging(appID: number) {
-  glob["messageBuilder"] = new SideMessaging(appID);
+export function initMessaging() {
+  const appId = getAppTags()[0];
+
+  glob["messageBuilder"] = new SideMessaging(appId);
   glob["messageBuilder"].connect();
 }
 

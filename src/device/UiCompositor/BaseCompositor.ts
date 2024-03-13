@@ -9,7 +9,7 @@ import { getScrollTop, scrollTo } from "../../zosx/page";
 /**
  * RootComponent - base component that can fit another ones into them.
  */
-export abstract class BaseCompositor<P> extends Component<P | {}> {
+export abstract class BaseCompositor<P> extends Component<P> {
     /**
      * Page UI theme
      */
@@ -58,8 +58,8 @@ export abstract class BaseCompositor<P> extends Component<P | {}> {
      * Default root component constructor
      * @param props
      */
-    constructor(props?: P | {}) {
-        super(props ?? {});
+    constructor(props: P) {
+        super(props);
         this.root = null;
     }
 
@@ -68,7 +68,7 @@ export abstract class BaseCompositor<P> extends Component<P | {}> {
      *
      * @param page class entry of RootComponent that will be used as page
      */
-    static makePage(page: BaseCompositor<any>): any {
+    static makePage(page: any): any {
         if(!page.performRender)
             throw new Error("makePage syntax is changed: use page instance instead of class entry");
 
@@ -77,9 +77,9 @@ export abstract class BaseCompositor<P> extends Component<P | {}> {
                 let props: any = {};
                 try {
                     props = JSON.parse(p);
-                } catch (e) {
-                }
+                } catch (e) {}
 
+                page.onInit();
                 page.updateProps(props);
                 page.performRender();
             },
