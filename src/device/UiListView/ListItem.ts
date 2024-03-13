@@ -1,5 +1,5 @@
 import { PaperComponent } from "../UiPaperComponent";
-import { TextLayoutProvider } from "../SystemTools";
+import { TextLayoutProvider } from "../System/TextLayoutProvider";
 import { ListItemProps } from "./Types";
 import { ensureIsNotBand7, ICON_OFFSET, ICON_OFFSET_AFTER_MPX, ICON_SIZE, IS_MI_BAND_7 } from "../UiProperties";
 import { DESCRIPTION_SIZE_DELTA, VERT_MARGIN } from "./ListItemSizes";

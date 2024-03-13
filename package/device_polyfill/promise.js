@@ -1,3 +1,5 @@
+// noinspection JSUnresolvedReference,ExceptionCaughtLocallyJS
+
 import {glob} from "../zosx/internal";
 
 ;(function (global, factory) {
@@ -73,7 +75,7 @@ import {glob} from "../zosx/internal";
         }
       }
 
-      for (var i = 0; i < args.length; i++) {
+      for (let i = 0; i < args.length; i++) {
         res(i, args[i])
       }
     })
@@ -201,7 +203,7 @@ import {glob} from "../zosx/internal";
    * Take a potentially misbehaving resolver function and make sure
    * onFulfilled and onRejected are only called once.
    *
-   * Makes no guarantees about asynchrony.
+   * Makes no guarantees about asynchronous.
    */
   function doResolve(fn, self) {
     let done = false;
@@ -273,7 +275,7 @@ import {glob} from "../zosx/internal";
         }
       }
 
-      for (var i = 0; i < args.length; i++) {
+      for (let i = 0; i < args.length; i++) {
         res(i, args[i])
       }
     })
@@ -325,7 +327,7 @@ import {glob} from "../zosx/internal";
 
   Promise._unhandledRejectionFn = function _unhandledRejectionFn(err) {
     if (typeof console !== 'undefined' && console) {
-      console.log('[jsfwk.error  ] Possible Unhandled Promise Rejection:', err) // eslint-disable-line no-console
+      console.log('[js.error  ] Possible Unhandled Promise Rejection:', err) // eslint-disable-line no-console
     }
   }
 

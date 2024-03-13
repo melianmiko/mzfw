@@ -1,6 +1,6 @@
 import { Component } from "../UiComponent";
 import { KEY_EVENT_PRESS, KEY_EVENT_RELEASE } from "../../zosx/interaction";
-import { IS_SMALL_SCREEN_DEVICE, IS_MI_BAND_7 } from "../UiProperties";
+import { IS_SMALL_SCREEN_DEVICE } from "../UiProperties";
 import { ZeppGroupInstance, ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
 import { ZeppFillRectWidgetOptions, ZeppWidgetPositionOptions } from "../../zosx/ui/WidgetOptionTypes";
 import { createWidget, deleteWidget, prop, widget } from "../../zosx/ui";

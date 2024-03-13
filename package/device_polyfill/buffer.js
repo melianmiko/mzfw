@@ -1,3 +1,5 @@
+/* global DeviceRuntimeCore */
+
 import { glob } from "../zosx/internal";
 
 if(!glob.Buffer) {

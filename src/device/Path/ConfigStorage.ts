@@ -4,7 +4,7 @@ export class ConfigStorage implements Storage {
     private data: {[id: string]: string} = {};
     private dataRestored: boolean = false;
     private writeTimer: NodeJS.Timeout | null = null;
-    private filename: string;
+    private readonly filename: string;
 
     constructor(filename: string) {
         this.filename = filename;

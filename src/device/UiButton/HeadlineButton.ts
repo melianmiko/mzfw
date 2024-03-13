@@ -1,6 +1,6 @@
 import { Component } from "../UiComponent";
 import { HeadlineButtonProps } from "./Types";
-import { TextLayoutProvider } from "../SystemTools";
+import { TextLayoutProvider } from "../System/TextLayoutProvider";
 import { IS_BAND_7, IS_SMALL_SCREEN_DEVICE, WIDGET_WIDTH } from "../UiProperties";
 import { ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
 import {

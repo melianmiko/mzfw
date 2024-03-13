@@ -1,4 +1,4 @@
-import { TextLayoutProvider } from "../SystemTools";
+import { TextLayoutProvider } from "../System/TextLayoutProvider";
 import { TextComponentProps } from "./Types";
 import { NativeComponent } from "../UiNativeComponents";
 import { align, text_style, widget } from "../../zosx/ui";

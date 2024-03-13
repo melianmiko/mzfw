@@ -1,4 +1,4 @@
-import { BaseCompositor } from "../UiCompositor/BaseCompositor";
+import { BaseCompositor } from "../UiCompositor";
 import * as Interaction from "../../zosx/interaction";
 import { ComponentGeometry } from "./Types";
 import { ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
@@ -173,8 +173,9 @@ export abstract class Component<P> {
     /**
      * Will be called when component get focus from keyboard
      * navigation or wheel.
+     * @param _degree Rotation degree
      */
-    onFocus(degree: number): void {};
+    onFocus(_degree: number): void {};
 
     /**
      * Will be called when component lose focus from keyboard
@@ -232,9 +233,9 @@ export abstract class Component<P> {
      * Return true, if you have handled this event to stop parent handlers.
      * Or return false, if you don't want to handle it.
      *
-     * @param degree
+     * @param _degree
      */
-    onWheelSpin(degree: number): boolean {
+    onWheelSpin(_degree: number): boolean {
         return false;
     }
 

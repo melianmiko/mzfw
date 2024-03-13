@@ -1,7 +1,7 @@
 import { glob } from "../../zosx/internal";
 import { getPackageInfo } from "../../zosx/app";
 
-export function getAppTags(): [number, "app"|"watchface"] {
+export function getAppTags(forceValid: boolean = false): [number, "app"|"watchface"] {
     if(glob["__cache_appPath"])
         return glob["__cache_appPath"];
 
@@ -16,6 +16,10 @@ export function getAppTags(): [number, "app"|"watchface"] {
     } catch(e) {
         console.log("ERROR: CAUTION: getPackageInfo() failed, using placeholder values. Note that " +
             "framework won't work normal with them");
+
+        if(forceValid)
+            throw new Error("Use defineAppTags() before reading app tags");
+
         return [999, 'app'];
     }
 }

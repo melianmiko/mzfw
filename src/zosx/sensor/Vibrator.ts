@@ -1,5 +1,5 @@
 import { isLegacyAPI } from "../internal";
-import { ZeppVibratorSensor, VibratorScenes } from "./Types";
+import { ZeppVibratorSensor } from "./Types";
 import { legacyHmSensor } from "./NativeLegacy";
 import { modernHmSensor } from "./NativeModern";
 

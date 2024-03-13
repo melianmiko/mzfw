@@ -1,3 +1,5 @@
+// noinspection JSUnresolvedReference
+
 import {glob} from "../zosx/internal";
 
 if (typeof setTimeout === 'undefined') {

@@ -1,3 +1,4 @@
+
 import { ZeppWidgetGenericOptions } from "./WidgetOptionTypes";
 
 /**
@@ -16,7 +17,7 @@ export interface ZeppUiLibrary extends ZeppGroupInstance {
     prop: ZeppWidgetProperty,
     redraw?(): void,
     setStatusBarVisible(visible: boolean): void,
-    show_level: ZeppWidgetShuwLevel,
+    show_level: ZeppWidgetShowLevel,
     system_status: ZeppWidgetSystemStatus,
     text_style: ZeppWidgetTextStyle,
     updateStatusBarTitle(title: string): void,
@@ -39,7 +40,7 @@ export interface ZeppGroupInstance {
  * `hmUI.createWidget()` instance
  */
 export type ZeppWidget<O, R> = R & {
-    setProperty(id: ZeppWidgetProperty, value: string | number | R | any): void,
+    setProperty(id: ZeppWidgetProperty, value: string | number | O | any): void,
     addEventListener(event: ZeppWidgetEvent, callback: (p: ZeppWidgetEventData) => any): void,
 }
 
@@ -68,6 +69,7 @@ export type ZeppWidgetAlignMode = {
     CENTER_V: ZeppWidgetAlignMode,
 }
 
+// noinspection SpellCheckingInspection
 export type ZeppWidgetAnimStatus = {
     UNKNOW: ZeppWidgetAnimStatus,
     START: ZeppWidgetAnimStatus,
@@ -76,6 +78,7 @@ export type ZeppWidgetAnimStatus = {
     RESUME: ZeppWidgetAnimStatus,
 }
 
+// noinspection SpellCheckingInspection
 export type ZeppWidgetDataType = {
     STEP: ZeppWidgetDataType,
     STEP_TARGET: ZeppWidgetDataType,
@@ -152,6 +155,7 @@ export type ZeppWidgetDateProp = {
     WEEK: ZeppWidgetDateProp,
 }
 
+// noinspection SpellCheckingInspection
 export type ZeppWidgetEditType = {
     STEP: ZeppWidgetEditType,
     BATTERY: ZeppWidgetEditType,
@@ -213,6 +217,7 @@ export type ZeppWidgetEditGroupType = {
     INVALID: ZeppWidgetEditGroupType,
 }
 
+// noinspection SpellCheckingInspection
 export type ZeppWidgetProperty = {
     MORE: ZeppWidgetProperty,
     X: ZeppWidgetProperty,
@@ -285,12 +290,13 @@ export type ZeppWidgetProperty = {
     MOVE_ITEM: ZeppWidgetProperty,
 }
 
-export type ZeppWidgetShuwLevel = {
-    ALL: ZeppWidgetShuwLevel,
-    ONLY_NORMAL: ZeppWidgetShuwLevel,
-    ONAL_AOD: ZeppWidgetShuwLevel,
-    ONLY_AOD: ZeppWidgetShuwLevel,
-    ONLY_EDIT: ZeppWidgetShuwLevel,
+// noinspection SpellCheckingInspection
+export type ZeppWidgetShowLevel = {
+    ALL: ZeppWidgetShowLevel,
+    ONLY_NORMAL: ZeppWidgetShowLevel,
+    ONAL_AOD: ZeppWidgetShowLevel,
+    ONLY_AOD: ZeppWidgetShowLevel,
+    ONLY_EDIT: ZeppWidgetShowLevel,
 }
 
 export type ZeppWidgetEvent = {
@@ -322,6 +328,7 @@ export type ZeppWidgetSystemStatus = {
     CLOCK: ZeppWidgetSystemStatus,
 }
 
+// noinspection SpellCheckingInspection
 /**
  * Enum type: `hmUI.widget`
  */

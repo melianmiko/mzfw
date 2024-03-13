@@ -13,7 +13,7 @@ export const glob = ((): any => {
 })();
 
 /**
- * If true, app is targeting ZeppoS 1.0
+ * If true, app is targeting ZeppOS 1.0
  */
 export const isLegacyAPI: boolean = typeof __$$R$$__ == "undefined";
 

@@ -1,8 +1,8 @@
 import { AnimComponentProps } from "./Types";
-import { NativeComponent } from "../SystemTools";
 import { anim_status, widget } from "../../zosx/ui";
 import { ZeppWidgetID } from "../../zosx/ui/Types";
 import { ZeppImgAnimWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
+import { NativeComponent } from "./NativeComponent";
 
 /**
  * systemUI.widget.IMG_ANIM wrapper component.

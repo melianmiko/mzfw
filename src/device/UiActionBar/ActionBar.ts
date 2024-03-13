@@ -1,6 +1,6 @@
 import { Component } from "../UiComponent";
 import { ActionBarItem, ActionBarItemView } from "./Types";
-import { DEVICE_SHAPE, ICON_SIZE } from "../UiProperties";
+import { DEVICE_SHAPE } from "../UiProperties";
 import { createWidget, deleteWidget, event, prop, widget } from "../../zosx/ui";
 import { ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
 

@@ -6,10 +6,9 @@ import { getAppTags } from "../AppTagsProvider";
 
 /**
  * Init messaging connection
- * @param appID Current app ID, if not set, we'll try to detect it from zeusx config
  */
 export function initMessaging() {
-  const appId = getAppTags()[0];
+  const appId = getAppTags(true)[0];
 
   glob["messageBuilder"] = new SideMessaging(appId);
   glob["messageBuilder"].connect();

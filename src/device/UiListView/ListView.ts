@@ -1,4 +1,4 @@
-import { Component, BaseCompositor } from "../UiComponent";
+import { BaseCompositor, Component } from "../UiComponent";
 import {
     BOTTOM_MARGIN,
     DeviceInfo,

@@ -13,7 +13,7 @@ export function createSpinner(): Component<any> {
         return new ImageComponent({
             imageWidth: 48,
             imageHeight: 48,
-            src: "mzfw/spin_lowram.png",
+            src: "mzfw/spin_low_ram.png",
         });
 
     return new AnimComponent({

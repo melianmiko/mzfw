@@ -1,4 +1,4 @@
-import { isLegacyAPI, osImport } from "../internal";
+import { osImport } from "../internal";
 import { ZeppUiLibrary } from "./Types";
 
 const _systemUi: ZeppUiLibrary = osImport<ZeppUiLibrary>("@zos/ui", "hmUI");

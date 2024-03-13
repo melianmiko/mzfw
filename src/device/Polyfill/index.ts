@@ -1,5 +1,5 @@
 import { glob } from "../../zosx/internal";
-import { ConfigStorage } from "../Path/ConfigStorage";
+import { ConfigStorage } from "../Path";
 import { SessionStoragePolyfill } from "./SessionStoragePolyfill";
 
 if(!glob.localStorage) {

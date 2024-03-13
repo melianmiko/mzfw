@@ -214,7 +214,7 @@ export class SideMessaging extends EventBus<SideMessageEvents, MessageContext> {
   /**
    * Process received hm-style message
    * @param data Message binary data
-   * @private of couse
+   * @private of course
    */
   private deviceProcessMessage(data: ArrayBuffer): void {
     const buffer = Buffer.from(data);

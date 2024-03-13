@@ -1,8 +1,8 @@
-import { ZeppWidgetAlignMode, ZeppWidgetAnimStatus, ZeppWidgetShuwLevel, ZeppWidgetTextStyle } from "./Types";
+import { ZeppWidgetAlignMode, ZeppWidgetAnimStatus, ZeppWidgetShowLevel, ZeppWidgetTextStyle } from "./Types";
 
 export type ZeppWidgetGenericOptions = {
     alpha?: number,
-    show_level?: ZeppWidgetShuwLevel,
+    show_level?: ZeppWidgetShowLevel,
 }
 
 export type ZeppWidgetPositionOptions = {

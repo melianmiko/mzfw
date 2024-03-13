@@ -32,5 +32,7 @@ export type ZeppLegacySensorID = {
     MUSIC: ZeppLegacySensorID,
     SLEEP: ZeppLegacySensorID,
     SPORT: ZeppLegacySensorID,
+    // Typo in firmware, nothing interesting
+    // noinspection SpellCheckingInspection
     BPRESSURE: ZeppLegacySensorID,
 }
