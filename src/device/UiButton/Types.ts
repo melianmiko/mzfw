@@ -10,6 +10,9 @@ export interface ButtonProps extends PaperWidgetProps {
 export interface HeadlineButtonProps {
     text: string;
     icon: string;
-    textColor?: number,
     onClick?(): any;
+    textColor?: number,
+    backgroundNormal?: number,
+    backgroundSelected?: number,
+    backgroundPressed?: number,
 }

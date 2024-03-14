@@ -1,5 +1,5 @@
 import { Component } from "../UiComponent";
-import { ActionBarItem, ActionBarItemView } from "./Types";
+import { ActionBarItemView, ActionBarProps } from "./Types";
 import { DEVICE_SHAPE } from "../UiProperties";
 import { createWidget, deleteWidget, event, prop, widget } from "../../zosx/ui";
 import { ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
@@ -9,7 +9,7 @@ const ACTION_ITEM_SIZE = ACTION_ICON_SIZE * 2;
 const ROW_HEIGHT = ACTION_ITEM_SIZE + 8;
 const ITEM_ICON_MARGIN = Math.floor((ACTION_ITEM_SIZE - 4 - ACTION_ICON_SIZE) / 2);
 
-export class ActionBar extends Component<ActionBarItem[]> {
+export class ActionBar extends Component<ActionBarProps> {
     isFocusable: boolean = true;
 
     private views: ActionBarItemView[] = [];
@@ -17,17 +17,17 @@ export class ActionBar extends Component<ActionBarItem[]> {
 
     protected getAutoHeight(): number {
         const itemsPerRow = Math.floor((this.geometry.w ?? 1) / ACTION_ITEM_SIZE);
-        return Math.ceil(this.props.length / itemsPerRow) * ROW_HEIGHT;
+        return Math.ceil(this.props.children.length / itemsPerRow) * ROW_HEIGHT;
     }
 
     protected onPropertiesChange() {
-        for(let i = 0; i < this.props.length; i++) {
+        for(let i = 0; i < this.props.children.length; i++) {
             // Default view native props
             if(!this.views[i]) this.views[i] = {
                 backgroundProps: {
                     x: 0,
                     y: 0,
-                    color: 0x222222,
+                    color: this.getItemBackgroundColor(i),
                     w: ACTION_ITEM_SIZE - 4,
                     h: ACTION_ITEM_SIZE - 4,
                     radius: Math.floor(ACTION_ITEM_SIZE / 2) - 1,
@@ -40,8 +40,8 @@ export class ActionBar extends Component<ActionBarItem[]> {
             }
 
             // Update native props
-            this.views[i].iconProps.src = `icon/${ACTION_ICON_SIZE}/${this.props[i].icon}.png`
-            this.views[i].iconProps.alpha = this.props[i].disabled ? 120 : 255;
+            this.views[i].iconProps.src = `icon/${ACTION_ICON_SIZE}/${this.props.children[i].icon}.png`
+            this.views[i].iconProps.alpha = this.props.children[i].disabled ? 120 : 255;
             this.views[i].backgroundProps.color = this.getItemBackgroundColor(i);
         }
     }
@@ -51,10 +51,10 @@ export class ActionBar extends Component<ActionBarItem[]> {
             return;
         const maxItemsInRow = Math.floor(this.geometry.w / ACTION_ITEM_SIZE);
         const maxItemWidth = Math.floor(ACTION_ITEM_SIZE * 1.5);
-        const rows = Math.ceil(this.props.length / maxItemsInRow);
+        const rows = Math.ceil(this.props.children.length / maxItemsInRow);
 
         for(let row = 0; row < rows; row++) {
-            const count = Math.min(this.props.length - (row * maxItemsInRow), maxItemsInRow);
+            const count = Math.min(this.props.children.length - (row * maxItemsInRow), maxItemsInRow);
             const itemWidth = Math.min(maxItemWidth, Math.floor(this.geometry.w / count));
             const offsetX = this.geometry.x + Math.floor((this.geometry.w - (itemWidth * count)) / 2);
 
@@ -97,9 +97,11 @@ export class ActionBar extends Component<ActionBarItem[]> {
     }
 
     private getItemBackgroundColor(i: number): number {
-        if(this.props[i].disabled) return 0x111111;
-        if(this.wheelFocusPosition == i) return 0x444444;
-        return 0x222222;
+        if(this.props.children[i].disabled) 
+            return this.props.backgroundDisabled ?? this.root?.theme.BUTTON_DISABLED ?? 0;
+        if(this.wheelFocusPosition == i) 
+            return this.props.backgroundSelected ?? this.root?.theme.BUTTON_SELECTED ?? 0x111111;
+        return this.props.backgroundNormal ?? this.root?.theme.BUTTON_NORMAL ?? 0x222222;
     }
 
     onFocus(degree: number) {
@@ -114,7 +116,7 @@ export class ActionBar extends Component<ActionBarItem[]> {
         super.setupEventsAt(nativeWidget);
         nativeWidget.addEventListener(event.CLICK_UP, (p :ZeppWidgetEventData) => {
             this.onTouchUp(p);
-            index && this.props[index].onClick();
+            index && this.props.children[index].onClick();
         })
     }
 
@@ -123,7 +125,7 @@ export class ActionBar extends Component<ActionBarItem[]> {
         let next = this.wheelFocusPosition;
         do {
             next += degree
-        } while (this.views[next] && this.props[next].disabled);
+        } while (this.views[next] && this.props.children[next].disabled);
 
         if(next > -1 && next < this.views.length) {
             this.raiseViewFocus(next);
@@ -134,8 +136,10 @@ export class ActionBar extends Component<ActionBarItem[]> {
     }
 
     onWheelClick(): boolean {
-        this.props[this.wheelFocusPosition] && this.props[this.wheelFocusPosition].onClick &&
-            this.props[this.wheelFocusPosition].onClick();
+        this.props.children[this.wheelFocusPosition]
+         && this.props.children[this.wheelFocusPosition].onClick
+         && this.props.children[this.wheelFocusPosition].onClick();
+
         return super.onWheelClick();
     }
 

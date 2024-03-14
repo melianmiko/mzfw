@@ -64,7 +64,7 @@ export class HeadlineButton extends Component<HeadlineButtonProps> {
         this.iconProps.src = `icon/${ICON_SIZE}/${this.props.icon}.png`;
 
         this.textProps.text = this.props.text;
-        this.textProps.color = this.props.textColor ?? 0xFFFFFF;
+        this.textProps.color = this.props.textColor ?? this.root?.theme.BUTTON_TEXT ?? 0xFFFFFF;
     }
 
     protected onGeometryChange() {
@@ -83,6 +83,8 @@ export class HeadlineButton extends Component<HeadlineButtonProps> {
     }
 
     protected onRender(): any {
+        this.backgroundProps.color = this.props.backgroundNormal ?? this.root?.theme.BUTTON_NORMAL ?? 0;
+
         this.backgroundView = createWidget(widget.FILL_RECT, this.backgroundProps);
         this.setupEventsAt(this.backgroundView);
         this.iconView = createWidget(widget.IMG, this.iconProps);
@@ -130,21 +132,21 @@ export class HeadlineButton extends Component<HeadlineButtonProps> {
     }
 
     onTouchDown(data: ZeppWidgetEventData): boolean {
-        this.backgroundProps.color = 0x444444;
+        this.backgroundProps.color = this.props.backgroundPressed ?? this.root?.theme.BUTTON_PRESSED ?? 0;
         if(this.backgroundView) this.backgroundView.setProperty(prop.MORE, this.backgroundProps);
 
         return super.onTouchDown(data);
     }
 
     onTouchMove(data: ZeppWidgetEventData): boolean {
-        this.backgroundProps.color = 0x222222;
+        this.backgroundProps.color = this.props.backgroundNormal ?? this.root?.theme.BUTTON_NORMAL ?? 0;
         if(this.backgroundView) this.backgroundView.setProperty(prop.MORE, this.backgroundProps);
 
         return super.onTouchMove(data);
     }
 
     onTouchUp(data: ZeppWidgetEventData): boolean {
-        this.backgroundProps.color = 0x222222;
+        this.backgroundProps.color = this.props.backgroundNormal ?? this.root?.theme.BUTTON_NORMAL ?? 0;
         if(this.backgroundView) this.backgroundView.setProperty(prop.MORE, this.backgroundProps);
 
         if(this.props.onClick) this.props.onClick();
@@ -152,12 +154,12 @@ export class HeadlineButton extends Component<HeadlineButtonProps> {
     }
 
     onFocus() {
-        this.backgroundProps.color = 0x444444;
+        this.backgroundProps.color = this.props.backgroundSelected ?? this.root?.theme.BUTTON_SELECTED ?? 0;
         if(this.backgroundView) this.backgroundView.setProperty(prop.MORE, this.backgroundProps);
     }
 
     onBlur() {
-        this.backgroundProps.color = 0x222222;
+        this.backgroundProps.color = this.props.backgroundNormal ?? this.root?.theme.BUTTON_NORMAL ?? 0;
         if(this.backgroundView) this.backgroundView.setProperty(prop.MORE, this.backgroundProps);
     }
 }

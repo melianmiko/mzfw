@@ -13,4 +13,11 @@ export class UiTheme {
     PAPER_NORMAL: number = IS_MI_BAND_7 ? 0x101010 : 0;
     PAPER_SELECTED: number = 0x333333;
     PAPER_PRESSED:  number = 0x444444;
+
+    // TODO: Select better colors
+    BUTTON_NORMAL: number = 0x111111;
+    BUTTON_SELECTED: number =  0x222222;
+    BUTTON_PRESSED: number = 0x0;
+    BUTTON_DISABLED: number = 0x050505;
+    BUTTON_TEXT: number = 0xFFFFFF;
 }
