@@ -153,10 +153,7 @@ export abstract class Component<P> {
      * Should perform required internal recalculations
      */
     protected onPropertiesChange() {}
-    protected onGeometryChange() {
-        // console.log("fallback onGeom -> onProp")
-        this.onPropertiesChange(); // fallback
-    }
+    protected onGeometryChange() {}
 
     /**
      * Will be called after component constructor.
@@ -198,7 +195,6 @@ export abstract class Component<P> {
      * @param data x,y
      */
     onTouchDown(data: ZeppWidgetEventData): boolean {
-        if(this.root == null) return false;
         return this.root.onTouchDown(data);
     }
 
@@ -207,7 +203,6 @@ export abstract class Component<P> {
      * @param data x,y
      */
     onTouchUp(data: ZeppWidgetEventData): boolean {
-        if(this.root == null) return false;
         return this.root.onTouchUp(data);
     }
 
@@ -216,7 +211,6 @@ export abstract class Component<P> {
      * @param data x,y
      */
     onTouchMove(data: ZeppWidgetEventData): boolean {
-        if(this.root == null) return false;
         return this.root.onTouchMove(data);
     }
 

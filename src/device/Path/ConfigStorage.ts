@@ -37,7 +37,7 @@ export class ConfigStorage implements Storage {
             }
         });
 
-        console.log("loadData", data);
+        // console.log("loadData", data);
 
         if(typeof data == "string") {
             this.data = JSON.parse(data);

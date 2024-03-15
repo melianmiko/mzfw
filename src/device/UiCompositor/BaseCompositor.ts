@@ -59,6 +59,8 @@ export abstract class BaseCompositor<P> implements IRootComponent, IComponentEve
      * @private
      */
     private internalTickTimer: NodeJS.Timeout | null = null;
+    private isGestureLocked: boolean = false;
+    private isGestureUnlockPending: boolean = false;
 
     /**
      * Default root component constructor
@@ -104,11 +106,8 @@ export abstract class BaseCompositor<P> implements IRootComponent, IComponentEve
 
         // System setup
         setStatusBarVisible(!this.hideStatusBar);
-        Interaction.onKey({
-            callback: (key: number, action: number) => {
-                return this.handleButtonEvent(key, action);
-            }
-        });
+        Interaction.onKey({ callback: this.handleButtonEvent.bind(this) });
+        Interaction.onGesture({ callback: this.handleGestureEvent.bind(this) })
 
         // Layer scroll check timer
         this.internalTickTimer = setInterval(this.onInternalTimerTick.bind(this), 50);
@@ -147,8 +146,40 @@ export abstract class BaseCompositor<P> implements IRootComponent, IComponentEve
 
         // Unregister all
         Interaction.offKey();
+        Interaction.offGesture();
         Interaction.offDigitalCrown();
         if(this.internalTickTimer) clearInterval(this.internalTickTimer);
+    }
+
+    setGestureLock(lock: boolean) {
+        if(lock) {
+            // Immediately lock
+            this.isGestureLocked = true;
+        } else if(!this.isGestureUnlockPending) {
+            // Unlock with small delay due to ZeppOS gesture handle behaviour
+            this.isGestureUnlockPending = true;
+            setTimeout(() => {
+                this.isGestureLocked = false;
+                this.isGestureUnlockPending = false;
+            }, 50);
+        }
+    }
+
+    private handleGestureEvent(gesture: number) {
+        if(this.isGestureLocked)
+            return true;
+
+        return this.onGesture(gesture);
+    }
+
+    /**
+     * On screen gesture callback.
+     *
+     * @param _gesture
+     * @protected
+     */
+    protected onGesture(_gesture: number) {
+        return false;
     }
 
     /**
@@ -248,6 +279,11 @@ export abstract class BaseCompositor<P> implements IRootComponent, IComponentEve
      * Handle touch up event
      */
     onTouchUp(_data: ZeppWidgetEventData): boolean {
+        if(this.isGestureLocked && !this.isGestureUnlockPending) {
+            console.log("BaseCompositor: auto unlock gestures");
+            this.setGestureLock(false);
+        }
+
         return false;
     }
 

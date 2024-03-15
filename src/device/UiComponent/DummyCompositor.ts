@@ -1,10 +1,10 @@
 import { IComponentEventReceiver, IRootComponent } from "./Interfaces";
 import { UiTheme } from "../UiCompositor";
-import { Component } from "./Component";
 
 export const DUMMY_COMPOSITOR: IRootComponent & IComponentEventReceiver = {
     theme: new UiTheme(),
-    onChildHeightChanged(child: Component<any>): any {},
+    onChildHeightChanged(): any {},
+    setGestureLock(): any {},
     onBlur(): void {},
     onFocus(): void {},
     onTouchDown(): boolean {
@@ -24,5 +24,5 @@ export const DUMMY_COMPOSITOR: IRootComponent & IComponentEventReceiver = {
     },
     onWheelSpin(): boolean {
         return false;
-    },
+    }
 };

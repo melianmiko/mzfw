@@ -60,7 +60,6 @@ function clientFetch(url: string, userOptions?: RequestInit): Promise<ResponseWr
     let body: Buffer | null = null;
     if(userOptions && userOptions.body)
         body = Buffer.from(userOptions.body as any);
-    console.log("BODY", body?.byteLength);
 
     const options = {
         method: (userOptions && userOptions.method) ? userOptions.method : "GET",

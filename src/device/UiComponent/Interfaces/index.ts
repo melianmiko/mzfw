@@ -8,6 +8,7 @@ import type { Component } from "../Component";
 export interface IRootComponent {
     theme: UiTheme;
     onChildHeightChanged(child: Component<any>): any,
+    setGestureLock(lock: boolean): any;
 }
 
 export interface IComponentEventReceiver {

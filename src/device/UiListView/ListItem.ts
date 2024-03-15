@@ -57,6 +57,16 @@ export class ListItem extends PaperComponent<ListItemProps> {
 
     protected onPropertiesChange() {
         super.onPropertiesChange();
+
+        this.titleLayout.performUpdate(this.props.title ?? "", this.textBoxWidth,
+            this.root?.theme.FONT_SIZE ?? 18);
+        this.descriptionLayout.performUpdate(this.props.description ?? "", this.textBoxWidth,
+            (this.root?.theme.FONT_SIZE ?? 18) - DESCRIPTION_SIZE_DELTA);
+    }
+
+    protected onGeometryChange() {
+        super.onGeometryChange();
+
         let width = (this.geometry.w ?? 0) - ICON_OFFSET * 2;
         if(this.props.icon) width = width - ICON_SIZE - (ICON_OFFSET * ICON_OFFSET_AFTER_MPX);
         this.textBoxWidth = width;
@@ -66,10 +76,7 @@ export class ListItem extends PaperComponent<ListItemProps> {
         this.textOffsetLeft = ICON_OFFSET + (this.iconAtRight ? 0 : iconBoxSize);
 
         // Text metrics
-        this.titleLayout.performUpdate(this.props.title ?? "", this.textBoxWidth,
-            this.root?.theme.FONT_SIZE ?? 18);
-        this.descriptionLayout.performUpdate(this.props.description ?? "", this.textBoxWidth,
-            (this.root?.theme.FONT_SIZE ?? 18) - DESCRIPTION_SIZE_DELTA);
+        this.onPropertiesChange();
     }
 
     getAutoHeight(): number {

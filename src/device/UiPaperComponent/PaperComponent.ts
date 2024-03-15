@@ -29,6 +29,7 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
     private color: number = 0;
     private pressedSince: number = 0;
     private clickData: ZeppWidgetEventData | null = null;
+    private offsetX: number = 0;
 
     private longTouchTimer: NodeJS.Timeout | null = null;
     private swipeCancelTimer: NodeJS.Timeout | null = null;
@@ -86,7 +87,10 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
 
         // Logical handler
         this.pressedSince = Date.now();
-        this.clickData = data;
+        this.clickData = {
+            x: data.x - this.offsetX,
+            y: data.y,
+        };
 
         // Timer
         let tick = 0;
@@ -146,6 +150,7 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
 
     onTouchUp(data: ZeppWidgetEventData): boolean {
         this.onClickCancel();
+        this.root.setGestureLock(false);
         return super.onTouchUp(data);
     }
 
@@ -164,15 +169,20 @@ export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> 
     }
 
     private onSwipeMove(dx: number) {
-        dx = Math.min(Math.max(-SECOND_BUTTON_WIDTH, dx), 0);
+        this.offsetX = Math.min(Math.max(-SECOND_BUTTON_WIDTH, dx), 0);
 
-        if(this.swipeCancelTimer)
+        if(this.swipeCancelTimer) {
             clearTimeout(this.swipeCancelTimer)
-        if(dx < 0)
+            this.swipeCancelTimer = null;
+        }
+
+        if(this.offsetX < -2) {
+            this.root.setGestureLock(true);
             this.swipeCancelTimer = setTimeout(() => this.onSwipeCancel(), 2500);
+        }
 
         if(this.group)
-            this.group.setProperty(prop.X, (this.geometry.x ?? 0) + dx);
+            this.group.setProperty(prop.X, (this.geometry.x ?? 0) + this.offsetX);
     }
 
     private onSwipeCancel() {
