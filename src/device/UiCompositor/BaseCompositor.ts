@@ -1,15 +1,20 @@
-import { Component } from "../UiComponent";
+import { type Component } from "../UiComponent";
 import { SCREEN_HEIGHT } from "../UiProperties";
 import * as Interaction from "../../zosx/interaction";
 import { UiTheme } from "./UiTheme";
 import { setStatusBarVisible } from "../../zosx/ui";
 import { ZeppWidgetEventData } from "../../zosx/ui/Types";
 import { getScrollTop, scrollTo } from "../../zosx/page";
+import { IComponentEventReceiver, IRootComponent } from "../UiComponent/Interfaces";
 
 /**
  * RootComponent - base component that can fit another ones into them.
  */
-export abstract class BaseCompositor<P> extends Component<P> {
+export abstract class BaseCompositor<P> implements IRootComponent, IComponentEventReceiver {
+    /**
+     * Screen properties
+     */
+    public props: P;
     /**
      * Page UI theme
      */
@@ -28,6 +33,7 @@ export abstract class BaseCompositor<P> extends Component<P> {
      * Remove system status bar on render
      */
     public hideStatusBar: boolean = false;
+    protected isRendered: boolean = false;
     /**
      * Components inside this root
      */
@@ -59,8 +65,7 @@ export abstract class BaseCompositor<P> extends Component<P> {
      * @param props
      */
     constructor(props: P) {
-        super(props);
-        this.root = null;
+        this.props = props;
     }
 
     /**
@@ -68,7 +73,7 @@ export abstract class BaseCompositor<P> extends Component<P> {
      *
      * @param page class entry of RootComponent that will be used as page
      */
-    static makePage(page: any): any {
+    static makePage(page: BaseCompositor<any>): any {
         if(!page.performRender)
             throw new Error("makePage syntax is changed: use page instance instead of class entry");
 
@@ -79,8 +84,7 @@ export abstract class BaseCompositor<P> extends Component<P> {
                     props = JSON.parse(p);
                 } catch (e) {}
 
-                page.onInit();
-                page.updateProps(props);
+                page.props = props;
                 page.performRender();
             },
             onDestroy() {
@@ -93,8 +97,7 @@ export abstract class BaseCompositor<P> extends Component<P> {
      * Render and bind system events.
      */
     performRender() {
-        // Render screen content
-        super.performRender();
+        this.isRendered = true;
 
         // Clean up events from other apps, if they exists
         Interaction.offDigitalCrown();
@@ -140,7 +143,7 @@ export abstract class BaseCompositor<P> extends Component<P> {
      * Delete all screen content, stop all timers and event listeners
      */
     performDestroy() {
-        super.performDestroy();
+        this.isRendered = false;
 
         // Unregister all
         Interaction.offKey();
@@ -283,4 +286,16 @@ export abstract class BaseCompositor<P> extends Component<P> {
     }
 
     protected onComponentUpdate() {}
+
+    onFocus(_degree: number): void {}
+
+    onBlur(): void {}
+
+    onTouchMove(_data: ZeppWidgetEventData): boolean {
+        return false;
+    }
+
+    onWheelClick(): boolean {
+        return false;
+    }
 }

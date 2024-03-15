@@ -48,7 +48,7 @@ export class ListView<T> extends BaseCompositor<T> {
                 page = new ListView(props);
                 page.build = () => {
                     return buildFunc(props);
-                }
+                };
                 page.performRender();
             },
             onDestroy() {
@@ -60,7 +60,12 @@ export class ListView<T> extends BaseCompositor<T> {
     /**
      * Render all attached components
      */
-    onRender() {
+    performRender() {
+        super.performRender();
+        this.renderListView();
+    }
+
+    private renderListView() {
         if(this.dynamicRenderEnabled && isLegacyDevice) {
             console.log("WARN: Force disable dynamic render: ZeppOS 1.0.x device");
             this.dynamicRenderEnabled = false;
@@ -103,10 +108,6 @@ export class ListView<T> extends BaseCompositor<T> {
             scrollTo({y: -REV_RENDER_START_POS + SCREEN_HEIGHT});
     }
 
-    protected onDestroy(): any {
-        // Nothing to do
-    }
-
     /**
      * Rebuild entire screen (this is VERY SLOW, use only if you really need this)
      */
@@ -121,7 +122,7 @@ export class ListView<T> extends BaseCompositor<T> {
         this.nestedComponents = [];
         this.childPositionInfo = [];
 
-        this.onRender();
+        this.renderListView();
     }
 
     /**

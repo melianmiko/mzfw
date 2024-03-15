@@ -37,7 +37,7 @@ export class Path {
     }
 
     constructor(scope: PathScopeName, path: string) {
-        if(path[0] != "/") path = "/" + path;
+        if(path[0] != "/" && scope == "full") path = "/" + path;
 
         if(["full", "assets", "data"].indexOf(scope) < 0)
             throw new Error("Unknown scope provided")

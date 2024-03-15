@@ -1,8 +1,9 @@
-import { BaseCompositor } from "../UiCompositor";
 import * as Interaction from "../../zosx/interaction";
 import { ComponentGeometry } from "./Types";
 import { ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
 import { event } from "../../zosx/ui";
+import { IComponentEventReceiver, IRootComponent } from "./Interfaces";
+import { DUMMY_COMPOSITOR } from "./DummyCompositor";
 
 /**
  * Generic component class.
@@ -20,7 +21,7 @@ export abstract class Component<P> {
     /**
      * Root component
      */
-    protected root: BaseCompositor<any> | null = null;
+    protected root: IRootComponent & IComponentEventReceiver = DUMMY_COMPOSITOR;
     /**
      * Is render performed
      */
@@ -50,7 +51,7 @@ export abstract class Component<P> {
      *
      * @param parent Root component to use
      */
-    attachParent(parent: BaseCompositor<any>) {
+    attachParent(parent: IRootComponent & IComponentEventReceiver) {
         this.root = parent;
         this.onInit();
         this.onPropertiesChange();
