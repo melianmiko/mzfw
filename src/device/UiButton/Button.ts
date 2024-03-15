@@ -80,9 +80,9 @@ export class Button extends PaperComponent<ButtonProps> {
     private applyColorScheme(): void {
         switch (this.props.variant) {
         case ButtonVariant.DEFAULT:
-            this.props.paperBackgroundNormal = 0x222222;
-            this.props.paperBackgroundSelected = 0x333333;
-            this.props.paperBackgroundPressed = 0x111111;
+            this.props.paperBackgroundNormal = this.root.theme.BUTTON_NORMAL;
+            this.props.paperBackgroundSelected = this.root.theme.BUTTON_SELECTED;
+            this.props.paperBackgroundPressed = this.root.theme.BUTTON_PRESSED;
             break;
         case ButtonVariant.PRIMARY:
             if(!this.root) break;
@@ -96,5 +96,7 @@ export class Button extends PaperComponent<ButtonProps> {
             this.props.paperBackgroundPressed = 0x3b0101;
             break;
         }
+
+        super.onPropertiesChange();
     }
 }

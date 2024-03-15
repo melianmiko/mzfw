@@ -82,9 +82,9 @@ export abstract class BaseCompositor<P> implements IRootComponent, IComponentEve
                 let props: any = {};
                 try {
                     props = JSON.parse(p);
+                    page.props = props;
                 } catch (e) {}
 
-                page.props = props;
                 page.performRender();
             },
             onDestroy() {

@@ -132,14 +132,14 @@ export class HeadlineButton extends Component<HeadlineButtonProps> {
     }
 
     onTouchDown(data: ZeppWidgetEventData): boolean {
-        this.backgroundProps.color = this.props.backgroundPressed ?? this.root?.theme.BUTTON_PRESSED ?? 0;
+        this.backgroundProps.color = this.props.backgroundPressed ?? this.root.theme.BUTTON_PRESSED;
         if(this.backgroundView) this.backgroundView.setProperty(prop.MORE, this.backgroundProps);
 
         return super.onTouchDown(data);
     }
 
     onTouchMove(data: ZeppWidgetEventData): boolean {
-        this.backgroundProps.color = this.props.backgroundNormal ?? this.root?.theme.BUTTON_NORMAL ?? 0;
+        this.backgroundProps.color = this.props.backgroundNormal ?? this.root.theme.BUTTON_NORMAL;
         if(this.backgroundView) this.backgroundView.setProperty(prop.MORE, this.backgroundProps);
 
         return super.onTouchMove(data);

@@ -10,14 +10,13 @@ export class UiTheme {
     TEXT_COLOR: number = 0xFFFFFF;
     TEXT_COLOR_2: number = 0x999999;
 
-    PAPER_NORMAL: number = IS_MI_BAND_7 ? 0x101010 : 0;
+    PAPER_NORMAL: number = IS_MI_BAND_7 ? 0x1f1f1f : 0;
     PAPER_SELECTED: number = 0x333333;
-    PAPER_PRESSED:  number = 0x444444;
+    PAPER_PRESSED:  number = IS_MI_BAND_7 ? 0x0f0f0f : 0x444444;
 
-    // TODO: Select better colors
-    BUTTON_NORMAL: number = 0x111111;
-    BUTTON_SELECTED: number =  0x222222;
-    BUTTON_PRESSED: number = 0x0;
-    BUTTON_DISABLED: number = 0x050505;
+    BUTTON_NORMAL: number = 0x1f1f1f;
+    BUTTON_SELECTED: number =  0x242424;
+    BUTTON_PRESSED: number = 0x0f0f0f;
+    BUTTON_DISABLED: number = 0x0f0f0f;
     BUTTON_TEXT: number = 0xFFFFFF;
 }
