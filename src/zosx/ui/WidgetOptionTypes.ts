@@ -28,8 +28,8 @@ export type ZeppFillRectWidgetOptions = ZeppWidgetGenericOptions & Required<Zepp
 
 export type ZeppImgWidgetOptions = ZeppWidgetGenericOptions & ZeppWidgetPositionOptions & {
     src: string,
-    pad_x?: string,
-    pad_y?: string,
+    pos_x?: number,
+    pos_y?: number,
 }
 
 export type ZeppImgAnimWidgetOptions = ZeppWidgetGenericOptions & {
@@ -43,4 +43,14 @@ export type ZeppImgAnimWidgetOptions = ZeppWidgetGenericOptions & {
     anim_repeat?: boolean,
     anim_size: number,
     anim_status: ZeppWidgetAnimStatus,
+}
+
+export type ZeppButtonWidgetOptions = ZeppWidgetPositionOptions & {
+    text: string,
+    text_size?: number,
+    color?: number,
+    normal_color?: number,
+    press_color?: number,
+    click_func: () => any,
+    radius?: number,
 }

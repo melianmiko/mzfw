@@ -41,6 +41,7 @@ export interface ZeppGroupInstance {
  */
 export type ZeppWidget<O, R> = R & {
     setProperty(id: ZeppWidgetProperty, value: string | number | O | any): void,
+    getProperty(id: ZeppWidgetProperty): any;
     addEventListener(event: ZeppWidgetEvent, callback: (p: ZeppWidgetEventData) => any): void,
 }
 

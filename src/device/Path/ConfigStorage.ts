@@ -56,7 +56,7 @@ export class ConfigStorage implements Storage {
         rmSync(this.filename);
     }
 
-    getItem(key: string): string | null {
+    getItem(key: string): any | null {
         if(!this.dataRestored) this.loadData();
         return this.data[key] ?? null;
     }
@@ -72,7 +72,7 @@ export class ConfigStorage implements Storage {
         this.handleChanges();
     }
 
-    setItem(key: string, value: string): void {
+    setItem(key: string, value: any): void {
         if(!this.dataRestored) this.loadData();
         this.data[key] = value;
         this.handleChanges();
