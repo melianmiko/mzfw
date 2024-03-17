@@ -2,19 +2,21 @@ import { ScreenBoardLayout, ScreenBoardLayoutsCollection, ScreenBoardRenderer } 
 import { ScreenBoard } from "../ScreenBoard";
 import { ZeppWidget } from "../../../zosx/ui/Types";
 import { ZeppButtonWidgetOptions, ZeppTextWidgetOptions } from "../../../zosx/ui/WidgetOptionTypes";
-import { SB_QWERTY_LAYOUTS, SB_QWERTY_SYMBOLS_SUB_SCREEN } from "../data/QWERTY";
+import { SB_QWERTY_SYMBOLS_SUB_SCREEN } from "../data/QWERTY";
 import { getScreenBoardCapsIcon, getScreenBoardRowPosition } from "../ScreenBoardTools";
 import { prop } from "../../../zosx/ui";
 import { ScreenBoardButtonsManager } from "../ScreenBoardButtonsManager";
 import { SB_ACT_BUTTON_WIDTH } from "../ScreenBoardConstants";
+import { SB_COMPILED_LAYOUTS } from "../ScreenBoardCompiledData";
 
 export class ScreenBoardQWERTY implements ScreenBoardRenderer {
     public extraLayouts: string[] = [];
     public hasBackspace: boolean = true;
 
+    protected rendererId: string = "qwerty";
     protected buttonCounts: number[] = [10, 9, 7];
     protected symbolsData: ScreenBoardLayout = SB_QWERTY_SYMBOLS_SUB_SCREEN;
-    protected layoutData: ScreenBoardLayoutsCollection = SB_QWERTY_LAYOUTS;
+    protected layoutData: ScreenBoardLayoutsCollection;
 
     private readonly inputButtons: ZeppWidget<ZeppTextWidgetOptions, {}>[] = [];
     private readonly board: ScreenBoard;
@@ -25,6 +27,7 @@ export class ScreenBoardQWERTY implements ScreenBoardRenderer {
 
     constructor(board: ScreenBoard) {
         this.board = board;
+        this.layoutData = SB_COMPILED_LAYOUTS[this.rendererId];
     }
 
     build() {

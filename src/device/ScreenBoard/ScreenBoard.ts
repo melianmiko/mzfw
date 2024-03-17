@@ -28,6 +28,7 @@ import {
   SB_ROW_HEIGHT,
   SB_VIEWPORT_HEIGHT
 } from "./ScreenBoardConstants";
+import { dynamicLoadScreenBoardLayouts } from "./ScreenBoardCompiledLoader";
 
 export class ScreenBoard implements Overlay {
   public capsState: CapsState = CapsState.CAPS_OFF;

@@ -1,15 +1,8 @@
 import { ScreenBoardQWERTY } from "./ScreenBoardQWERTY";
-import { SB_T14_LAYOUTS, SB_T14_SYMBOLS_SUB_SCREEN } from "../data/T14";
-import { ScreenBoard } from "../ScreenBoard";
+import { SB_T14_SYMBOLS_SUB_SCREEN } from "../data/T14";
 
 export class ScreenBoardT14 extends ScreenBoardQWERTY {
+    protected rendererId: string = "t14";
     protected symbolsData = SB_T14_SYMBOLS_SUB_SCREEN;
-    protected layoutData = SB_T14_LAYOUTS;
     protected buttonCounts = [5, 5, 4];
-    constructor(board: ScreenBoard) {
-        super(board);
-        this.symbolsData = SB_T14_SYMBOLS_SUB_SCREEN;
-        this.layoutData = SB_T14_LAYOUTS;
-        this.buttonCounts = [5, 5, 4];
-    }
 }

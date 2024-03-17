@@ -5,20 +5,21 @@ import { ZeppImgWidgetOptions, ZeppTextWidgetOptions } from "../../../zosx/ui/Wi
 import { ScreenBoardButtonsManager } from "../ScreenBoardButtonsManager";
 import { getScreenBoardCapsIcon, getScreenBoardRowPosition } from "../ScreenBoardTools";
 import { prop } from "../../../zosx/ui";
-import { SB_T9_LAYOUTS } from "../data/T9";
+import { SB_COMPILED_LAYOUTS } from "../ScreenBoardCompiledData";
 
 export class ScreenBoardT9 implements ScreenBoardRenderer {
     hasBackspace: boolean = false;
-    extraLayouts: string[] = ["numbers"];
+    extraLayouts: string[] = ["123"];
 
     private readonly board: ScreenBoard;
     private readonly inputButtons: ZeppWidget<ZeppTextWidgetOptions, {}>[] = [];
     private readonly manager: ScreenBoardButtonsManager;
     private capsButton: ZeppWidget<ZeppImgWidgetOptions, {}> | null = null;
+    private spaceBtn: ZeppWidget<ZeppTextWidgetOptions, {}> | null = null
 
     constructor(board: ScreenBoard) {
         this.board = board;
-        this.manager = new ScreenBoardButtonsManager(board, this.inputButtons, SB_T9_LAYOUTS);
+        this.manager = new ScreenBoardButtonsManager(board, this.inputButtons, SB_COMPILED_LAYOUTS.t9);
     }
 
     build() {
@@ -48,6 +49,12 @@ export class ScreenBoardT9 implements ScreenBoardRenderer {
             ident: 0,
             handler: this.board.toggleCaps
         });
+        this.spaceBtn = this.board.createSpaceButton({
+            x: x + buttonWidth,
+            y,
+            w: buttonWidth,
+            handler: this.addSpace.bind(this),
+        })
         this.board.createIconButton({
             x: x + buttonWidth * 2,
             y,
@@ -56,13 +63,6 @@ export class ScreenBoardT9 implements ScreenBoardRenderer {
             ident: 0,
             handler: this.board.switchLayout,
         });
-
-        this.board.createSpaceButton({
-            x: x + buttonWidth,
-            y,
-            w: buttonWidth,
-            handler: this.addSpace.bind(this),
-        })
     }
 
     private addSpace() {
@@ -74,7 +74,10 @@ export class ScreenBoardT9 implements ScreenBoardRenderer {
     }
 
     useLayout(name: string) {
-        this.capsButton?.setProperty(prop.SRC, getScreenBoardCapsIcon(this.board.capsState));
+
+        if(this.capsButton) this.capsButton.setProperty(prop.SRC, getScreenBoardCapsIcon(this.board.capsState));
+        if(this.spaceBtn) this.spaceBtn.setProperty(prop.TEXT, name.toUpperCase());
+
         return this.manager.useLayout(name);
     }
 }

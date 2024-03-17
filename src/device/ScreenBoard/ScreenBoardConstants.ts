@@ -1,6 +1,6 @@
 import { DEVICE_SHAPE, IS_BAND_7, IS_MI_BAND_7, IS_SMALL_SCREEN_DEVICE, SCREEN_HEIGHT } from "../UiProperties";
 
-export const SB_CONFIRM_BUTTON_HEIGHT = IS_MI_BAND_7 ? 96 : 56;
+export const SB_CONFIRM_BUTTON_HEIGHT = IS_MI_BAND_7 ? 64 : 56;
 export const SB_ROW_HEIGHT = ((): number => {
     if(SCREEN_HEIGHT > 450) return 60;
     return IS_SMALL_SCREEN_DEVICE ? 48 : 56;
