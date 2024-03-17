@@ -1,8 +1,8 @@
-import { ScreenBoardLayoutsCollection, ScreenBoardRenderer } from "../Interfaces";
+import { ScreenBoardLayout, ScreenBoardLayoutsCollection, ScreenBoardRenderer } from "../Interfaces";
 import { ScreenBoard } from "../ScreenBoard";
 import { ZeppWidget } from "../../../zosx/ui/Types";
 import { ZeppButtonWidgetOptions, ZeppTextWidgetOptions } from "../../../zosx/ui/WidgetOptionTypes";
-import { SB_QWERTY_LAYOUTS, SB_QWERTY_SYMBOLS_SUBSCREEN } from "../data/QWERTY";
+import { SB_QWERTY_LAYOUTS, SB_QWERTY_SYMBOLS_SUB_SCREEN } from "../data/QWERTY";
 import { getScreenBoardCapsIcon, getScreenBoardRowPosition } from "../ScreenBoardTools";
 import { prop } from "../../../zosx/ui";
 import { ScreenBoardButtonsManager } from "../ScreenBoardButtonsManager";
@@ -12,23 +12,24 @@ export class ScreenBoardQWERTY implements ScreenBoardRenderer {
     public extraLayouts: string[] = [];
     public hasBackspace: boolean = true;
 
-    protected readonly layoutData: ScreenBoardLayoutsCollection = SB_QWERTY_LAYOUTS;
-    protected readonly symbolsData: string[] = SB_QWERTY_SYMBOLS_SUBSCREEN;
-    protected readonly buttonCounts: number[] = [10, 9, 7];
+    protected buttonCounts: number[] = [10, 9, 7];
+    protected symbolsData: ScreenBoardLayout = SB_QWERTY_SYMBOLS_SUB_SCREEN;
+    protected layoutData: ScreenBoardLayoutsCollection = SB_QWERTY_LAYOUTS;
 
     private readonly inputButtons: ZeppWidget<ZeppTextWidgetOptions, {}>[] = [];
     private readonly board: ScreenBoard;
-    private readonly manager: ScreenBoardButtonsManager;
+    private manager: ScreenBoardButtonsManager | null = null;
     private capsButton: ZeppWidget<ZeppButtonWidgetOptions, {}> | null = null;
     private symbolsBtn: ZeppWidget<ZeppButtonWidgetOptions, {}> | null = null;
     private spaceBtn: ZeppWidget<ZeppButtonWidgetOptions, {}> | null = null;
 
     constructor(board: ScreenBoard) {
         this.board = board;
-        this.manager = new ScreenBoardButtonsManager(this.board, this.inputButtons, this.layoutData);
     }
 
     build() {
+        this.manager = new ScreenBoardButtonsManager(this.board, this.inputButtons, this.layoutData);
+
         // First rows
         for(let i = 0; i < 3; i++) {
             let [x, y, w] = getScreenBoardRowPosition(i);
@@ -108,18 +109,29 @@ export class ScreenBoardQWERTY implements ScreenBoardRenderer {
     }
 
     private toggleSymbols() {
+        if(!this.manager) return;
+
         if(this.manager.isSubScreen)
             return this.manager.useLayout(this.manager.layout);
-        this.manager.joinSubScreen(this.symbolsData, true);
+        if(this.manager.layout == "symbols")
+            this.manager.leaveTemporaryLayout()
+        else
+            this.manager.useLayoutData("symbols", this.symbolsData, true);
     }
 
     private addSpace() {
-        if(this.manager.isSubScreen)
-            this.manager.useLayout(this.manager.layout);
+        if(this.manager) {
+            if(this.manager.layout == "symbols")
+                this.manager.leaveTemporaryLayout();
+            if(this.manager.isSubScreen)
+                this.manager.useLayout(this.manager.layout);
+        }
         this.board.value += " ";
     }
 
     useLayout(name: string) {
+        if(!this.manager) return;
+
         if(this.capsButton) this.capsButton.setProperty(prop.SRC, getScreenBoardCapsIcon(this.board.capsState));
         if(this.spaceBtn) this.spaceBtn.setProperty(prop.TEXT, name.toUpperCase());
 

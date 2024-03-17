@@ -1,7 +1,7 @@
 import { ScreenBoard } from "./ScreenBoard";
 import { ZeppWidget } from "../../zosx/ui/Types";
 import { ZeppTextWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
-import { ScreenBoardLayoutsCollection } from "./Interfaces";
+import { ScreenBoardLayout, ScreenBoardLayoutsCollection } from "./Interfaces";
 import { CapsState } from "./Enums";
 import { prop } from "../../zosx/ui";
 
@@ -12,7 +12,8 @@ export class ScreenBoardButtonsManager {
     private readonly board: ScreenBoard;
     private readonly inputButtons: ZeppWidget<ZeppTextWidgetOptions, {}>[];
     private readonly layoutData: ScreenBoardLayoutsCollection;
-    private noAutoExit: boolean = false;
+    private currentData: ScreenBoardLayout = [];
+    private prevLayout: string = "";
     private subScreenData: string[] = [];
 
     constructor(
@@ -30,8 +31,16 @@ export class ScreenBoardButtonsManager {
     useLayout(name: string) {
         const data = this.layoutData[name];
         if(!data) throw new Error(`Layout not found: ${name}`);
+        this.useLayoutData(name, data);
+    }
+
+    useLayoutData(name: string, data: ScreenBoardLayout, temporary: boolean = false) {
+        if(temporary && !this.prevLayout) {
+            this.prevLayout = this.layout;
+        }
 
         this.layout = name;
+        this.currentData = data;
         this.isSubScreen = false;
 
         const isCapsUp = this.board.capsState != CapsState.CAPS_OFF;
@@ -45,13 +54,17 @@ export class ScreenBoardButtonsManager {
         }
     }
 
-    joinSubScreen(data: string[], noAutoExit: boolean = false) {
+    leaveTemporaryLayout() {
+        this.useLayout(this.prevLayout);
+        this.prevLayout = "";
+    }
+
+    private joinSubScreen(data: string[]) {
         if(!Array.isArray(data))
             data = data[Object.keys(data)[0]];
 
         this.subScreenData = data;
         this.isSubScreen = true;
-        this.noAutoExit = noAutoExit;
         const isCapsUp = this.board.capsState != CapsState.CAPS_OFF;
         for(let i = 0; i < this.inputButtons.length; i++) {
             let text: string = "";
@@ -69,12 +82,11 @@ export class ScreenBoardButtonsManager {
             if(this.board.capsState !== CapsState.CAPS_OFF) data = data.toUpperCase();
 
             this.board.value += data;
-            if(!this.noAutoExit)
-                this.useLayout(this.layout);
+            this.useLayoutData(this.layout, this.currentData);
             return;
         }
 
-        const values: string[] = this.layoutData[this.layout][ident].values;
+        const values: string[] = this.currentData[ident].values;
         if(values.length > 1) {
             // Run sub-screen
             this.joinSubScreen(values);

@@ -113,8 +113,8 @@ export class ScreenBoard implements Overlay {
       text: "Confirm",
       text_size: this.theme.FONT_SIZE - 4,
       color: 0xFFFFFF,
-      normal_color: 0x111111,
-      press_color: 0x222222,
+      normal_color: this.theme.ACCENT_COLOR_DARK,
+      press_color: this.theme.ACCENT_COLOR_DARK_2,
       click_func: () => this.onConfirm(this.value)
     });
 
@@ -157,10 +157,10 @@ export class ScreenBoard implements Overlay {
       h: SB_ROW_HEIGHT - 4,
       text: "",
       text_size: this.theme.FONT_SIZE + SB_FONT_DELTA,
-      normal_color: special ? 0x191919 : 0x111111,
-      press_color: 0x222222,
+      normal_color: special ? this.theme.KBD_BUTTON_BG_SPECIAL : this.theme.KBD_BUTTON_BG_NORMAL,
+      press_color: this.theme.KBD_BUTTON_BG_PRESSED,
       radius: 4,
-      color: 0xCCCCCC,
+      color: special ? this.theme.KBD_BUTTON_TEXT_SPECIAL : this.theme.KBD_BUTTON_TEXT_NORMAL,
       click_func: () => handler(ident)
     })
   }
@@ -168,21 +168,21 @@ export class ScreenBoard implements Overlay {
   createSpaceButton(options: ScreenBoardCreateButtonRequest): ZeppWidget<ZeppButtonWidgetOptions, {}> {
     const {x, y, w, handler} = options;
     return this.group.createWidget<ZeppButtonWidgetOptions>(widget.BUTTON, {
-      x: x + 2,
-      y: y + 2,
-      w: w - 4,
-      h: SB_ROW_HEIGHT - 4,
+      x: x + 2 + (this.theme.KBD_SPACE_SIZE_DELTA / 2),
+      y: y + 2 + this.theme.KBD_SPACE_SIZE_DELTA,
+      w: w - 4 - this.theme.KBD_SPACE_SIZE_DELTA,
+      h: SB_ROW_HEIGHT - 4 - (this.theme.KBD_SPACE_SIZE_DELTA * 2),
       text: "",
-      text_size: this.theme.FONT_SIZE + SB_FONT_DELTA - 6,
-      normal_color: 0x191919,
-      press_color: 0x222222,
+      text_size: this.theme.FONT_SIZE + SB_FONT_DELTA - 8,
+      normal_color: this.theme.KBD_SPACE_BG,
+      press_color: this.theme.KBD_SPACE_BG_PRESSED,
       radius: 4,
-      color: 0x777777,
+      color: this.theme.KBD_SPACE_TEXT,
       click_func: () => handler()
     })
   }
 
-  createIconButton(options: ScreenBoardCreateIconButtonRequest) {
+  createIconButton(options: ScreenBoardCreateIconButtonRequest): ZeppWidget<ZeppImgWidgetOptions, {}> {
     const {x, y, w, icon, ident, handler} = options;
     this.group.createWidget<ZeppFillRectWidgetOptions>(widget.FILL_RECT, {
       x: x + 2,
@@ -190,7 +190,7 @@ export class ScreenBoard implements Overlay {
       w: w - 4,
       h: SB_ROW_HEIGHT - 4,
       radius: 4,
-      color: 0x191919
+      color: this.theme.KBD_BUTTON_BG_NORMAL,
     });
 
     const view = this.group.createWidget<ZeppImgWidgetOptions>(widget.IMG, {
