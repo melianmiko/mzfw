@@ -6,6 +6,8 @@ import { setStatusBarVisible } from "../../zosx/ui";
 import { ZeppWidgetEventData } from "../../zosx/ui/Types";
 import { getScrollTop, scrollTo } from "../../zosx/page";
 import { IComponentEventReceiver, IRootComponent } from "../UiComponent/Interfaces";
+import { Overlay } from "../UiOverlay";
+import { GESTURE_RIGHT } from "../../zosx/interaction";
 
 /**
  * RootComponent - base component that can fit another ones into them.
@@ -61,6 +63,7 @@ export abstract class BaseCompositor<P> implements IRootComponent, IComponentEve
     private internalTickTimer: NodeJS.Timeout | null = null;
     private isGestureLocked: boolean = false;
     private isGestureUnlockPending: boolean = false;
+    private activeOverlay: Overlay | null = null;
 
     /**
      * Default root component constructor
@@ -151,6 +154,11 @@ export abstract class BaseCompositor<P> implements IRootComponent, IComponentEve
         if(this.internalTickTimer) clearInterval(this.internalTickTimer);
     }
 
+    protected showOverlay(overlay: Overlay) {
+        this.activeOverlay = overlay;
+        overlay.visible = true;
+    }
+
     setGestureLock(lock: boolean) {
         if(lock) {
             // Immediately lock
@@ -166,6 +174,16 @@ export abstract class BaseCompositor<P> implements IRootComponent, IComponentEve
     }
 
     private handleGestureEvent(gesture: number) {
+        if(this.activeOverlay != null && gesture == GESTURE_RIGHT) {
+            const overlay = this.activeOverlay;
+            console.log(this.activeOverlay, this.activeOverlay?.visible)
+            this.activeOverlay = null;
+            if(overlay.visible) {
+                overlay.visible = false;
+                return true;
+            }
+        }
+
         if(this.isGestureLocked)
             return true;
 

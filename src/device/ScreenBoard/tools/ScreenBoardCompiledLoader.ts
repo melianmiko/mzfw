@@ -11,6 +11,7 @@ function proxyDictionary<P = any>(keys: string[], handler: (key: string) => P): 
     const out: {[id: string]: P} = {};
     keys.forEach((key: string) => {
         Object.defineProperty(out, key, {
+            enumerable: true,
             get: () => handler(key),
         });
     });

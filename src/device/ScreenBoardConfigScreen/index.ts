@@ -22,25 +22,27 @@ export class ScreenBoardConfigScreen extends ListView<any> {
     }
 
     private makeLayoutSwitch(id: string, name: string): ListItem {
-        let layouts: string[] = this.config.getItem("layouts") ?? getFallbackLayouts(Object.keys(SB_KNOWN_LAYOUTS));
         const item = new ListItem({
             title: this.i18n(name),
             description: id,
             icon: `/mzfw/${ICON_SIZE}/false.png`,
             onClick: (): void => {
+                let layouts = this.currentLayouts();
                 if(layouts.indexOf(id) > -1) {
                     // delete
+                    if(layouts.length == 1) return;
                     layouts = layouts.filter((i) => i != id);
                 } else {
                     // add
                     layouts.push(id);
                 }
-                refreshIcon();
                 this.config.setItem("layouts", layouts);
+                refreshIcon();
             }
         });
 
-        function refreshIcon() {
+        const refreshIcon = () => {
+            const layouts = this.currentLayouts();
             item.updateProps({
                 icon: layouts.indexOf(id) > -1 ? `/mzfw/${ICON_SIZE}/true.png` : `/mzfw/${ICON_SIZE}/false.png`,
             });
@@ -48,6 +50,10 @@ export class ScreenBoardConfigScreen extends ListView<any> {
 
         refreshIcon();
         return item;
+    }
+
+    private currentLayouts(): string[] {
+        return this.config.getItem("layouts") ?? getFallbackLayouts(Object.keys(SB_KNOWN_LAYOUTS));
     }
 
     private getRendererPickerProps(): ImageOptionBarProps {
@@ -60,7 +66,7 @@ export class ScreenBoardConfigScreen extends ListView<any> {
                 title: this.i18n(rendererName.toUpperCase()),
                 active: current == rendererName,
                 onClick: () => {
-                    console.log("Apply", rendererName)
+                    // console.log("Apply", rendererName)
                     this.config.setItem("renderer", rendererName);
                     this.renderPicker.updateProps(this.getRendererPickerProps());
                 }

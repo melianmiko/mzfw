@@ -60,6 +60,8 @@ export class LegacyFileSystemWrapper implements ZeppFsLibrary {
     }
 
     writeFileSync(options: { path: string; data: string | ArrayBuffer; options?: ZeppOverrideOptions | undefined; }): void {
+        try { fs.remove(options.path); } catch(_) {}
+
         const data: ArrayBuffer = typeof options.data == "string"
             ? Buffer.from(options.data, options.options?.encoding ?? "utf-8") : options.data;
 

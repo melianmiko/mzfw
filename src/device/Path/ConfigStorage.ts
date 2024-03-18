@@ -17,7 +17,7 @@ export class ConfigStorage implements Storage {
         setTimeout(() => {
             this.writeTimer = null;
 
-            console.log("Dumping localStorage to disk...");
+            // console.log("[cs] dump", JSON.stringify(this.data), "to", this.filename);
             writeFileSync({
                 path: this.filename,
                 data: JSON.stringify(this.data),
@@ -25,7 +25,7 @@ export class ConfigStorage implements Storage {
                     encoding: "utf8",
                 }
             })
-            console.log("Complete");
+            // console.log("Complete");
         }, 200);
     }
 
@@ -37,10 +37,17 @@ export class ConfigStorage implements Storage {
             }
         });
 
-        // console.log("loadData", data);
-
+        console.log("[cs] loadData", data);
         if(typeof data == "string") {
-            this.data = JSON.parse(data);
+            try {
+                this.data = JSON.parse(data);
+                if(!this.data || this.data.constructor != Object) {
+                    console.log("[cs] failed to parse data", this.data);
+                    this.data = {};
+                }
+            } catch(e) {
+                console.log("[cs] load error", e);
+            }
         }
 
         this.dataRestored = true;

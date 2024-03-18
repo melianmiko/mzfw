@@ -5,7 +5,8 @@ import { getLanguageString } from "../../../zosx/settings";
 
 export function getFallbackLayouts(knownLayouts: string[]): string[] {
     const userLang = getLanguageString();
-    if(knownLayouts.indexOf(userLang) < 0)
+    // console.log(`[sb] userLang=${userLang}`);
+    if(knownLayouts.indexOf(userLang) < 0 || userLang == "en-US")
         return ["en-US"];
     else
         return [userLang, "en-US"];

@@ -19,7 +19,7 @@ import {
 } from "../../zosx/ui/WidgetOptionTypes";
 import { align, createWidget, event, prop, text_style, widget } from "../../zosx/ui";
 import { DEVICE_SHAPE, SCREEN_HEIGHT, SCREEN_WIDTH } from "../UiProperties";
-import { getScrollTop, scrollTo } from "../../zosx/page";
+import { getScrollTop, scrollTo, setScrollLock } from "../../zosx/page";
 import { UiTheme } from "../UiCompositor";
 import {
   SB_CONFIRM_BUTTON_HEIGHT,
@@ -41,14 +41,17 @@ export class ScreenBoard implements Overlay {
   private readonly layouts: string[];
   private readonly theme: UiTheme;
   private readonly renderer: ScreenBoardRenderer;
-  private readonly group: ZeppWidget<ZeppWidgetPositionOptions, ZeppGroupInstance>;
-  private readonly valueScreen: ZeppWidget<ZeppTextWidgetOptions, {}>;
-  private readonly backspaceView?: ZeppWidget<ZeppImgWidgetOptions, {}>;
-  private readonly confirmButton: ZeppWidget<ZeppButtonWidgetOptions, {}>;
+  private group?: ZeppWidget<ZeppWidgetPositionOptions, ZeppGroupInstance>;
+  private valueScreen?: ZeppWidget<ZeppTextWidgetOptions, {}>;
+  private backspaceView?: ZeppWidget<ZeppImgWidgetOptions, {}>;
+  private confirmButton?: ZeppWidget<ZeppButtonWidgetOptions, {}>;
   private titleValue: string = "Input";
+  private confirmView: string = "Confirm";
   private displayValue: string = "";
   private activeLayout: string;
   private lastLayerY: number = 0;
+  private lastScrollLock: boolean = false;
+  private isVisible: boolean = false;
 
   constructor(options: ScreenBoardInitOptions) {
     this.options = options;
@@ -60,7 +63,9 @@ export class ScreenBoard implements Overlay {
 
     this.switchLayout = this.switchLayout.bind(this);
     this.toggleCaps = this.toggleCaps.bind(this);
+  }
 
+  private build() {
     // Create native views now
     this.group = createWidget<ZeppWidgetPositionOptions, ZeppGroupInstance>(widget.GROUP, {
       x: 0,
@@ -115,7 +120,7 @@ export class ScreenBoard implements Overlay {
       y: SCREEN_HEIGHT - SB_CONFIRM_BUTTON_HEIGHT,
       w: SCREEN_WIDTH,
       h: SB_CONFIRM_BUTTON_HEIGHT,
-      text: "Confirm",
+      text: this.confirmView,
       text_size: this.theme.FONT_SIZE - 4,
       color: 0xFFFFFF,
       normal_color: this.theme.ACCENT_COLOR_DARK,
@@ -177,6 +182,9 @@ export class ScreenBoard implements Overlay {
   }
 
   createTextButton(options: ScreenBoardCreateTextButtonRequest): ZeppWidget<ZeppButtonWidgetOptions, {}> {
+    if(!this.group)
+      throw new Error("NotInitialized");
+
     const {x, y, w, special, handler, ident} = options
     return this.group.createWidget<ZeppButtonWidgetOptions>(widget.BUTTON, {
       x: x + 2,
@@ -194,6 +202,9 @@ export class ScreenBoard implements Overlay {
   }
 
   createSpaceButton(options: ScreenBoardCreateButtonRequest): ZeppWidget<ZeppButtonWidgetOptions, {}> {
+    if(!this.group)
+      throw new Error("NotInitialized");
+
     const {x, y, w, handler} = options;
     return this.group.createWidget<ZeppButtonWidgetOptions>(widget.BUTTON, {
       x: x + 2 + (this.theme.KBD_SPACE_SIZE_DELTA / 2),
@@ -211,6 +222,9 @@ export class ScreenBoard implements Overlay {
   }
 
   createIconButton(options: ScreenBoardCreateIconButtonRequest): ZeppWidget<ZeppImgWidgetOptions, {}> {
+    if(!this.group)
+      throw new Error("NotInitialized");
+
     const {x, y, w, icon, ident, handler} = options;
     this.group.createWidget<ZeppFillRectWidgetOptions>(widget.FILL_RECT, {
       x: x + 2,
@@ -248,28 +262,38 @@ export class ScreenBoard implements Overlay {
   }
 
  get visible(): boolean {
-    return !!this.group.getProperty(prop.VISIBLE);
+    return this.isVisible;
   }
 
   set visible(v: boolean) {
-    if(this.visible == v) return;
+    if(this.isVisible == v) return;
+    if(!this.group) {
+      this.build();
+      if(!this.group)
+        throw new Error("InitFailed");
+    }
+
+    this.isVisible = v;
     this.group.setProperty(prop.VISIBLE, v);
 
     if(v) {
       this.lastLayerY = getScrollTop();
       scrollTo({y: 0});
+      setScrollLock({lock: true});
     } else {
       scrollTo({y: this.lastLayerY});
+      setScrollLock({lock: this.lastScrollLock});
     }
   }
 
   set confirmButtonText(v: string) {
-    this.confirmButton.setProperty(prop.TEXT, v);
+    this.confirmView = v;
+    this.confirmButton?.setProperty(prop.TEXT, v);
   }
 
   set title(v: string) {
     this.titleValue = v;
-    if(this.displayValue == "") {
+    if(this.displayValue == "" && this.valueScreen) {
       this.valueScreen.setProperty(prop.TEXT, this.displayFormat(v));
       this.valueScreen.setProperty(prop.COLOR, this.theme.TEXT_COLOR_2);
     }
@@ -280,12 +304,12 @@ export class ScreenBoard implements Overlay {
   }
 
   set value(v) {
-    if(this.displayValue == "" && v != "")
+    if(this.displayValue == "" && v != "" && this.valueScreen)
       this.valueScreen.setProperty(prop.COLOR, this.theme.TEXT_COLOR);
-    else if(this.displayValue != "" && v == "")
+    else if(this.displayValue != "" && v == "" && this.valueScreen)
       this.valueScreen.setProperty(prop.COLOR, this.theme.TEXT_COLOR_2);
 
-    this.valueScreen.setProperty(prop.TEXT, v == "" ? this.titleValue : this.displayFormat(v));
+    this.valueScreen?.setProperty(prop.TEXT, v == "" ? this.titleValue : this.displayFormat(v));
     this.displayValue = v;
 
     if(this.capsState == CapsState.CAPS_ONE_TIME) {
