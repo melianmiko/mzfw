@@ -205,8 +205,8 @@ export class ScreenBoard implements Overlay {
       y,
       w,
       h: SB_ROW_HEIGHT,
-      pos_x: Math.floor((w - 24) / 2),
-      pos_y: Math.floor((SB_ROW_HEIGHT - 24) / 2),
+      pos_x: Math.floor((w - SB_ICON_SIZE) / 2),
+      pos_y: Math.floor((SB_ROW_HEIGHT - SB_ICON_SIZE) / 2),
       src: `mzfw/${SB_ICON_SIZE}/${icon}.png`,
     });
     view.addEventListener(event.CLICK_UP, () => {

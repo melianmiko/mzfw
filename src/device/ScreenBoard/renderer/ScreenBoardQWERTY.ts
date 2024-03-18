@@ -16,7 +16,6 @@ export class ScreenBoardQWERTY implements ScreenBoardRenderer {
     protected rendererId: string = "qwerty";
     protected buttonCounts: number[] = [10, 9, 7];
     protected symbolsData: ScreenBoardLayout = SB_QWERTY_SYMBOLS_SUB_SCREEN;
-    protected layoutData: ScreenBoardLayoutsCollection;
 
     private readonly inputButtons: ZeppWidget<ZeppTextWidgetOptions, {}>[] = [];
     private readonly board: ScreenBoard;
@@ -27,11 +26,10 @@ export class ScreenBoardQWERTY implements ScreenBoardRenderer {
 
     constructor(board: ScreenBoard) {
         this.board = board;
-        this.layoutData = SB_COMPILED_LAYOUTS[this.rendererId];
     }
 
     build() {
-        this.manager = new ScreenBoardButtonsManager(this.board, this.inputButtons, this.layoutData);
+        this.manager = new ScreenBoardButtonsManager(this.board, this.inputButtons, SB_COMPILED_LAYOUTS[this.rendererId]);
 
         // First rows
         for(let i = 0; i < 3; i++) {

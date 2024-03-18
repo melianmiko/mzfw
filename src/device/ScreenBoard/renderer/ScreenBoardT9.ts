@@ -9,7 +9,7 @@ import { SB_COMPILED_LAYOUTS } from "../tools/ScreenBoardCompiledData";
 
 export class ScreenBoardT9 implements ScreenBoardRenderer {
     hasBackspace: boolean = false;
-    extraLayouts: string[] = ["123"];
+    extraLayouts: string[] = ["0", "sym"];
 
     private readonly board: ScreenBoard;
     private readonly inputButtons: ZeppWidget<ZeppTextWidgetOptions, {}>[] = [];
@@ -65,12 +65,12 @@ export class ScreenBoardT9 implements ScreenBoardRenderer {
         });
     }
 
-    private addSpace() {
+    private addSpace(): void {
         if(this.manager) {
             if(this.manager.isSubScreen)
                 this.manager.useLayout(this.manager.layout);
         }
-        this.board.value += " ";
+        this.board.value += this.manager.layout == "0" ? "0" : " ";
     }
 
     useLayout(name: string) {
