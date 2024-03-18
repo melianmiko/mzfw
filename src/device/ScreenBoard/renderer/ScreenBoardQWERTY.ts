@@ -3,11 +3,11 @@ import { ScreenBoard } from "../ScreenBoard";
 import { ZeppWidget } from "../../../zosx/ui/Types";
 import { ZeppButtonWidgetOptions, ZeppTextWidgetOptions } from "../../../zosx/ui/WidgetOptionTypes";
 import { SB_QWERTY_SYMBOLS_SUB_SCREEN } from "../data/QWERTY";
-import { getScreenBoardCapsIcon, getScreenBoardRowPosition } from "../ScreenBoardTools";
+import { getScreenBoardCapsIcon, getScreenBoardRowPosition } from "../tools/ScreenBoardTools";
 import { prop } from "../../../zosx/ui";
-import { ScreenBoardButtonsManager } from "../ScreenBoardButtonsManager";
-import { SB_ACT_BUTTON_WIDTH } from "../ScreenBoardConstants";
-import { SB_COMPILED_LAYOUTS } from "../ScreenBoardCompiledData";
+import { ScreenBoardButtonsManager } from "../tools/ScreenBoardButtonsManager";
+import { SB_ACT_BUTTON_WIDTH } from "../tools/ScreenBoardConstants";
+import { SB_COMPILED_LAYOUTS } from "../tools/ScreenBoardCompiledData";
 
 export class ScreenBoardQWERTY implements ScreenBoardRenderer {
     public extraLayouts: string[] = [];

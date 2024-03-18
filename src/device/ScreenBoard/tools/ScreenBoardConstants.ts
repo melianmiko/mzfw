@@ -1,4 +1,4 @@
-import { DEVICE_SHAPE, IS_BAND_7, IS_MI_BAND_7, IS_SMALL_SCREEN_DEVICE, SCREEN_HEIGHT } from "../UiProperties";
+import { DEVICE_SHAPE, IS_BAND_7, IS_MI_BAND_7, IS_SMALL_SCREEN_DEVICE, SCREEN_HEIGHT } from "../../UiProperties";
 
 export const SB_CONFIRM_BUTTON_HEIGHT = IS_MI_BAND_7 ? 64 : 56;
 export const SB_ROW_HEIGHT = ((): number => {
@@ -13,3 +13,8 @@ export const SB_ICON_SIZE = ((): number => {
     if(DEVICE_SHAPE == "band") return 24;
     return IS_SMALL_SCREEN_DEVICE ? 32 : 48;
 })()
+export const SB_DEFAULT_RENDERER: string = ((): string => {
+    if(DEVICE_SHAPE == "band") return "t9";
+    return IS_SMALL_SCREEN_DEVICE ? "t14" : "qwerty";
+})();
+export const SB_AVAILABLE_RENDERERS: string[] = DEVICE_SHAPE == "band" ? ["t9"] : ["t9", "t14", "qwerty"];

@@ -1,6 +1,6 @@
 import { UiTheme } from "../UiCompositor";
 
-export interface ScreenBoardConfig {
+export interface ScreenBoardInitOptions {
     forceRenderer?: string;
     forceLayouts?: string[];
     theme?: UiTheme,
@@ -9,8 +9,8 @@ export interface ScreenBoardConfig {
 export interface ScreenBoardRenderer {
     extraLayouts: string[];
     hasBackspace: boolean;
-    build: () => any;
-    useLayout: (layout: string) => any;
+    build(): any;
+    useLayout(layout: string): any;
 }
 
 export interface ScreenBoardButtonData {

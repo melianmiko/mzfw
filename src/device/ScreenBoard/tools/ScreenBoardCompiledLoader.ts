@@ -1,5 +1,5 @@
-import { O_RDONLY, openAssetsSync, readSync } from "../../zosx/fs";
-import { ScreenBoardButtonData, ScreenBoardLayout, ScreenBoardLayoutsCollection } from "./Interfaces";
+import { O_RDONLY, openAssetsSync, readSync } from "../../../zosx/fs";
+import { ScreenBoardButtonData, ScreenBoardLayout, ScreenBoardLayoutsCollection } from "../Interfaces";
 
 type DictIndex = {[key: string]: [number, number]};
 

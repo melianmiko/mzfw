@@ -1,9 +1,9 @@
-import { ScreenBoard } from "./ScreenBoard";
-import { ZeppWidget } from "../../zosx/ui/Types";
-import { ZeppTextWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
-import { ScreenBoardLayout, ScreenBoardLayoutsCollection } from "./Interfaces";
-import { CapsState } from "./Enums";
-import { prop } from "../../zosx/ui";
+import { ScreenBoard } from "../ScreenBoard";
+import { ZeppWidget } from "../../../zosx/ui/Types";
+import { ZeppTextWidgetOptions } from "../../../zosx/ui/WidgetOptionTypes";
+import { ScreenBoardLayout, ScreenBoardLayoutsCollection } from "../Interfaces";
+import { CapsState } from "../Enums";
+import { prop } from "../../../zosx/ui";
 
 export class ScreenBoardButtonsManager {
     public layout: string = "";

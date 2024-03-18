@@ -1,11 +1,11 @@
 import { Overlay } from "../UiOverlay";
 import { ConfigStorage } from "../Path";
-import { getScreenBoardRenderer } from "./ScreenBoardTools";
+import { getScreenBoardRenderer } from "./tools/ScreenBoardTools";
 import {
-  ScreenBoardConfig,
   ScreenBoardCreateButtonRequest,
   ScreenBoardCreateIconButtonRequest,
   ScreenBoardCreateTextButtonRequest,
+  ScreenBoardInitOptions,
   ScreenBoardRenderer
 } from "./Interfaces";
 import { CapsState } from "./Enums";
@@ -23,22 +23,22 @@ import { getScrollTop, scrollTo } from "../../zosx/page";
 import { UiTheme } from "../UiCompositor";
 import {
   SB_CONFIRM_BUTTON_HEIGHT,
+  SB_DEFAULT_RENDERER,
   SB_FONT_DELTA,
   SB_ICON_SIZE,
   SB_ROW_HEIGHT,
   SB_VIEWPORT_HEIGHT
-} from "./ScreenBoardConstants";
-import { dynamicLoadScreenBoardLayouts } from "./ScreenBoardCompiledLoader";
+} from "./tools/ScreenBoardConstants";
 
 export class ScreenBoard implements Overlay {
   public capsState: CapsState = CapsState.CAPS_OFF;
 
   private readonly config: ConfigStorage = new ConfigStorage("mzfw_sb");
+  private readonly options: ScreenBoardInitOptions;
   private readonly layouts: string[];
   private readonly theme: UiTheme;
   private readonly renderer: ScreenBoardRenderer;
   private readonly group: ZeppWidget<ZeppWidgetPositionOptions, ZeppGroupInstance>;
-  // private readonly titleView: ZeppWidget<ZeppTextWidgetOptions, {}>;
   private readonly valueScreen: ZeppWidget<ZeppTextWidgetOptions, {}>;
   private readonly backspaceView?: ZeppWidget<ZeppImgWidgetOptions, {}>;
   private readonly confirmButton: ZeppWidget<ZeppButtonWidgetOptions, {}>;
@@ -47,11 +47,12 @@ export class ScreenBoard implements Overlay {
   private activeLayout: string;
   private lastLayerY: number = 0;
 
-  constructor(config: ScreenBoardConfig) {
-    this.renderer = getScreenBoardRenderer(this, config.forceRenderer);
-    this.theme = config.theme ?? new UiTheme();
+  constructor(options: ScreenBoardInitOptions) {
+    this.options = options;
+    this.renderer = getScreenBoardRenderer(this);
+    this.theme = options.theme ?? new UiTheme();
 
-    this.layouts = config.forceLayouts ?? this.restoreLayouts();
+    this.layouts = options.forceLayouts ?? this.restoreLayouts();
     this.activeLayout = this.layouts[0];
 
     this.switchLayout = this.switchLayout.bind(this);
@@ -121,6 +122,11 @@ export class ScreenBoard implements Overlay {
 
     this.renderer.build();
     this.renderer.useLayout(this.activeLayout);
+  }
+
+  getCurrentRendererName(): string {
+    if(this.options.forceRenderer) return this.options.forceRenderer;
+    return this.config.getItem("renderer") ?? SB_DEFAULT_RENDERER
   }
 
   private restoreLayouts(): string[] {
