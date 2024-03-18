@@ -97,9 +97,9 @@ export class ActionBar extends Component<ActionBarProps> {
     }
 
     private getItemBackgroundColor(i: number): number {
-        if(this.props.children[i].disabled) 
+        if(this.props.children[i].disabled)
             return this.props.backgroundDisabled ?? this.root?.theme.BUTTON_DISABLED ?? 0;
-        if(this.wheelFocusPosition == i) 
+        if(this.wheelFocusPosition == i)
             return this.props.backgroundSelected ?? this.root?.theme.BUTTON_SELECTED ?? 0x111111;
         return this.props.backgroundNormal ?? this.root?.theme.BUTTON_NORMAL ?? 0x222222;
     }
@@ -116,7 +116,7 @@ export class ActionBar extends Component<ActionBarProps> {
         super.setupEventsAt(nativeWidget);
         nativeWidget.addEventListener(event.CLICK_UP, (p :ZeppWidgetEventData) => {
             this.onTouchUp(p);
-            index && this.props.children[index].onClick();
+            index != undefined && this.props.children[index].onClick();
         })
     }
 

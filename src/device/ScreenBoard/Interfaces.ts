@@ -11,6 +11,7 @@ export interface ScreenBoardRenderer {
     hasBackspace: boolean;
     build(): any;
     useLayout(layout: string): any;
+    listLayouts(): string[];
 }
 
 export interface ScreenBoardButtonData {

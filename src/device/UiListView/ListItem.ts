@@ -6,6 +6,7 @@ import { DESCRIPTION_SIZE_DELTA, VERT_MARGIN } from "./ListItemSizes";
 import { ZeppWidget } from "../../zosx/ui/Types";
 import { ZeppImgWidgetOptions, ZeppTextWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
 import { deleteWidget, prop, text_style, widget } from "../../zosx/ui";
+import { handleIconProperty } from "../UiTools";
 
 export class ListItem extends PaperComponent<ListItemProps> {
     private textBoxWidth: number = 0;
@@ -98,7 +99,7 @@ export class ListItem extends PaperComponent<ListItemProps> {
             y: this.props.description ? VERT_MARGIN : Math.floor(((this.geometry.h ?? 0) - ICON_SIZE) / 2),
             w: ICON_SIZE,
             h: ICON_SIZE,
-            src: `icon/${ICON_SIZE}/${this.props.icon}.png`,
+            src: handleIconProperty(this.props.icon ?? "", ICON_SIZE),
         };
     }
 

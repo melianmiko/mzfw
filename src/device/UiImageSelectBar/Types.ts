@@ -19,7 +19,7 @@ export type ImageOptionsBarItem = {
     onClick: () => any,
 }
 
-export type ImageOptionBarItem = {
+export type ImageOptionBarView = {
     background?: ZeppWidget<ZeppFillRectWidgetOptions, {}>,
     backgroundProps: ZeppFillRectWidgetOptions,
     icon?: ZeppWidget<ZeppImgWidgetOptions, {}>,

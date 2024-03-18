@@ -138,4 +138,8 @@ export class ScreenBoardQWERTY implements ScreenBoardRenderer {
 
         return this.manager.useLayout(name);
     }
+
+    listLayouts(): string[] {
+        return Object.keys(SB_COMPILED_LAYOUTS[this.rendererId]);
+    }
 }

@@ -2,17 +2,17 @@ import { Component } from "../UiComponent";
 import { DEVICE_SHAPE } from "../UiProperties";
 import { align, createWidget, deleteWidget, event, prop, widget } from "../../zosx/ui";
 import { ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
-import { ImageOptionBarItem, ImageOptionBarProps } from "./Types";
+import { ImageOptionBarView, ImageOptionBarProps } from "./Types";
 import { handleIconProperty } from "../UiTools";
 
-const ICON_SIZE = DEVICE_SHAPE == "band" ? 64 : 80;
-const ITEM_WIDTH = ICON_SIZE + 20;
+export const IMAGE_SELECT_ICON_SIZE = DEVICE_SHAPE == "band" ? 64 : 80;
+const ITEM_WIDTH = IMAGE_SELECT_ICON_SIZE + 20;
 const ROW_HEIGHT = ITEM_WIDTH + 40;
 
 export class ImageSelectBar extends Component<ImageOptionBarProps> {
     isFocusable: boolean = true;
 
-    private views: ImageOptionBarItem[] = [];
+    private views: ImageOptionBarView[] = [];
     private wheelFocusPosition: number = -1;
 
     protected getAutoHeight(): number {
@@ -28,8 +28,8 @@ export class ImageSelectBar extends Component<ImageOptionBarProps> {
                     x: 0,
                     y: 0,
                     color: 0,
-                    w: ICON_SIZE,
-                    h: ICON_SIZE,
+                    w: IMAGE_SELECT_ICON_SIZE,
+                    h: IMAGE_SELECT_ICON_SIZE,
                 },
                 titleProps: {
                     x: 0,
@@ -48,7 +48,7 @@ export class ImageSelectBar extends Component<ImageOptionBarProps> {
             }
 
             // Update native props
-            this.views[i].iconProps.src = handleIconProperty(this.props.children[i].icon, ICON_SIZE);
+            this.views[i].iconProps.src = handleIconProperty(this.props.children[i].icon, IMAGE_SELECT_ICON_SIZE);
             this.views[i].titleProps.text = this.props.children[i].title;
             this.views[i].backgroundProps.color = this.getItemBackgroundColor(i);
             this.views[i].titleProps.color = this.getItemBackgroundColor(i);
@@ -70,13 +70,13 @@ export class ImageSelectBar extends Component<ImageOptionBarProps> {
             for(let column = 0; column < itemCount; column++) {
                 const i = row * maxItemsInRow + column;
                 this.views[i].backgroundProps.x = offsetX + (column * itemWidth) +
-                    Math.floor((itemWidth - ICON_SIZE) / 2);
+                    Math.floor((itemWidth - IMAGE_SELECT_ICON_SIZE) / 2);
                 this.views[i].backgroundProps.y = this.geometry.y + (row * ROW_HEIGHT) + 8;
                 this.views[i].iconProps.x = this.views[i].backgroundProps.x;
                 this.views[i].iconProps.y = this.views[i].backgroundProps.y;
                 this.views[i].titleProps.w = itemWidth;
                 this.views[i].titleProps.x = offsetX + (column * itemWidth);
-                this.views[i].titleProps.y = this.geometry.y + (row * ROW_HEIGHT) + ICON_SIZE + 16;
+                this.views[i].titleProps.y = this.geometry.y + (row * ROW_HEIGHT) + IMAGE_SELECT_ICON_SIZE + 16;
             }
         }
     }
@@ -114,7 +114,10 @@ export class ImageSelectBar extends Component<ImageOptionBarProps> {
 
     private getItemBackgroundColor(i: number): number {
         const active = this.props.children[i].active;
-        return active ? this.root.theme.ACCENT_COLOR : this.root.theme.TEXT_COLOR;
+        if(this.wheelFocusPosition == i)
+            return active ? this.root.theme.ACCENT_COLOR_LIGHT : this.root.theme.TEXT_COLOR;
+        else
+            return active ? this.root.theme.ACCENT_COLOR : this.root.theme.TEXT_COLOR_2;
     }
 
     onFocus(degree: number) {
@@ -129,8 +132,8 @@ export class ImageSelectBar extends Component<ImageOptionBarProps> {
         super.setupEventsAt(nativeWidget);
         nativeWidget.addEventListener(event.CLICK_UP, (p :ZeppWidgetEventData) => {
             this.onTouchUp(p);
-            index && this.props.children[index].onClick();
-        })
+            index != undefined && this.props.children[index].onClick();
+        });
     }
 
     onWheelSpin(degree: number): boolean {

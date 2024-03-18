@@ -1,6 +1,6 @@
 import { Overlay } from "../UiOverlay";
 import { ConfigStorage } from "../Path";
-import { getScreenBoardRenderer } from "./tools/ScreenBoardTools";
+import { getFallbackLayouts } from "./tools/ScreenBoardTools";
 import {
   ScreenBoardCreateButtonRequest,
   ScreenBoardCreateIconButtonRequest,
@@ -29,6 +29,9 @@ import {
   SB_ROW_HEIGHT,
   SB_VIEWPORT_HEIGHT
 } from "./tools/ScreenBoardConstants";
+import { ScreenBoardT9 } from "./renderer/ScreenBoardT9";
+import { ScreenBoardT14 } from "./renderer/ScreenBoardT14";
+import { ScreenBoardQWERTY } from "./renderer/ScreenBoardQWERTY";
 
 export class ScreenBoard implements Overlay {
   public capsState: CapsState = CapsState.CAPS_OFF;
@@ -49,7 +52,7 @@ export class ScreenBoard implements Overlay {
 
   constructor(options: ScreenBoardInitOptions) {
     this.options = options;
-    this.renderer = getScreenBoardRenderer(this);
+    this.renderer = this.getRendererInstance();
     this.theme = options.theme ?? new UiTheme();
 
     this.layouts = options.forceLayouts ?? this.restoreLayouts();
@@ -129,9 +132,27 @@ export class ScreenBoard implements Overlay {
     return this.config.getItem("renderer") ?? SB_DEFAULT_RENDERER
   }
 
+  getRendererInstance(): ScreenBoardRenderer {
+    const renderer = this.getCurrentRendererName();
+    switch (renderer) {
+    case "t9":
+      return new ScreenBoardT9(this);
+    case "t14":
+      return new ScreenBoardT14(this);
+    case "qwerty":
+      return new ScreenBoardQWERTY(this);
+    default:
+      console.log(`[sb] warn: unknown renderer ${renderer}`);
+      return new ScreenBoardT9(this);
+    }
+  }
+
   private restoreLayouts(): string[] {
     let layouts = this.config.getItem("layouts") as string[];
-    if(!layouts) layouts = ["en", "ru"];
+    if(!layouts) {
+      layouts = getFallbackLayouts(this.renderer.listLayouts());
+    }
+
     return [
       ...layouts,
       ...this.renderer.extraLayouts,
