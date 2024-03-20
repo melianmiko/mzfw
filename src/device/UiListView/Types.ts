@@ -1,3 +1,5 @@
+import { TextLayoutProvider } from "../System/TextLayoutProvider";
+
 export type ListItemProps = {
     title?: string,
     icon?: string,
@@ -6,6 +8,14 @@ export type ListItemProps = {
     titleColor?: number,
     descriptionColor?: number,
     onClick?(): any,
+}
+
+export type ListItemInternalMetrics = {
+    textOffsetLeft: number,
+    textBasedHeight: number,
+    textBoxWidth: number,
+    titleLayout: TextLayoutProvider,
+    descriptionLayout: TextLayoutProvider,
 }
 
 export type ChildPositionInfo = {
