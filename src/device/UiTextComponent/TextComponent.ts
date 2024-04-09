@@ -7,6 +7,7 @@ import { ZeppWidgetID } from "../../zosx/ui/Types";
 
 export class TextComponent extends NativeComponent<TextComponentProps, ZeppTextWidgetOptions> {
     public isFocusable: boolean = false;
+    public preventDestroyOnLegacyDevices: boolean = true;
 
     protected widgetID: ZeppWidgetID = widget.TEXT;
     protected nativeProps: ZeppTextWidgetOptions = {

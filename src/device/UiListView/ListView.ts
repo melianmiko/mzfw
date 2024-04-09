@@ -2,7 +2,7 @@ import { BaseCompositor, Component } from "../UiComponent";
 import {
     BOTTOM_MARGIN,
     DeviceInfo,
-    ensureIsNotBand7,
+    ensureIsNotLegacyDevice,
     HAVE_STATUS_BAR,
     SCREEN_HEIGHT,
     SCREEN_MARGIN,
@@ -112,7 +112,7 @@ export class ListView<T> extends BaseCompositor<T> {
      * Rebuild entire screen (this is VERY SLOW, use only if you really need this)
      */
     rebuildAll() {
-        ensureIsNotBand7();
+        ensureIsNotLegacyDevice();
 
         for(const component of this.nestedComponents) {
             component.performDestroy();

@@ -4,6 +4,8 @@ import { ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
 import { event } from "../../zosx/ui";
 import { IComponentEventReceiver, IRootComponent } from "./Interfaces";
 import { DUMMY_COMPOSITOR } from "./DummyCompositor";
+import { isLegacyDevice } from "../System";
+import { ZeppNotSupportedError } from "../UiProperties";
 
 /**
  * Generic component class.
@@ -30,6 +32,7 @@ export abstract class Component<P> {
      * Can this component receive wheel focus?
      */
     public isFocusable: boolean = false;
+    public preventDestroyOnLegacyDevices: boolean = false;
     /**
      * Component geometry data
      * @protected
@@ -126,6 +129,8 @@ export abstract class Component<P> {
      */
     performDestroy() {
         if(!this.isRendered) return;
+        if(this.preventDestroyOnLegacyDevices && isLegacyDevice)
+            throw new ZeppNotSupportedError("!DESTROY_ON_LEGACY");
         this.onDestroy();
         this.isRendered = false;
     }

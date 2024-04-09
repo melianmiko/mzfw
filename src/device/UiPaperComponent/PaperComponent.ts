@@ -21,6 +21,7 @@ export type PaperWidgetProps = {
 // TODO: Refactor
 export abstract class PaperComponent<T> extends Component<PaperWidgetProps & T> {
     public isFocusable: boolean = true;
+    public preventDestroyOnLegacyDevices: boolean = true;
 
     protected button: ZeppWidget<any, {}> | null = null;
     protected group: ZeppWidget<ZeppWidgetPositionOptions, ZeppGroupInstance> | null = null;

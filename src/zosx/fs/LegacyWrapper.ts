@@ -63,7 +63,7 @@ export class LegacyFileSystemWrapper implements ZeppFsLibrary {
         try { fs.remove(options.path); } catch(_) {}
 
         const data: ArrayBuffer = typeof options.data == "string"
-            ? Buffer.from(options.data, options.options?.encoding ?? "utf-8") : options.data;
+            ? Buffer.from(options.data, options.options?.encoding ?? "utf-8").buffer : options.data;
 
         const file = fs.open(options.path, fs.O_WRONLY | fs.O_CREAT);
         fs.write(file, data, 0, data.byteLength);

@@ -12,8 +12,7 @@ import { align, createWidget, deleteWidget, prop, text_style, widget } from "../
 
 const BTN_PADDING = 8;
 const SIZE_OPTION = IS_SMALL_SCREEN_DEVICE ? (IS_BAND_7 ? 0 : 1) : 2;
-const ICON_SIZE = [32, 24, 48][SIZE_OPTION];
-const TEXT_SIZE = [0, 20, 24][SIZE_OPTION];
+const ICON_SIZE = [32, 32, 48][SIZE_OPTION];
 
 /**
  * Headline button, for use in header/footer of page.
@@ -50,7 +49,7 @@ export class HeadlineButton extends Component<HeadlineButtonProps> {
         h: ICON_SIZE,
         text: "",
         text_style: text_style.NONE,
-        text_size: TEXT_SIZE,
+        text_size: 20,
         align_v: align.CENTER_V,
     };
 
@@ -114,7 +113,7 @@ export class HeadlineButton extends Component<HeadlineButtonProps> {
 
     private refreshWidth() {
         if(SIZE_OPTION > 0) {
-            this.textLayout.performUpdate(this.props.text, WIDGET_WIDTH, TEXT_SIZE);
+            this.textLayout.performUpdate(this.props.text, WIDGET_WIDTH, this.root.theme.FONT_SIZE - 4);
             this.backgroundProps.w = this.textLayout.width + ICON_SIZE + BTN_PADDING * 5;
         } else {
             this.backgroundProps.w = ICON_SIZE + BTN_PADDING * 2;

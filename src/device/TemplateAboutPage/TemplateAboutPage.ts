@@ -14,6 +14,8 @@ import {
 import { zeppFeatureLevel } from "../System";
 
 export abstract class TemplateAboutPage extends ListView<null> {
+    hideStatusBar: boolean = true;
+
     /**
      * Place your app display name here
      * @protected

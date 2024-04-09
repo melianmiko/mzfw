@@ -20,10 +20,11 @@ export abstract class NativeWidgetWrapper<WP, WO> {
         if(!this.allowDestroyOnBand7 && IS_BAND_7)
             throw new ZeppNotSupportedError("This feature not supported on Band 7");
         if(this.widget) deleteWidget(this.widget);
+        this.widget = null;
     }
 
     onComponentUpdate(): void {
-        if(this.widget && (this.shouldExist || ( IS_BAND_7 && !this.shouldExist))) {
+        if(this.widget && (this.shouldExist || ( IS_BAND_7 && !this.shouldExist && !this.allowDestroyOnBand7))) {
             // update
             this.widget.setProperty(prop.MORE, this.props);
         } else if(this.widget && !this.shouldExist) {
