@@ -16,6 +16,7 @@ export class TemplateSplashScreen {
      */
     protected iconPath: string = "icon/80/icon.png";
     protected continueToUrl: string = "page/index";
+    protected continueParam: string = "";
     protected iconSize: number = 80;
     private viewAnimation: ZeppWidget<ZeppFillRectWidgetOptions, {}> | null = null;
     private viewStatus: ZeppWidget<ZeppTextWidgetOptions, {}> | null = null;
@@ -70,7 +71,7 @@ export class TemplateSplashScreen {
             this.onInit(),
             this.playAnimation()
         ]).then(() => {
-            replace({url: this.continueToUrl});
+            replace({url: this.continueToUrl, params: this.continueParam});
         });
     }
 

@@ -14,19 +14,22 @@ export class ConfigStorage implements Storage {
         if(this.writeTimer)
             clearTimeout(this.writeTimer);
 
-        setTimeout(() => {
-            this.writeTimer = null;
-
-            // console.log("[cs] dump", JSON.stringify(this.data), "to", this.filename);
-            writeFileSync({
-                path: this.filename,
-                data: JSON.stringify(this.data),
-                options: {
-                    encoding: "utf8",
-                }
-            })
-            // console.log("Complete");
+        this.writeTimer = setTimeout(() => {
+            this.writeChanges();
         }, 200);
+    }
+
+    writeChanges() {
+        writeFileSync({
+            path: this.filename,
+            data: JSON.stringify(this.data),
+            options: {
+                encoding: "utf8",
+            }
+        });
+
+        if(this.writeTimer) clearTimeout(this.writeTimer);
+        this.writeTimer = null;
     }
 
     private loadData() {

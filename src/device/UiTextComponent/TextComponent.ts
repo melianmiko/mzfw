@@ -31,10 +31,10 @@ export class TextComponent extends NativeComponent<TextComponentProps, ZeppTextW
     onInit() {
         super.onInit();
         this.props.textSize = this.props.textSize ?? this.root?.theme.FONT_SIZE ?? 18;
-        this.props.color = this.props.textColor ?? this.root?.theme.TEXT_COLOR ?? 0xFFFFFF;
+        this.props.color = this.props.color ?? this.root?.theme.TEXT_COLOR ?? 0xFFFFFF;
     }
 
-    updateProperties(): void {
+    protected updateProperties(): void {
         this.nativeProps = {
             ...this.nativeProps,
             text: this.props.text,
@@ -48,7 +48,7 @@ export class TextComponent extends NativeComponent<TextComponentProps, ZeppTextW
         this.textLayout.performUpdate(this.props.text, this.nativeProps.w ?? 0, this.nativeProps.text_size ?? 0);
     }
 
-    updateGeometry(): void {
+    protected updateGeometry(): void {
         const mh = this.props.marginH ?? 0;
         const mv = this.props.marginV ?? 0;
         this.nativeProps = {

@@ -45,6 +45,6 @@ export abstract class NativeComponent<AP, NP, WTE = {}> extends Component<AP> {
      *
      * @protected
      */
-    abstract updateProperties(): void;
-    abstract updateGeometry(): void;
+    protected abstract updateProperties(): void;
+    protected abstract updateGeometry(): void;
 }

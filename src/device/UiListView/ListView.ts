@@ -31,6 +31,8 @@ export class ListView<T> extends BaseCompositor<T> {
     private buildMorePage: number = 0;
     private lastDynRenderRefreshScrollPosition: number = 0;
     protected dynamicRenderEnabled: boolean = false;
+    protected listViewTopOffset: number = 0;
+    protected overrideHeaderHeight: number | null = null;
 
     /**
      * Will create ListScreen from only one present build() function
@@ -62,8 +64,11 @@ export class ListView<T> extends BaseCompositor<T> {
      */
     performRender() {
         super.performRender();
+        this.beforeListViewRender();
         this.renderListView();
     }
+
+    protected beforeListViewRender() {}
 
     private renderListView() {
         if(this.dynamicRenderEnabled && isLegacyDevice) {
@@ -71,8 +76,8 @@ export class ListView<T> extends BaseCompositor<T> {
             this.dynamicRenderEnabled = false;
         }
 
-        this.renderStartPos = this.renderDirection == 1 ? 0 : REV_RENDER_START_POS;
-        this.renderEndPos = this.renderDirection == 1 ? 0 : REV_RENDER_START_POS;
+        this.renderStartPos = this.renderDirection == 1 ? this.listViewTopOffset : REV_RENDER_START_POS;
+        this.renderEndPos = this.renderStartPos;
 
         // Create end-of list view for dynamic rendering
         if(!this.eofListView)
@@ -85,7 +90,7 @@ export class ListView<T> extends BaseCompositor<T> {
             });
 
         const header = this.buildHeader();
-        const margin = this.renderDirection == 1 ? TOP_MARGIN : BOTTOM_MARGIN;
+        const margin = this.overrideHeaderHeight ?? (this.renderDirection == 1 ? TOP_MARGIN : BOTTOM_MARGIN);
         if(header) {
             if(HAVE_STATUS_BAR && !this.hideStatusBar && this.renderDirection == 1) {
                 // Keep status bar visible, so add offset

@@ -63,9 +63,9 @@ function clientFetch(url: string, userOptions?: RequestInit): Promise<ResponseWr
 
     const options = {
         method: (userOptions && userOptions.method) ? userOptions.method : "GET",
-        header: (userOptions && userOptions.headers) ? userOptions.headers : {},
+        headers: (userOptions && userOptions.headers) ? userOptions.headers as {[id: string]: string} : {},
     }
-    return sendRequestMessage<SideFetchRequest, SideFetchResult>(["mzfw.fetch", url, options, body]).then((d) => {
+    return sendRequestMessage<SideFetchRequest, SideFetchResult>(["mzfw.fetch", url, options, body], glob["_fetch_timeout"]).then((d) => {
         return new ResponseWrapper(url, d);
     })
 }
@@ -74,7 +74,7 @@ function clientFetch(url: string, userOptions?: RequestInit): Promise<ResponseWr
  * This function will fet up global `fetch` function in device side,
  * and their handler in side-service side.
  */
-export function initFetchProvider() {
+export function initFetchProvider(timeout: number = 30000) {
     if(IS_SIDE_SERVICE) {
 
         registerMessageHandler((ctx) => {
@@ -86,6 +86,7 @@ export function initFetchProvider() {
     } else {
 
         glob.fetch = clientFetch;
+        glob["_fetch_timeout"] = timeout;
 
     }
 }

@@ -6,6 +6,14 @@
   "scripts": {
     "build": "tsc"
   },
+  "files": [
+    "./device",
+    "./assets",
+    "./assets_raw",
+    "./device_polyfill",
+    "./shared",
+    "./zosx"
+  ],
   "author": "melianmiko",
   "license": "ISC"
 }
