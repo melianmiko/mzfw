@@ -1,4 +1,5 @@
 import { TextLayoutProvider } from "../System/TextLayoutProvider";
+import { Component } from "../UiComponent";
 
 export type ListItemProps = {
     title?: string,
@@ -19,6 +20,7 @@ export type ListItemInternalMetrics = {
 }
 
 export type ChildPositionInfo = {
+    component: Component<any>,
     lastHeight: number,
     y: number,
 }

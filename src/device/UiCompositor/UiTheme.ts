@@ -1,5 +1,9 @@
 import { BASE_FONT_SIZE, IS_MI_BAND_7 } from "../UiProperties";
 
+type UiThemeOptions = {
+    useFontSetting?: boolean,
+}
+
 export class UiTheme {
     FONT_SIZE: number = BASE_FONT_SIZE;
 
@@ -16,7 +20,7 @@ export class UiTheme {
     PAPER_PRESSED:  number = IS_MI_BAND_7 ? 0x0f0f0f : 0x444444;
 
     BUTTON_NORMAL: number = 0x1f1f1f;
-    BUTTON_SELECTED: number =  0x242424;
+    BUTTON_SELECTED: number =  0x333333;
     BUTTON_PRESSED: number = 0x0f0f0f;
     BUTTON_DISABLED: number = 0x0f0f0f;
     BUTTON_TEXT: number = 0xFFFFFF;
@@ -30,4 +34,12 @@ export class UiTheme {
     KBD_SPACE_BG_PRESSED: number = 0x555555;
     KBD_SPACE_TEXT: number = 0x999999;
     KBD_SPACE_SIZE_DELTA: number = 8;
+
+    constructor(options?: UiThemeOptions) {
+        if(!options) return;
+        if(options.useFontSetting) {
+            const fontSize = localStorage.getItem("uiFontSize");
+            if(fontSize) this.FONT_SIZE = parseInt(fontSize);
+        }
+    }
 }

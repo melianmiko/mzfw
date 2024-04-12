@@ -138,7 +138,7 @@ export class ImageSelectBar extends Component<ImageOptionBarProps> {
 
     onWheelSpin(degree: number): boolean {
         // const next = this.wheelFocusPosition + degree;
-        const next = this.wheelFocusPosition += degree;
+        const next = this.wheelFocusPosition + degree;
 
         if(next > -1 && next < this.views.length) {
             this.raiseViewFocus(next);
@@ -159,19 +159,24 @@ export class ImageSelectBar extends Component<ImageOptionBarProps> {
     private raiseViewFocus(next: number): void {
         const prev = this.wheelFocusPosition;
         this.wheelFocusPosition = next;
+        console.log("switch", prev, "->", next);
 
-        if(prev > -1) {
+        if(this.views[prev]) {
             this.views[prev].backgroundProps.color = this.getItemBackgroundColor(prev);
             this.views[prev].titleProps.color = this.getItemBackgroundColor(prev);
             const v = this.views[prev].background;
             if(v) v.setProperty(prop.MORE, this.views[prev].backgroundProps);
+            const v2 = this.views[prev].title;
+            if(v2) v2.setProperty(prop.MORE, this.views[prev].titleProps);
         }
 
-        if(next > -1) {
+        if(this.views[next]) {
             this.views[next].backgroundProps.color = this.getItemBackgroundColor(next);
             this.views[next].titleProps.color = this.getItemBackgroundColor(next);
             const v = this.views[next].background;
             if(v) v.setProperty(prop.MORE, this.views[next].backgroundProps);
+            const v2 = this.views[next].title;
+            if(v2) v2.setProperty(prop.MORE, this.views[next].titleProps);
         }
     }
 }

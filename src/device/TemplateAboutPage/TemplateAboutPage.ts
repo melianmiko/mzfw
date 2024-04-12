@@ -68,7 +68,7 @@ export abstract class TemplateAboutPage extends ListView<null> {
 
     private getAuthors(): Component<any>[] {
         const out: Component<any>[] = [
-            new SectionHeaderComponent("Authors")
+            new SectionHeaderComponent(this.i18n("Authors"))
         ];
 
         for (const name in this.authors)
@@ -82,7 +82,7 @@ export abstract class TemplateAboutPage extends ListView<null> {
 
     private getLibrariesInfo(): Component<any>[] {
         const out: Component<any>[] = [
-            new SectionHeaderComponent("Third-party libraries")
+            new SectionHeaderComponent(this.i18n("Third-party libraries"))
         ];
 
         for (const name in this.thirdPartyLibraries) {

@@ -40,16 +40,16 @@ export class ConfigStorage implements Storage {
             }
         });
 
-        console.log("[cs] loadData", data);
+        // console.log("[cs] loadData", data);
         if(typeof data == "string") {
             try {
                 this.data = JSON.parse(data);
                 if(!this.data || this.data.constructor != Object) {
-                    console.log("[cs] failed to parse data", this.data);
+                    // console.log("[cs] failed to parse data", this.data);
                     this.data = {};
                 }
             } catch(e) {
-                console.log("[cs] load error", e);
+                // console.log("[cs] load error", e);
             }
         }
 

@@ -280,6 +280,9 @@ export class ScreenBoard implements Overlay {
       this.lastLayerY = getScrollTop();
       scrollTo({y: 0});
       setScrollLock({lock: true});
+
+      this.valueScreen?.setProperty(prop.TEXT, this.displayValue == "" ? this.titleValue : this.displayValue);
+      this.valueScreen?.setProperty(prop.COLOR, this.displayValue == "" ? this.theme.TEXT_COLOR_2 : this.theme.TEXT_COLOR);
     } else {
       scrollTo({y: this.lastLayerY});
       setScrollLock({lock: this.lastScrollLock});

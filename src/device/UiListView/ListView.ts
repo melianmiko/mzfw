@@ -24,7 +24,7 @@ const REV_RENDER_START_POS = 10000;
 
 export class ListView<T> extends BaseCompositor<T> {
     private eofListView: ZeppWidget<ZeppImgWidgetOptions, {}> | null = null;
-    private childPositionInfo: ChildPositionInfo[] = [];
+    private listChildComponents: ChildPositionInfo[] = [];
     private renderStartPos: number = 0;
     private renderEndPos: number = 0;
     private footerComponent: Component<any> | null = null;
@@ -119,13 +119,13 @@ export class ListView<T> extends BaseCompositor<T> {
     rebuildAll() {
         ensureIsNotLegacyDevice();
 
-        for(const component of this.nestedComponents) {
-            component.performDestroy();
+        for(const child of this.listChildComponents) {
+            child.component.performDestroy();
         }
 
         this.focusPosition = -1;
         this.nestedComponents = [];
-        this.childPositionInfo = [];
+        this.listChildComponents = [];
 
         this.renderListView();
     }
@@ -137,12 +137,13 @@ export class ListView<T> extends BaseCompositor<T> {
      * @param at Target index position
      * @param height
      */
-    addComponent(component: Component<any>, at: number = this.nestedComponents.length, height: number | null = null) {
+    addComponent(component: Component<any>, at: number = this.listChildComponents.length, height: number | null = null) {
         component.attachParent(this);
         component.setGeometry(null, null, WIDGET_WIDTH, height);
 
-        if(at == this.nestedComponents.length) {
+        if(at == this.listChildComponents.length) {
             this.nestedComponents.push(component);
+            this.listChildComponents.push({component, y: 0, lastHeight: 0});
             this.repositionComponents(at, this.renderEndPos);
         } else {
             this.injectComponentToPosition(component, at);
@@ -150,7 +151,7 @@ export class ListView<T> extends BaseCompositor<T> {
         }
 
         if(this.dynamicRenderEnabled) {
-            this.dynamicRender(this.nestedComponents.length - 1);
+            this.dynamicRender(this.listChildComponents.length - 1);
         } else {
             component.performRender();
         }
@@ -169,10 +170,10 @@ export class ListView<T> extends BaseCompositor<T> {
             component,
             ...this.nestedComponents.slice(at),
         ];
-        this.childPositionInfo = [
-            ...this.childPositionInfo.slice(0, at),
-            {lastHeight: -1, y: -1},
-            ...this.childPositionInfo.slice(at),
+        this.listChildComponents = [
+            ...this.listChildComponents.slice(0, at),
+            {component, lastHeight: -1, y: -1},
+            ...this.listChildComponents.slice(at),
         ]
     }
 
@@ -182,8 +183,8 @@ export class ListView<T> extends BaseCompositor<T> {
      * @param component Component to remove
      */
     removeComponent(component: Component<any>) {
-        for(let i = 0; i < this.nestedComponents.length; i++)
-            if(this.nestedComponents[i] == component)
+        for(let i = 0; i < this.listChildComponents.length; i++)
+            if(this.listChildComponents[i].component == component)
                 return this.removeComponentAt(i);
     }
 
@@ -194,20 +195,20 @@ export class ListView<T> extends BaseCompositor<T> {
      * @private
      */
     private removeComponentAt(index: number) {
-        const component = this.nestedComponents[index];
-        component.performDestroy();
+        const child = this.listChildComponents[index];
+        child.component.performDestroy();
 
-        this.nestedComponents = this.nestedComponents.filter((_, i) => i != index);
-        this.childPositionInfo = this.childPositionInfo.filter((_ , i) => i != index);
+        this.nestedComponents = this.nestedComponents.filter((c) => c != child.component);
+        this.listChildComponents = this.listChildComponents.filter((_ , i) => i != index);
 
         // Re-position all items bellow current
         const y = index == 0 ? this.renderStartPos :
-            this.childPositionInfo[index - 1].y + this.childPositionInfo[index - 1].lastHeight;
+            this.listChildComponents[index - 1].y + this.listChildComponents[index - 1].lastHeight;
         this.repositionComponents(index, y);
 
         // If focus position is equal to removed item, we should set it to next one
         if(this.focusPosition == index) {
-            const cmp = this.nestedComponents[index];
+            const cmp = this.listChildComponents[index].component;
             cmp.onFocus && cmp.onFocus(1);
             this.scrollToFocusedChild();
         }
@@ -221,11 +222,11 @@ export class ListView<T> extends BaseCompositor<T> {
 
         // Detect changed component
         let i: number;
-        for(i = 0 ; i < this.nestedComponents.length; i++) {
-            if(this.nestedComponents[i].geometry.h != this.childPositionInfo[i].lastHeight)
+        for(i = 0 ; i < this.listChildComponents.length; i++) {
+            if(this.listChildComponents[i].component.geometry.h != this.listChildComponents[i].lastHeight)
                 break;
 
-            y += this.renderDirection * this.childPositionInfo[i].lastHeight;
+            y += this.renderDirection * this.listChildComponents[i].lastHeight;
         }
 
         this.repositionComponents();
@@ -239,14 +240,15 @@ export class ListView<T> extends BaseCompositor<T> {
      * @private
      */
     private repositionComponents(i: number = 0, y: number = this.renderStartPos) {
-        for(; i < this.nestedComponents.length; i++) {
-            const cmp = this.nestedComponents[i]
+        for(; i < this.listChildComponents.length; i++) {
+            const cmp = this.listChildComponents[i].component;
             const height = cmp.geometry.h ?? 0;
             cmp.setGeometry(
                 SCREEN_MARGIN,
                 this.renderDirection == 1 ? y : y - height
             );
-            this.childPositionInfo[i] = {
+            this.listChildComponents[i] = {
+                component: cmp,
                 y: y,
                 lastHeight: height,
             };
@@ -357,18 +359,20 @@ export class ListView<T> extends BaseCompositor<T> {
         const targetY = Math.floor(-getScrollTop() + (SCREEN_HEIGHT / 2));
         if(this.renderDirection == 1) {
             // From first to last
-            for(let i = 0; i < this.childPositionInfo.length && i >= 0; i++) {
-                if(this.childPositionInfo[i].y + this.childPositionInfo[i].lastHeight >= targetY)
+            for(let i = 0; i < this.listChildComponents.length && i >= 0; i++) {
+                if(this.listChildComponents[i].y + this.listChildComponents[i].lastHeight >= targetY)
                     return i;
             }
         } else {
             // From last to first
-            for(let i = this.childPositionInfo.length - 1; i >= 0; i--) {
-                if(this.childPositionInfo[i].y >= targetY)
+            for(let i = this.listChildComponents.length - 1; i >= 0; i--) {
+                if(this.listChildComponents[i].y >= targetY)
                     return i;
             }
         }
-        return 0;
+
+        // Focus to first controlled component
+        return this.nestedComponents.length - this.listChildComponents.length;
     }
 
     /**
@@ -379,7 +383,7 @@ export class ListView<T> extends BaseCompositor<T> {
      * @param endIndex Component review end index
      * @private
      */
-    private dynamicRender(startIndex: number = 0, endIndex: number = this.nestedComponents.length) {
+    private dynamicRender(startIndex: number = 0, endIndex: number = this.listChildComponents.length) {
         const scrollPos = -getScrollTop();
         const topBaseLine = Math.max(0, scrollPos - SCREEN_HEIGHT);
         const bottomBaseLine = scrollPos + 2 * SCREEN_HEIGHT;
@@ -387,12 +391,12 @@ export class ListView<T> extends BaseCompositor<T> {
 
         // let debug = "";
         for(let i = startIndex; i < endIndex; i++) {
-            const visible = this.childPositionInfo[i].y >= topBaseLine && this.childPositionInfo[i].y <= bottomBaseLine
+            const visible = this.listChildComponents[i].y >= topBaseLine && this.listChildComponents[i].y <= bottomBaseLine
             // debug += visible ? "1" : "0";
-            if(!visible && this.nestedComponents[i].isRendered) {
-                this.nestedComponents[i].performDestroy();
-            } else if(visible && !this.nestedComponents[i].isRendered) {
-                this.nestedComponents[i].performRender();
+            if(!visible && this.listChildComponents[i].component.isRendered) {
+                this.listChildComponents[i].component.performDestroy();
+            } else if(visible && !this.listChildComponents[i].component.isRendered) {
+                this.listChildComponents[i].component.performRender();
             }
         }
         // console.log(debug);
