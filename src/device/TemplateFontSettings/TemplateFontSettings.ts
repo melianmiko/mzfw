@@ -11,7 +11,7 @@ export class TemplateFontSettings extends ListView<any> {
     private slider: SliderComponent = new SliderComponent({
         value: this.value,
         minValue: 10,
-        maxValue: 40,
+        maxValue: 50,
         onChange: (v) => this.useValue(v),
     });
     private preview: TextComponent = new TextComponent({
