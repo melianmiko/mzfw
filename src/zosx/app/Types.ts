@@ -12,8 +12,15 @@ export type ZeppPackageInfo = {
     description?: string,
 }
 
+export type ZeppRequestPermissionContext = {
+    permissions: string[],
+    callback: (result: number[]) => any
+}
+
 export type ZeppAppLibrary = {
     getPackageInfo(): ZeppPackageInfo,
+    queryPermission(request: {permissions: string[]}): number[],
+    requestPermission(request: ZeppRequestPermissionContext): number;
 }
 
 export type LegacyZeppAppLibrary = {

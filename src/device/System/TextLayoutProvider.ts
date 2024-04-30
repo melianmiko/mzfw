@@ -12,6 +12,16 @@ export class TextLayoutProvider {
     public height = 0;
     public width = 0;
 
+    static getHeightOf(text: string, width: number, size: number): number {
+        const layout = getTextLayout(text, {
+            text_size: size,
+            text_width: width,
+        });
+        if(!layout)
+            throw new TextLayoutError(`text=${text}, size=${size}, width=${width}`);
+        return layout.height;
+    }
+
     /**
      * Do update if required.
      *

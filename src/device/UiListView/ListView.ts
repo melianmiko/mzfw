@@ -29,6 +29,7 @@ export class ListView<T> extends BaseCompositor<T> {
     private renderEndPos: number = 0;
     private footerComponent: Component<any> | null = null;
     private buildMorePage: number = 0;
+    private exited: boolean = false;
     private lastDynRenderRefreshScrollPosition: number = 0;
     protected dynamicRenderEnabled: boolean = false;
     protected listViewTopOffset: number = 0;
@@ -66,6 +67,11 @@ export class ListView<T> extends BaseCompositor<T> {
         super.performRender();
         this.beforeListViewRender();
         this.renderListView();
+    }
+
+    performDestroy() {
+        super.performDestroy();
+        this.exited = true;
     }
 
     protected beforeListViewRender() {}
@@ -138,6 +144,9 @@ export class ListView<T> extends BaseCompositor<T> {
      * @param height
      */
     addComponent(component: Component<any>, at: number = this.listChildComponents.length, height: number | null = null) {
+        if(this.exited)
+            return;
+
         component.attachParent(this);
         component.setGeometry(null, null, WIDGET_WIDTH, height);
 
@@ -340,7 +349,7 @@ export class ListView<T> extends BaseCompositor<T> {
      * @private
      */
     private performRenderFooter() {
-        if(this.footerComponent == null)
+        if(this.footerComponent == null || this.exited)
             return;
         this.footerComponent.attachParent(this);
         this.footerComponent.setGeometry(

@@ -14,6 +14,8 @@ export interface ZeppUiLibrary extends ZeppGroupInstance {
     edit_widget_group_type: ZeppWidgetEditGroupType,
     event: ZeppWidgetEvent,
     getTextLayout(text: string, options: TextLayoutOptions): TextLayoutData | null,
+    getAppWidgetSize(): ZeppAppWidgetSize,
+    setAppWidgetSize(props: Partial<ZeppAppWidgetSize>): void;
     prop: ZeppWidgetProperty,
     redraw?(): void,
     setStatusBarVisible(visible: boolean): void,
@@ -29,6 +31,13 @@ export interface ZeppUiLibrary extends ZeppGroupInstance {
     // setScrollView(enable: boolean, pageHeight: number, pageCount: number, isVertical: boolean): void,
     // scrollToPage(index: number, animation: boolean): void,
     // setLayerScrolling(value: boolean): void,
+}
+
+export interface ZeppAppWidgetSize {
+    w: number,
+    h: number,
+    margin: number,
+    radius: number,
 }
 
 export interface ZeppGroupInstance {

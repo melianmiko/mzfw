@@ -57,6 +57,12 @@ export abstract class BaseCompositor<P> implements IRootComponent, IComponentEve
      */
     protected disableWheelNavigation: boolean = false;
     /**
+     * Delay of internal timer, set to 0 to disable timer at all.
+     * Use with caution.
+     * @protected
+     */
+    protected internalTickDelay: number = 50;
+    /**
      * Timer used for scroll position check
      * @private
      */
@@ -113,7 +119,8 @@ export abstract class BaseCompositor<P> implements IRootComponent, IComponentEve
         Interaction.onGesture({ callback: this.handleGestureEvent.bind(this) })
 
         // Layer scroll check timer
-        this.internalTickTimer = setInterval(this.onInternalTimerTick.bind(this), 50);
+        if(this.internalTickDelay > 0)
+            this.internalTickTimer = setInterval(this.onInternalTimerTick.bind(this), this.internalTickDelay);
     }
 
     /**

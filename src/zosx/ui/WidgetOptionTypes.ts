@@ -51,6 +51,8 @@ export type ZeppButtonWidgetOptions = ZeppWidgetPositionOptions & {
     color?: number,
     normal_color?: number,
     press_color?: number,
+    normal_src?: string,
+    press_src?: string,
     click_func: () => any,
     radius?: number,
 }

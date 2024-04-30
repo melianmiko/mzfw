@@ -8,6 +8,7 @@ import { align, createWidget, prop, widget } from "../../zosx/ui";
 import { BASE_FONT_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from "../UiProperties";
 import { isLegacyDevice } from "../System";
 import { replace } from "../../zosx/router";
+import { resetPageBrightTime, setPageBrightTime } from "../../zosx/display";
 
 export class TemplateSplashScreen {
     /**
@@ -41,6 +42,8 @@ export class TemplateSplashScreen {
     }
 
     private performRender() {
+        setPageBrightTime({brightTime: 30000});
+
         this.viewAnimation = createWidget<ZeppFillRectWidgetOptions>(widget.FILL_RECT, {
             x: Math.floor((SCREEN_WIDTH - this.iconSize) / 2),
             y: Math.floor((SCREEN_HEIGHT - this.iconSize) / 2),
@@ -76,7 +79,7 @@ export class TemplateSplashScreen {
     }
 
     private performDestroy() {
-
+        resetPageBrightTime();
     }
 
     private playAnimation() {

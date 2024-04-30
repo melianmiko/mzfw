@@ -21,6 +21,7 @@ export class SideMessaging extends EventBus<SideMessageEvents, MessageContext> {
   private readonly appId: number;
   private appSidePort: number = 0;
   private waitHandshake: Deferred<void> = new Deferred<void>();
+  private handshakeStarted: boolean = false;
   private messageId: number = 959;
   private pendingReceive: Map<number, PendingMessageData> = new Map<number, PendingMessageData>();
   private pendingResponses: Map<number, Deferred<any>> = new Map<number, Deferred<any>>();
@@ -28,10 +29,6 @@ export class SideMessaging extends EventBus<SideMessageEvents, MessageContext> {
   constructor(appId: number) {
     super();
     this.appId = appId;
-  }
-
-  connect() {
-    IS_SIDE_SERVICE ? this.sideConnect() : this.deviceConnect();
   }
 
   /**
@@ -48,39 +45,42 @@ export class SideMessaging extends EventBus<SideMessageEvents, MessageContext> {
     }
   }
 
+  connect() {
+    if(IS_SIDE_SERVICE) {
+      // Side-service connection
+      this.log("Waiting for messages...");
+      messaging.peerSocket.addListener('message', (message: Buffer) => {
+        this.processRawMessage(message);
+      });
+
+      // Auto-resolve handshake resolve
+      this.handshakeStarted = true;
+      this.waitHandshake.resolve();
+    } else {
+      // ZeppOS-side connection
+      ble && ble.createConnect((index: number, data: ArrayBuffer, size: number) => {
+        this.log(`[MSG][R] Message, index=${index}, size=${size}, data=${data}`)
+        this.deviceProcessMessage(data);
+      });
+    }
+  }
+
   /**
-   * Will connect to other side and perform handshake.
+   * Perform a handshake before first request
    * @private
    */
-  private deviceConnect() {
-    ble && ble.createConnect((index: number, data: ArrayBuffer, size: number) => {
-      this.log(`[MSG][R] Message, index=${index}, size=${size}, data=${data}`)
-      this.deviceProcessMessage(data);
-    });
-
-    // Initialize handshake
-    if (this.appSidePort == 0) {
+  private performHandshake(): Promise<void> {
+    if (this.appSidePort == 0 && !this.handshakeStarted) {
       this.log("[MSG] Send handshake request...");
       const buffer = Buffer.alloc(20);
       const message = Buffer.from([this.appId]);
       this.writeHmHeader(MessageType.HANDSHAKE, buffer);
       buffer.fill(message, 16, 16 + message.byteLength);
       this.sendBuffer(buffer);
+      this.handshakeStarted = true;
     }
-  }
 
-  /**
-   * Will initialize event waiting for side-service
-   * @private
-   */
-  private sideConnect() {
-    this.log("Waiting for messages...");
-    messaging.peerSocket.addListener('message', (message: Buffer) => {
-      this.processRawMessage(message);
-    });
-
-    // Auto-resolve handshake wait
-    this.waitHandshake.resolve();
+    return this.waitHandshake.promise;
   }
 
   /**
@@ -98,7 +98,7 @@ export class SideMessaging extends EventBus<SideMessageEvents, MessageContext> {
       new Promise<P>((_, reject) => setTimeout(() => {
           reject(new Error(`Request timed out in ${timeout}ms`));
       }, timeout)),
-      this.waitHandshake.promise.then(() => {
+      this.performHandshake().then(() => {
         const messageID = this.messageId++;
         const deferred: Deferred<P> = new Deferred<P>();
 
