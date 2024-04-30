@@ -51,7 +51,7 @@ export class TextLayoutProvider {
 
         if(this.width < 0) {
             this.width = Math.min(text.length * size * 0.6);
-            console.log(`USE_LEGACY_TEXT_WIDTH=${this.width}px`);
+            // console.log(`USE_LEGACY_TEXT_WIDTH=${this.width}px`);
         }
 
         this.lastText = text;

@@ -35,7 +35,7 @@ export abstract class BaseCompositor<P> implements IRootComponent, IComponentEve
      * Remove system status bar on render
      */
     public hideStatusBar: boolean = false;
-    protected isRendered: boolean = false;
+    public isRendered: boolean = false;
     /**
      * Components inside this root
      */
@@ -159,6 +159,13 @@ export abstract class BaseCompositor<P> implements IRootComponent, IComponentEve
         Interaction.offGesture();
         Interaction.offDigitalCrown();
         if(this.internalTickTimer) clearInterval(this.internalTickTimer);
+
+        // Destroy all children (fixes phantom widgets on other pages, maybe)
+        for(let i = 0; i < this.nestedComponents.length; i++) {
+            try {
+                this.nestedComponents[i].performDestroy();
+            } catch(_) {}
+        }
     }
 
     protected showOverlay(overlay: Overlay) {

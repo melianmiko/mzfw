@@ -3,6 +3,7 @@ import { UiTheme } from "../UiCompositor";
 
 export const DUMMY_COMPOSITOR: IRootComponent & IComponentEventReceiver = {
     theme: new UiTheme(),
+    isRendered: false,
     onChildHeightChanged(): any {},
     setGestureLock(): any {},
     onBlur(): void {},

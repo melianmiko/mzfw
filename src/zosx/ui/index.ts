@@ -21,6 +21,10 @@ export function getAppWidgetSize(): ZeppAppWidgetSize {
     return _systemUi.getAppWidgetSize() ?? DUMMY_APP_WIDGET_SIZE;
 }
 
+export function redraw(): void {
+    _systemUi.redraw && _systemUi.redraw();
+}
+
 export const {
     createWidget,
     widget,
@@ -36,7 +40,6 @@ export const {
     edit_type,
     date,
     setStatusBarVisible,
-    redraw,
     updateStatusBarTitle,
     getTextLayout,
     deleteWidget,

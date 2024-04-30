@@ -60,7 +60,7 @@ export const TOP_MARGIN = ((): number => {
 export const BOTTOM_MARGIN = DEVICE_SHAPE === "circle" ? Math.floor(SCREEN_HEIGHT * 0.3) : 80;
 
 export const BASE_FONT_SIZE = ((): number => {
-    if(DEVICE_SHAPE == "band") return 20;
+    if(DEVICE_SHAPE == "band") return 22;
     return Math.min(32, Math.floor(SCREEN_WIDTH / 12));
 })();
 

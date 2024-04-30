@@ -15,7 +15,7 @@ import { performVibration } from "../System/Vibrator";
 import { ChildPositionInfo } from "./Types";
 import { DummyComponent } from "../UiComponent/DummyComponent";
 import { createSpinner } from "../UiTools";
-import { createWidget, prop, widget } from "../../zosx/ui";
+import { createWidget, prop, redraw, widget } from "../../zosx/ui";
 import { ZeppImgWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
 import { ZeppWidget } from "../../zosx/ui/Types";
 import { getScrollTop, scrollTo } from "../../zosx/page";
@@ -29,7 +29,6 @@ export class ListView<T> extends BaseCompositor<T> {
     private renderEndPos: number = 0;
     private footerComponent: Component<any> | null = null;
     private buildMorePage: number = 0;
-    private exited: boolean = false;
     private lastDynRenderRefreshScrollPosition: number = 0;
     protected dynamicRenderEnabled: boolean = false;
     protected listViewTopOffset: number = 0;
@@ -67,11 +66,6 @@ export class ListView<T> extends BaseCompositor<T> {
         super.performRender();
         this.beforeListViewRender();
         this.renderListView();
-    }
-
-    performDestroy() {
-        super.performDestroy();
-        this.exited = true;
     }
 
     protected beforeListViewRender() {}
@@ -144,7 +138,7 @@ export class ListView<T> extends BaseCompositor<T> {
      * @param height
      */
     addComponent(component: Component<any>, at: number = this.listChildComponents.length, height: number | null = null) {
-        if(this.exited)
+        if(!this.isRendered)
             return;
 
         component.attachParent(this);
@@ -327,6 +321,7 @@ export class ListView<T> extends BaseCompositor<T> {
         // Call to buildMore
         this.buildMore(this.buildMorePage).then((components) => {
             spinner.performDestroy();
+            redraw();
 
             if(components.length == 0) {
                 // console.log("No more items, redirect to generic footer...");
@@ -349,7 +344,7 @@ export class ListView<T> extends BaseCompositor<T> {
      * @private
      */
     private performRenderFooter() {
-        if(this.footerComponent == null || this.exited)
+        if(this.footerComponent == null || !this.isRendered)
             return;
         this.footerComponent.attachParent(this);
         this.footerComponent.setGeometry(

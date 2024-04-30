@@ -4,7 +4,7 @@ import { DEVICE_SHAPE } from "../UiProperties";
 import { createWidget, deleteWidget, event, prop, widget } from "../../zosx/ui";
 import { ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
 
-const ACTION_ICON_SIZE = DEVICE_SHAPE == "band" ? 32 : 48;
+const ACTION_ICON_SIZE = 48;
 const ACTION_ITEM_SIZE = ACTION_ICON_SIZE * 2;
 const ROW_HEIGHT = ACTION_ITEM_SIZE + 8;
 const ITEM_ICON_MARGIN = Math.floor((ACTION_ITEM_SIZE - 4 - ACTION_ICON_SIZE) / 2);

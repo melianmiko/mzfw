@@ -140,6 +140,12 @@ export abstract class Component<P> {
      */
     performRender() {
         if(this.isRendered) return;
+
+        if(!this.root.isRendered) {
+            console.log("[mzfw] prevent cmp render due to root death");
+            return;
+        }
+
         this.onRender();
         this.isRendered = true;
     }
