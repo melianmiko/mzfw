@@ -1,8 +1,9 @@
 {
   "name": "mzfw_zeus",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "",
   "type": "module",
+  "zeppos": true,
   "scripts": {
     "prepack": "npm run build",
     "build": "rollup --config rollup.config.mjs"

@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+cd packages/mzfw && npm $1
+cd ../mzfw_zeus && npm $1

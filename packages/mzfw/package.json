@@ -1,17 +1,18 @@
 {
   "name": "mzfw",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "",
   "type": "module",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepack": "npm run build"
   },
   "files": [
     "./device",
+    "./device_polyfill",
+    "./shared",
     "./assets",
-    "./assets_raw",
-    "../../src/device_polyfill",
-    "./shared"
+    "./assets_raw"
   ],
   "author": "melianmiko",
   "license": "ISC",
