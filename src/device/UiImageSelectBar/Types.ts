@@ -1,9 +1,4 @@
-import { ZeppWidget } from "../../zosx/ui/Types";
-import {
-    ZeppFillRectWidgetOptions,
-    ZeppImgWidgetOptions,
-    ZeppTextWidgetOptions
-} from "../../zosx/ui/WidgetOptionTypes";
+import { ZeppFillRectWidgetOptions, ZeppImgWidgetOptions, ZeppTextWidgetOptions, ZeppWidget } from "@zosx/types";
 
 export type ImageOptionBarProps = {
     children: ImageOptionsBarItem[],

@@ -1,8 +1,7 @@
 import { Component } from "../UiComponent";
 import { ActionBarItemView, ActionBarProps } from "./Types";
-import { DEVICE_SHAPE } from "../UiProperties";
-import { createWidget, deleteWidget, event, prop, widget } from "../../zosx/ui";
-import { ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
+import { createWidget, deleteWidget, event, prop, widget } from "@zosx/ui";
+import { ZeppWidget, ZeppWidgetEventData } from "@zosx/types";
 
 const ACTION_ICON_SIZE = 48;
 const ACTION_ITEM_SIZE = ACTION_ICON_SIZE * 2;

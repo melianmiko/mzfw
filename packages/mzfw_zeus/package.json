@@ -1,0 +1,22 @@
+{
+  "name": "mzfw_zeus",
+  "version": "0.1.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "prepack": "npm run build",
+    "build": "rollup --config rollup.config.mjs"
+  },
+  "files": [
+    "**/*.js",
+    "**/*.ts",
+    "assets",
+    "assets_raw",
+    "device_polyfill"
+  ],
+  "author": "melianmiko",
+  "license": "ISC",
+  "dependencies": {
+    "zosx": "^0.2.1"
+  }
+}

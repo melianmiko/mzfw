@@ -1,8 +1,7 @@
 import { Component } from "../UiComponent";
 import { AnimComponent } from "../UiNativeComponents";
-import { ICON_SIZE, IS_LOW_RAM_DEVICE } from "../UiProperties";
+import { IS_LOW_RAM_DEVICE } from "../UiProperties";
 import { ImageComponent } from "../UiNativeComponents/UiImageComponent";
-import { prop } from "../../zosx/ui";
 
 export function handleIconProperty(propValue: string, size: number) {
     if(propValue[0] == "/")

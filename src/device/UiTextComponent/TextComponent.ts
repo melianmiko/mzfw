@@ -1,9 +1,8 @@
 import { TextLayoutProvider } from "../System/TextLayoutProvider";
 import { TextComponentProps } from "./Types";
 import { NativeComponent } from "../UiNativeComponents";
-import { align, text_style, widget } from "../../zosx/ui";
-import { ZeppTextWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
-import { ZeppWidgetID } from "../../zosx/ui/Types";
+import { align, text_style, widget } from "@zosx/ui";
+import { ZeppTextWidgetOptions, ZeppWidgetID } from "@zosx/types";
 
 export class TextComponent extends NativeComponent<TextComponentProps, ZeppTextWidgetOptions> {
     public isFocusable: boolean = false;

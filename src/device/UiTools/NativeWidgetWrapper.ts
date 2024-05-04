@@ -1,5 +1,5 @@
-import { ZeppGroupInstance, ZeppWidget, ZeppWidgetID } from "../../zosx/ui/Types";
-import { createWidget, deleteWidget, prop } from "../../zosx/ui";
+import { ZeppGroupInstance, ZeppWidget, ZeppWidgetID } from "@zosx/types";
+import { createWidget, deleteWidget, prop } from "@zosx/ui";
 import { IS_BAND_7, ZeppNotSupportedError } from "../UiProperties";
 
 export abstract class NativeWidgetWrapper<WP, WO> {

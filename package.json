@@ -1,13 +1,19 @@
 {
   "private": true,
   "type": "module",
-  "scripts": {
-    "build": "tsc"
-  },
   "author": "melianmiko",
   "license": "ISC",
   "devDependencies": {
+    "@rollup/plugin-alias": "^5.1.0",
+    "@rollup/plugin-typescript": "^11.1.6",
     "@types/node": "^20.11.25",
+    "glob": "^10.3.12",
+    "rollup": "^4.17.2",
+    "rollup-plugin-copy": "^3.5.0",
+    "tslib": "^2.6.2",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "zosx": "^0.2.1"
   }
 }

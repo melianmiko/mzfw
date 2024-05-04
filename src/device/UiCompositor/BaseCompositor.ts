@@ -1,13 +1,12 @@
 import { type Component } from "../UiComponent";
 import { SCREEN_HEIGHT } from "../UiProperties";
-import * as Interaction from "../../zosx/interaction";
 import { UiTheme } from "./UiTheme";
-import { setStatusBarVisible } from "../../zosx/ui";
-import { ZeppWidgetEventData } from "../../zosx/ui/Types";
-import { getScrollTop, scrollTo } from "../../zosx/page";
 import { IComponentEventReceiver, IRootComponent } from "../UiComponent/Interfaces";
 import { Overlay } from "../UiOverlay";
-import { GESTURE_RIGHT } from "../../zosx/interaction";
+import * as Interaction from "@zosx/interaction";
+import { setStatusBarVisible } from "@zosx/ui";
+import { ZeppWidgetEventData } from "@zosx/types";
+import { getScrollTop, scrollTo } from "@zosx/page";
 
 /**
  * RootComponent - base component that can fit another ones into them.
@@ -188,7 +187,7 @@ export abstract class BaseCompositor<P> implements IRootComponent, IComponentEve
     }
 
     private handleGestureEvent(gesture: number) {
-        if(this.activeOverlay != null && gesture == GESTURE_RIGHT) {
+        if(this.activeOverlay != null && gesture == Interaction.GESTURE_RIGHT) {
             const overlay = this.activeOverlay;
             console.log(this.activeOverlay, this.activeOverlay?.visible)
             this.activeOverlay = null;

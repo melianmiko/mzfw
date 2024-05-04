@@ -1,4 +1,4 @@
-import { Vibrator } from "../../zosx/sensor";
+import { Vibrator } from "@zosx/sensor";
 
 /**
  * Current `performVibration` timer

@@ -1,9 +1,8 @@
 import { Component } from "../UiComponent";
 import { AboutPageHeaderProps } from "./Types";
 import { DEVICE_SHAPE, SCREEN_MARGIN } from "../UiProperties";
-import { ZeppWidget } from "../../zosx/ui/Types";
-import { ZeppImgWidgetOptions, ZeppTextWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
-import { align, createWidget, deleteWidget, text_style, widget } from "../../zosx/ui";
+import { ZeppImgWidgetOptions, ZeppTextWidgetOptions, ZeppWidget } from "@zosx/types";
+import { align, createWidget, deleteWidget, text_style, widget } from "@zosx/ui";
 
 export class AboutPageHeader extends Component<AboutPageHeaderProps> {
     private titleView: ZeppWidget<ZeppTextWidgetOptions, {}> | null = null;

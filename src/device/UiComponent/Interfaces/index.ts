@@ -1,4 +1,4 @@
-import { ZeppWidgetEventData } from "../../../zosx/ui/Types";
+import { ZeppWidgetEventData } from "@zosx/types";
 import { UiTheme } from "../../UiCompositor";
 import type { Component } from "../Component";
 

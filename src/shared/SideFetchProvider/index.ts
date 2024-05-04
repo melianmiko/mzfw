@@ -3,7 +3,7 @@ import { registerMessageHandler, sendRequestMessage } from "../SideMessaging";
 import { SideFetchRequest, SideFetchResult } from "./Types";
 import { MessageContext } from "../SideMessaging/Types";
 import { ResponseWrapper } from "./ResponseWrapper";
-import { glob } from "../../zosx/internal";
+import { glob } from "@zosx/utils";
 
 /**
  * Side-service fetch handler.

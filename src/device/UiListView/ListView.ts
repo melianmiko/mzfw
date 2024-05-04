@@ -15,10 +15,9 @@ import { performVibration } from "../System/Vibrator";
 import { ChildPositionInfo } from "./Types";
 import { DummyComponent } from "../UiComponent/DummyComponent";
 import { createSpinner } from "../UiTools";
-import { createWidget, prop, redraw, widget } from "../../zosx/ui";
-import { ZeppImgWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
-import { ZeppWidget } from "../../zosx/ui/Types";
-import { getScrollTop, scrollTo } from "../../zosx/page";
+import { createWidget, prop, redraw, widget } from "@zosx/ui";
+import { ZeppImgWidgetOptions, ZeppWidget } from "@zosx/types";
+import { getScrollTop, scrollTo } from "@zosx/page";
 
 const REV_RENDER_START_POS = 10000;
 
@@ -321,7 +320,7 @@ export class ListView<T> extends BaseCompositor<T> {
         // Call to buildMore
         this.buildMore(this.buildMorePage).then((components) => {
             spinner.performDestroy();
-            redraw();
+            redraw && redraw();
 
             if(components.length == 0) {
                 // console.log("No more items, redirect to generic footer...");

@@ -1,14 +1,9 @@
-import { ZeppWidget } from "../../zosx/ui/Types";
-import {
-    ZeppFillRectWidgetOptions,
-    ZeppImgWidgetOptions,
-    ZeppTextWidgetOptions
-} from "../../zosx/ui/WidgetOptionTypes";
-import { align, createWidget, prop, widget } from "../../zosx/ui";
+import { ZeppFillRectWidgetOptions, ZeppImgWidgetOptions, ZeppTextWidgetOptions, ZeppWidget } from "@zosx/types";
+import { align, createWidget, prop, widget } from "@zosx/ui";
 import { BASE_FONT_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from "../UiProperties";
 import { isLegacyDevice } from "../System";
-import { replace } from "../../zosx/router";
-import { resetPageBrightTime, setPageBrightTime } from "../../zosx/display";
+import { replace } from "@zosx/router";
+import { resetPageBrightTime, setPageBrightTime } from "@zosx/display";
 
 export class TemplateSplashScreen {
     /**

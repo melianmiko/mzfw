@@ -1,5 +1,5 @@
-import { glob } from "../../zosx/internal";
-import { getPackageInfo } from "../../zosx/app";
+import { glob } from "@zosx/utils";
+import { getPackageInfo } from "@zosx/app";
 
 export function getAppTags(forceValid: boolean = false): [number, "app"|"watchface"] {
     if(glob["__cache_appPath"])

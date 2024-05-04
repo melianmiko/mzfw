@@ -1,4 +1,4 @@
-import { ZeppWidgetAlignMode, ZeppWidgetTextStyle } from "../../zosx/ui/Types";
+import { ZeppWidgetAlignMode, ZeppWidgetTextStyle } from "@zosx/types";
 
 export type TextComponentProps = {
     text: string,

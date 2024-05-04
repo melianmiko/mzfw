@@ -1,9 +1,14 @@
 import { Component } from "../UiComponent";
-import { KEY_EVENT_PRESS, KEY_EVENT_RELEASE } from "../../zosx/interaction";
+import { KEY_EVENT_PRESS, KEY_EVENT_RELEASE } from "@zosx/interaction";
 import { IS_SMALL_SCREEN_DEVICE } from "../UiProperties";
-import { ZeppGroupInstance, ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
-import { ZeppFillRectWidgetOptions, ZeppWidgetPositionOptions } from "../../zosx/ui/WidgetOptionTypes";
-import { createWidget, deleteWidget, prop, widget } from "../../zosx/ui";
+import {
+    ZeppFillRectWidgetOptions,
+    ZeppGroupInstance,
+    ZeppWidget,
+    ZeppWidgetEventData,
+    ZeppWidgetPositionOptions
+} from "@zosx/types";
+import { createWidget, deleteWidget, prop, widget } from "@zosx/ui";
 
 const SECOND_BUTTON_WIDTH = IS_SMALL_SCREEN_DEVICE ? 90 : 120;
 

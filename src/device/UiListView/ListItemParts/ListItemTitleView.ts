@@ -1,7 +1,6 @@
-import type { ZeppTextWidgetOptions } from "../../../zosx/ui/WidgetOptionTypes";
-import type { ZeppGroupInstance, ZeppWidget, ZeppWidgetID } from "../../../zosx/ui/Types";
+import type { ZeppGroupInstance, ZeppTextWidgetOptions, ZeppWidget, ZeppWidgetID } from "@zosx/types";
 import { NativeWidgetWrapper } from "../../UiTools/NativeWidgetWrapper";
-import { text_style, widget } from "../../../zosx/ui";
+import { text_style, widget } from "@zosx/ui";
 import { UiTheme } from "../../UiCompositor";
 import { ListItemInternalMetrics, ListItemProps } from "../Types";
 import { ComponentGeometry } from "../../UiComponent";

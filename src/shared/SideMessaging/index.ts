@@ -1,7 +1,7 @@
 import { SideMessaging } from "./SideMessaging";
 import { MessageContext } from "./Types";
 import { SideMessageEvents } from "./Enums";
-import { glob } from "../../zosx/internal";
+import { glob } from "@zosx/utils";
 import { getAppTags } from "../AppTagsProvider";
 
 /**

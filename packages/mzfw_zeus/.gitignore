@@ -1,0 +1,6 @@
+*
+!.gitignore
+!package.json
+!package-lock.json
+!rollup.config.mjs
+!tsconfig.json

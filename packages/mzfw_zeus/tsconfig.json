@@ -1,16 +1,18 @@
 {
   "include": [
-    "./src/**/*"
+    "../../src"
   ],
   "files": [
-    "global.d.ts"
+    "../../global.d.ts"
   ],
   "compilerOptions": {
-    "rootDir": "src",
+    "outDir": ".",
+    "rootDir": "../../src",
     "module": "ES6",
     "target": "ES2021",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
+    "declaration": true,
     "strict": true,
     "lib": [
       "es2021",

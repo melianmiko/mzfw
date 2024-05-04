@@ -1,7 +1,6 @@
 import { NativeWidgetWrapper } from "../../UiTools/NativeWidgetWrapper";
-import { ZeppImgWidgetOptions } from "../../../zosx/ui/WidgetOptionTypes";
-import { type ZeppGroupInstance, type ZeppWidget, ZeppWidgetID } from "../../../zosx/ui/Types";
-import { widget } from "../../../zosx/ui";
+import type { ZeppGroupInstance, ZeppImgWidgetOptions, ZeppWidget, ZeppWidgetID } from "@zosx/types";
+import { widget } from "@zosx/ui";
 import { ListItemProps } from "../Types";
 import { ComponentGeometry } from "../../UiComponent";
 import { ICON_OFFSET, ICON_SIZE } from "../../UiProperties";

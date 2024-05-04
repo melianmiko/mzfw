@@ -1,8 +1,7 @@
 import { NativeComponent } from "./NativeComponent";
 import { UiDrawRectangleComponentProps } from "./Types";
-import { ZeppFillRectWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
-import { ZeppWidgetID } from "../../zosx/ui/Types";
-import { widget } from "../../zosx/ui";
+import { ZeppFillRectWidgetOptions, ZeppWidgetID } from "@zosx/types";
+import { widget } from "@zosx/ui";
 
 /**
  * systemUI.widget.FILL_RECT wrapper component.

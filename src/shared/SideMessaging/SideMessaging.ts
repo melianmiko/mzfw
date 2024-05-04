@@ -3,9 +3,8 @@ import { MessageParseType, MessageType, SideMessageEvents } from "./Enums";
 import { recoverSerializedData, serializeItem } from "./Serialize";
 import { Deferred } from "./Deferred";
 import { EventBus } from "./EventBus";
-import { osImport } from "../../zosx/internal";
-import { ZeppBleLibrary } from "../../zosx/ble";
-import { ZeppSideServiceMessaging } from "../../zosx/side";
+import { osImport } from "@zosx/utils";
+import { ZeppBleLibrary, ZeppSideServiceMessaging } from "@zosx/types";
 
 declare const messaging: ZeppSideServiceMessaging;
 

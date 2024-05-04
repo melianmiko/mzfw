@@ -1,4 +1,4 @@
 /device
 /shared
-/zosx
+/device_polyfill
 *.tgz

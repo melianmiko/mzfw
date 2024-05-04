@@ -1,8 +1,8 @@
 import { Component } from "../UiComponent";
 import { DEVICE_SHAPE } from "../UiProperties";
-import { align, createWidget, deleteWidget, event, prop, widget } from "../../zosx/ui";
-import { ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
-import { ImageOptionBarView, ImageOptionBarProps } from "./Types";
+import { align, createWidget, deleteWidget, event, prop, widget } from "@zosx/ui";
+import { ZeppWidget, ZeppWidgetEventData } from "@zosx/types";
+import { ImageOptionBarProps, ImageOptionBarView } from "./Types";
 import { handleIconProperty } from "../UiTools";
 
 export const IMAGE_SELECT_ICON_SIZE = DEVICE_SHAPE == "band" ? 64 : 80;

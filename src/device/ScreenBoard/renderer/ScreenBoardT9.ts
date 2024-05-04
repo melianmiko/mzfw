@@ -1,10 +1,9 @@
 import { ScreenBoard } from "../ScreenBoard";
 import { ScreenBoardRenderer } from "../Interfaces";
-import { ZeppWidget } from "../../../zosx/ui/Types";
-import { ZeppImgWidgetOptions, ZeppTextWidgetOptions } from "../../../zosx/ui/WidgetOptionTypes";
+import { ZeppImgWidgetOptions, ZeppTextWidgetOptions, ZeppWidget } from "@zosx/types";
 import { ScreenBoardButtonsManager } from "../tools/ScreenBoardButtonsManager";
 import { getScreenBoardCapsIcon, getScreenBoardRowPosition } from "../tools/ScreenBoardTools";
-import { prop } from "../../../zosx/ui";
+import { prop } from "@zosx/ui";
 import { SB_COMPILED_LAYOUTS } from "../tools/ScreenBoardCompiledData";
 
 export class ScreenBoardT9 implements ScreenBoardRenderer {

@@ -1,4 +1,4 @@
-import { glob } from "../../zosx/internal";
+import { glob } from "@zosx/utils";
 
 export function memoryCleanup() {
     // Yes, freaking ZeppOS shares global variables between all apps

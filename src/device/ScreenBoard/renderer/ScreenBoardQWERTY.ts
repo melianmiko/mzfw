@@ -1,10 +1,9 @@
-import { ScreenBoardLayout, ScreenBoardLayoutsCollection, ScreenBoardRenderer } from "../Interfaces";
+import { ScreenBoardLayout, ScreenBoardRenderer } from "../Interfaces";
 import { ScreenBoard } from "../ScreenBoard";
-import { ZeppWidget } from "../../../zosx/ui/Types";
-import { ZeppButtonWidgetOptions, ZeppTextWidgetOptions } from "../../../zosx/ui/WidgetOptionTypes";
+import { ZeppButtonWidgetOptions, ZeppTextWidgetOptions, ZeppWidget } from "@zosx/types";
 import { SB_QWERTY_SYMBOLS_SUB_SCREEN } from "../data/QWERTY";
 import { getScreenBoardCapsIcon, getScreenBoardRowPosition } from "../tools/ScreenBoardTools";
-import { prop } from "../../../zosx/ui";
+import { prop } from "@zosx/ui";
 import { ScreenBoardButtonsManager } from "../tools/ScreenBoardButtonsManager";
 import { SB_ACT_BUTTON_WIDTH } from "../tools/ScreenBoardConstants";
 import { SB_COMPILED_LAYOUTS } from "../tools/ScreenBoardCompiledData";

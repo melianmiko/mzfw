@@ -1,8 +1,7 @@
 import { NativeComponent } from "./NativeComponent";
 import { ImageComponentProps } from "./Types";
-import { ZeppWidgetID } from "../../zosx/ui/Types";
-import { widget } from "../../zosx/ui";
-import { ZeppImgWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
+import { ZeppImgWidgetOptions, ZeppWidgetID } from "@zosx/types";
+import { widget } from "@zosx/ui";
 
 export class ImageComponent extends NativeComponent<ImageComponentProps, ZeppImgWidgetOptions> {
     protected widgetID: ZeppWidgetID = widget.IMG;

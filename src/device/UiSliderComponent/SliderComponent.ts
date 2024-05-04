@@ -1,8 +1,7 @@
 import { Component } from "../UiComponent";
 import { SliderComponentProps } from "./Types";
-import { ZeppFillRectWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
-import { ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
-import { createWidget, deleteWidget, prop, widget } from "../../zosx/ui";
+import { ZeppFillRectWidgetOptions, ZeppWidget, ZeppWidgetEventData } from "@zosx/types";
+import { createWidget, deleteWidget, prop, widget } from "@zosx/ui";
 import { BASE_FONT_SIZE } from "../UiProperties";
 
 const DEFAULT_HEIGHT = BASE_FONT_SIZE * 2;

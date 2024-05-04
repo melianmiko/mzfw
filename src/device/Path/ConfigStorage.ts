@@ -1,4 +1,4 @@
-import { readFileSync, rmSync, writeFileSync } from "../../zosx/fs";
+import { readFileSync, rmSync, writeFileSync } from "@zosx/fs";
 
 export class ConfigStorage implements Storage {
     private data: {[id: string]: string} = {};

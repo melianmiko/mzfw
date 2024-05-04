@@ -1,7 +1,7 @@
 import { DEVICE_SHAPE, SCREEN_WIDTH } from "../../UiProperties";
 import { SB_ICON_SIZE, SB_ROW_HEIGHT, SB_SCREEN_ROUND_DELTA, SB_VIEWPORT_HEIGHT } from "./ScreenBoardConstants";
 import { CapsState } from "../Enums";
-import { getLanguageString } from "../../../zosx/settings";
+import { getLanguageString } from "@zosx/utils";
 
 export function getFallbackLayouts(knownLayouts: string[]): string[] {
     const userLang = getLanguageString();

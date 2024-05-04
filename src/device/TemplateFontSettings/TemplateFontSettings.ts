@@ -3,7 +3,7 @@ import { Component } from "../UiComponent";
 import { SliderComponent } from "../UiSliderComponent";
 import { BASE_FONT_SIZE } from "../UiProperties";
 import { TextComponent } from "../UiTextComponent";
-import { align } from "../../zosx/ui";
+import { align } from "@zosx/ui";
 import { Button, ButtonVariant } from "../UiButton";
 
 export class TemplateFontSettings extends ListView<any> {

@@ -1,5 +1,5 @@
-import { getDeviceInfo } from "../../zosx/device";
-import { ZeppDeviceInfo } from "../../zosx/device/Types";
+import { getDeviceInfo } from "@zosx/device";
+import { ZeppDeviceInfo } from "@zosx/types";
 
 /**
  * Generic device info (Cross-runtime import)

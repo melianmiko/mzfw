@@ -1,5 +1,5 @@
 import { TextLayoutError } from "./Errors";
-import { getTextLayout } from "../../zosx/ui";
+import { getTextLayout } from "@zosx/ui";
 
 /**
  * Cached wrapper for getTextLayout()

@@ -1,7 +1,6 @@
 import { AnimComponentProps } from "./Types";
-import { anim_status, widget } from "../../zosx/ui";
-import { ZeppWidgetID } from "../../zosx/ui/Types";
-import { ZeppImgAnimWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
+import { anim_status, widget } from "@zosx/ui";
+import { ZeppImgAnimWidgetOptions, ZeppWidgetID } from "@zosx/types";
 import { NativeComponent } from "./NativeComponent";
 
 /**

@@ -1,7 +1,7 @@
 import { PathScopeName } from "./Types";
 import { fullAssetPath, fullDataPath } from "./FsTools";
-import * as fs from "../../zosx/fs";
-import { OpenFileEntry, ZeppFsStat } from "../../zosx/fs/Types";
+import * as fs from "@zosx/fs";
+import { OpenFileEntry, ZeppFsStat } from "@zosx/types";
 import { IS_MI_BAND_7 } from "../UiProperties";
 
 export class Path {

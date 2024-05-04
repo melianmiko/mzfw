@@ -1,7 +1,7 @@
-import * as Interaction from "../../zosx/interaction";
+import * as Interaction from "@zosx/interaction";
 import { ComponentGeometry } from "./Types";
-import { ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
-import { event } from "../../zosx/ui";
+import { ZeppWidget, ZeppWidgetEventData } from "@zosx/types";
+import { event } from "@zosx/ui";
 import { IComponentEventReceiver, IRootComponent } from "./Interfaces";
 import { DUMMY_COMPOSITOR } from "./DummyCompositor";
 import { isLegacyDevice } from "../System";

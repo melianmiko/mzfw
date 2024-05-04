@@ -1,5 +1,5 @@
-import { ZeppFillRectWidgetOptions, ZeppImgWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
-import { ZeppWidget } from "../../zosx/ui/Types";
+import { ZeppFillRectWidgetOptions, ZeppImgWidgetOptions } from "@zosx/types";
+import { ZeppWidget } from "@zosx/types";
 
 export type ActionBarProps = {
     children: ActionBarItem[],

@@ -2,13 +2,14 @@ import { Component } from "../UiComponent";
 import { HeadlineButtonProps } from "./Types";
 import { TextLayoutProvider } from "../System/TextLayoutProvider";
 import { IS_BAND_7, IS_SMALL_SCREEN_DEVICE, WIDGET_WIDTH } from "../UiProperties";
-import { ZeppWidget, ZeppWidgetEventData } from "../../zosx/ui/Types";
 import {
     ZeppFillRectWidgetOptions,
     ZeppImgWidgetOptions,
-    ZeppTextWidgetOptions
-} from "../../zosx/ui/WidgetOptionTypes";
-import { align, createWidget, deleteWidget, prop, text_style, widget } from "../../zosx/ui";
+    ZeppTextWidgetOptions,
+    ZeppWidget,
+    ZeppWidgetEventData
+} from "@zosx/types";
+import { align, createWidget, deleteWidget, prop, text_style, widget } from "@zosx/ui";
 
 const BTN_PADDING = 8;
 const SIZE_OPTION = IS_SMALL_SCREEN_DEVICE ? (IS_BAND_7 ? 0 : 1) : 2;

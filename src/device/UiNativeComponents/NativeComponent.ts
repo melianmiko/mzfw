@@ -1,7 +1,6 @@
 import { Component } from "../UiComponent";
-import { ZeppWidget, ZeppWidgetID } from "../../zosx/ui/Types";
-import { ZeppWidgetGenericOptions } from "../../zosx/ui/WidgetOptionTypes";
-import { createWidget, deleteWidget, prop } from "../../zosx/ui";
+import { ZeppWidget, ZeppWidgetID, ZeppWidgetGenericOptions } from "@zosx/types";
+import { createWidget, deleteWidget, prop } from "@zosx/ui";
 
 export abstract class NativeComponent<AP, NP, WTE = {}> extends Component<AP> {
     protected abstract widgetID: ZeppWidgetID;

@@ -1,4 +1,4 @@
-import { getSystemInfo } from "../../zosx/settings";
+import { getSystemInfo } from "@zosx/settings";
 
 declare const DeviceRuntimeCore: any;
 

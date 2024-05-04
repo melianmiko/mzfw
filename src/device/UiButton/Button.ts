@@ -1,9 +1,9 @@
 import { ButtonProps } from "./Types";
 import { PaperComponent } from "../UiPaperComponent";
 import { ButtonVariant } from "./Enums";
-import { ZeppTextWidgetOptions } from "../../zosx/ui/WidgetOptionTypes";
-import { align, deleteWidget, prop, text_style, widget } from "../../zosx/ui";
-import { ZeppWidget } from "../../zosx/ui/Types";
+import { ZeppTextWidgetOptions } from "@zosx/types";
+import { align, deleteWidget, prop, text_style, widget } from "@zosx/ui";
+import { ZeppWidget } from "@zosx/types";
 
 const MPX_BUTTON_HEIGHT = 2.5;
 const MPX_FULL_HEIGHT = 3;

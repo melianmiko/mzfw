@@ -9,17 +9,18 @@ import {
   ScreenBoardRenderer
 } from "./Interfaces";
 import { CapsState } from "./Enums";
-import { ZeppGroupInstance, ZeppWidget } from "../../zosx/ui/Types";
 import {
   ZeppButtonWidgetOptions,
   ZeppFillRectWidgetOptions,
+  ZeppGroupInstance,
   ZeppImgWidgetOptions,
   ZeppTextWidgetOptions,
+  ZeppWidget,
   ZeppWidgetPositionOptions
-} from "../../zosx/ui/WidgetOptionTypes";
-import { align, createWidget, event, prop, text_style, widget } from "../../zosx/ui";
+} from "@zosx/types";
+import { align, createWidget, event, prop, text_style, widget } from "@zosx/ui";
 import { DEVICE_SHAPE, SCREEN_HEIGHT, SCREEN_WIDTH } from "../UiProperties";
-import { getScrollTop, scrollTo, setScrollLock } from "../../zosx/page";
+import { getScrollTop, scrollTo, setScrollLock } from "@zosx/page";
 import { UiTheme } from "../UiCompositor";
 import {
   SB_CONFIRM_BUTTON_HEIGHT,

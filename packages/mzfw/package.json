@@ -10,10 +10,12 @@
     "./device",
     "./assets",
     "./assets_raw",
-    "./device_polyfill",
-    "./shared",
-    "./zosx"
+    "../../src/device_polyfill",
+    "./shared"
   ],
   "author": "melianmiko",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "zosx": "^0.2.1"
+  }
 }
