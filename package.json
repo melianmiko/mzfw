@@ -14,6 +14,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@by-mmk/hey-api-zeppos-fetch": "file:../hey-api-openapi-fetch-zeppos/by-mmk-hey-api-zeppos-fetch-0.2.3.tgz",
     "zosx": "^0.2.1"
   }
 }

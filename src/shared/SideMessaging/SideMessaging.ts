@@ -9,7 +9,7 @@ import { ZeppBleLibrary, ZeppSideServiceMessaging } from "@zosx/types";
 declare const messaging: ZeppSideServiceMessaging;
 
 const DEBUG = false;
-const PART_SIZE = 2048;
+const PART_SIZE = 1024;
 const RQ_HEADER_SIZE = 16;
 
 export const IS_SIDE_SERVICE = typeof messaging != "undefined";

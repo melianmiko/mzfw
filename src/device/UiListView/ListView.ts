@@ -65,9 +65,12 @@ export class ListView<T> extends BaseCompositor<T> {
         super.performRender();
         this.beforeListViewRender();
         this.renderListView();
+        this.onBuild();
     }
 
     protected beforeListViewRender() {}
+
+    protected onBuild() {}
 
     private renderListView() {
         if(this.dynamicRenderEnabled && isLegacyDevice) {
