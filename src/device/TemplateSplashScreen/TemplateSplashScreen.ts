@@ -69,7 +69,9 @@ export class TemplateSplashScreen {
             this.onInit(),
             this.playAnimation()
         ]).then(() => {
-            replace({url: this.continueToUrl, params: this.continueParam});
+            if(this.continueToUrl) {
+                replace({url: this.continueToUrl, params: this.continueParam});
+            }
         });
     }
 
